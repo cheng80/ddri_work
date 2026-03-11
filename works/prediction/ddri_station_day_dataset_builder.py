@@ -25,7 +25,7 @@ def load_common_station_ids():
     return set(master["대여소번호"].tolist()), master
 
 
-def load_clean_target(paths, valid_return_ids, common_ids):
+def load_clean_events(paths, valid_return_ids, common_ids):
     frames = []
     for path in paths:
         df = pd.read_csv(path, usecols=RENTAL_COLS)
@@ -45,18 +45,48 @@ def load_clean_target(paths, valid_return_ids, common_ids):
 
         clean_df = df.loc[mask_complete & mask_positive & mask_rent_common & mask_return_valid].copy()
         clean_df["station_id"] = clean_df["대여 대여소번호"].astype(int)
+        clean_df["return_station_id"] = clean_df["반납대여소번호"].astype(int)
         clean_df["date"] = clean_df["대여일시"].dt.normalize()
-        frames.append(clean_df[["station_id", "date"]])
+        clean_df["return_date"] = clean_df["반납일시"].dt.normalize()
+        frames.append(clean_df[["station_id", "date", "return_station_id", "return_date"]])
 
-    all_df = pd.concat(frames, ignore_index=True)
-    target_df = (
-        all_df.groupby(["station_id", "date"])
+    return pd.concat(frames, ignore_index=True)
+
+
+def build_station_day_metrics(event_df):
+    rental_df = (
+        event_df.groupby(["station_id", "date"])
         .size()
         .reset_index(name="rental_count")
+    )
+    return_df = (
+        event_df.groupby(["return_station_id", "return_date"])
+        .size()
+        .reset_index(name="return_count")
+        .rename(columns={"return_station_id": "station_id", "return_date": "date"})
+    )
+    same_station_df = event_df[
+        (event_df["station_id"] == event_df["return_station_id"]) & (event_df["date"] == event_df["return_date"])
+    ]
+    same_station_df = (
+        same_station_df.groupby(["station_id", "date"])
+        .size()
+        .reset_index(name="same_station_return_count")
+    )
+
+    metrics_df = (
+        rental_df.merge(return_df, on=["station_id", "date"], how="left")
+        .merge(same_station_df, on=["station_id", "date"], how="left")
         .sort_values(["station_id", "date"])
         .reset_index(drop=True)
     )
-    return target_df
+    metrics_df["return_count"] = metrics_df["return_count"].fillna(0).astype(int)
+    metrics_df["same_station_return_count"] = metrics_df["same_station_return_count"].fillna(0).astype(int)
+    metrics_df["same_station_return_ratio"] = (
+        metrics_df["same_station_return_count"] / metrics_df["rental_count"]
+    ).fillna(0.0)
+    metrics_df["net_flow"] = metrics_df["rental_count"] - metrics_df["return_count"]
+    return metrics_df
 
 
 def build_weather_daily():
@@ -107,31 +137,59 @@ def main():
         2025: set(pd.to_numeric(station_2025["대여소번호"], errors="coerce").dropna().astype(int)),
     }
 
-    target_train_2023 = load_clean_target(
+    train_events_2023 = load_clean_events(
         sorted((RAW_DIR / "2023 강남구 따릉이 이용정보").glob("*.csv")),
         valid_return_ids[2023],
         common_ids,
     )
-    target_train_2024 = load_clean_target(
+    train_events_2024 = load_clean_events(
         sorted((RAW_DIR / "2024 강남구 따릉이 이용정보").glob("*.csv")),
         valid_return_ids[2024],
         common_ids,
     )
-    target_test_2025 = load_clean_target(
+    test_events_2025 = load_clean_events(
         sorted((RAW_DIR / "2025 강남구 따릉이 이용정보").glob("*.csv")),
         valid_return_ids[2025],
         common_ids,
     )
 
-    target_train = pd.concat([target_train_2023, target_train_2024], ignore_index=True)
+    station_day_train_2023 = build_station_day_metrics(train_events_2023)
+    station_day_train_2024 = build_station_day_metrics(train_events_2024)
+    station_day_test_2025 = build_station_day_metrics(test_events_2025)
+
+    target_train = pd.concat([station_day_train_2023, station_day_train_2024], ignore_index=True)
     weather_daily = build_weather_daily()
     weather_train_daily = weather_daily[weather_daily["date"].dt.year.isin([2023, 2024])].copy()
     weather_test_daily = weather_daily[weather_daily["date"].dt.year == 2025].copy()
 
     target_train.to_csv(OUTPUT_DIR / "ddri_station_day_target_train_2023_2024.csv", index=False)
-    target_test_2025.to_csv(OUTPUT_DIR / "ddri_station_day_target_test_2025.csv", index=False)
+    station_day_test_2025.to_csv(OUTPUT_DIR / "ddri_station_day_target_test_2025.csv", index=False)
     weather_train_daily.to_csv(OUTPUT_DIR / "ddri_weather_daily_2023_2024.csv", index=False)
     weather_test_daily.to_csv(OUTPUT_DIR / "ddri_weather_daily_2025.csv", index=False)
+
+    station_day_metrics_summary = pd.DataFrame(
+        [
+            {
+                "dataset": "train_2023_2024",
+                "rows": len(target_train),
+                "rental_count_sum": int(target_train["rental_count"].sum()),
+                "return_count_sum": int(target_train["return_count"].sum()),
+                "same_station_return_count_sum": int(target_train["same_station_return_count"].sum()),
+                "same_station_return_ratio_mean": round(target_train["same_station_return_ratio"].mean(), 6),
+                "net_flow_mean": round(target_train["net_flow"].mean(), 6),
+            },
+            {
+                "dataset": "test_2025",
+                "rows": len(station_day_test_2025),
+                "rental_count_sum": int(station_day_test_2025["rental_count"].sum()),
+                "return_count_sum": int(station_day_test_2025["return_count"].sum()),
+                "same_station_return_count_sum": int(station_day_test_2025["same_station_return_count"].sum()),
+                "same_station_return_ratio_mean": round(station_day_test_2025["same_station_return_ratio"].mean(), 6),
+                "net_flow_mean": round(station_day_test_2025["net_flow"].mean(), 6),
+            },
+        ]
+    )
+    station_day_metrics_summary.to_csv(OUTPUT_DIR / "ddri_station_day_flow_metrics_summary.csv", index=False)
 
     train_dataset = (
         target_train.merge(calendar, on="date", how="left")
@@ -149,7 +207,7 @@ def main():
     train_dataset.to_csv(OUTPUT_DIR / "ddri_station_day_train_baseline_dataset.csv", index=False)
 
     test_dataset = (
-        target_test_2025.merge(calendar, on="date", how="left")
+        station_day_test_2025.merge(calendar, on="date", how="left")
         .merge(weather_test_daily, on="date", how="left")
         .merge(cluster_labels, on="station_id", how="left")
         .merge(
@@ -172,6 +230,7 @@ def main():
     print("saved test target:", OUTPUT_DIR / "ddri_station_day_target_test_2025.csv")
     print("saved weather daily:", OUTPUT_DIR / "ddri_weather_daily_2023_2024.csv")
     print("saved weather daily:", OUTPUT_DIR / "ddri_weather_daily_2025.csv")
+    print("saved flow summary:", OUTPUT_DIR / "ddri_station_day_flow_metrics_summary.csv")
     print("saved baseline train dataset:", OUTPUT_DIR / "ddri_station_day_train_baseline_dataset.csv")
     print("saved baseline test dataset:", OUTPUT_DIR / "ddri_station_day_test_baseline_dataset.csv")
     print("saved test main eval dataset:", OUTPUT_DIR / "ddri_station_day_test_main_eval_dataset.csv")
@@ -180,7 +239,7 @@ def main():
     print("test_rows=", len(test_dataset))
     print("test_main_rows=", len(test_main_dataset))
     print("test_exception_rows=", len(test_exception_rows))
-    print("test_target_rows=", len(target_test_2025))
+    print("test_target_rows=", len(station_day_test_2025))
 
 
 if __name__ == "__main__":

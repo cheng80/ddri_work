@@ -1,0 +1,17 @@
+table_name,category,metric,value
+cluster_summary,일반수요형,평균 대여량,11.91
+cluster_summary,일반수요형,평일 평균 대여량,12.87
+cluster_summary,일반수요형,주말 평균 대여량,9.48
+cluster_summary,일반수요형,출퇴근 시간 비율,0.373
+cluster_summary,일반수요형,야간 비율,0.133
+cluster_summary,고수요형,평균 대여량,31.18
+cluster_summary,고수요형,평일 평균 대여량,33.30
+cluster_summary,고수요형,주말 평균 대여량,25.86
+cluster_summary,고수요형,출퇴근 시간 비율,0.382
+cluster_summary,고수요형,야간 비율,0.134
+environment_summary,일반수요형,공원 거리(m),1036.82
+environment_summary,일반수요형,지하철 거리(m),551.64
+environment_summary,일반수요형,300m 버스정류장 수,26.98
+environment_summary,고수요형,공원 거리(m),1170.43
+environment_summary,고수요형,지하철 거리(m),387.75
+environment_summary,고수요형,300m 버스정류장 수,32.56

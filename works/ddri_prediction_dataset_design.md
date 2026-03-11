@@ -184,6 +184,18 @@
 - `bus_stop_count_300m`
 - `cluster_label`
 
+### 5.5 운영 해석용 이동/재고 보조 지표
+
+- `same_station_return_count`
+- `same_station_return_ratio`
+- `return_count`
+- `net_flow`
+
+설명:
+- `same_station_return`은 같은 날 같은 대여소에서 빌리고 같은 대여소로 반납한 건수를 의미한다.
+- 이 값은 대여소의 하루 말 재고를 크게 바꾸지 않을 수 있지만, 실제 운행 중 자전거 점유는 발생하므로 이상치로 제거하지 않는다.
+- 따라서 제거 대상이 아니라 `적정 보유 대수`, `순유출입`, `재고 변동성` 해석용 보조 지표로 관리하는 것이 더 적절하다.
+
 ## 6. 군집 label 포함 여부
 
 1차 권장안:
@@ -218,6 +230,8 @@
 - `subway_distance`
 - `bus_stop_count_300m`
 - `cluster_label`
+- `same_station_return_ratio`
+- `net_flow`
 
 ## 8. 현재 보류 항목
 
@@ -225,6 +239,7 @@
 - 대기질 데이터 결합
 - 상업지역/POI 밀도 결합
 - `return_count` 보조 target 활용 여부
+- `same_station_return` 기반 적정 보유 대수 해석 지표 확장
 
 ## 9. 바로 다음 구현 순서
 

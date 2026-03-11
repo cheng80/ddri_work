@@ -1,0 +1,151 @@
+@page {
+  size: A4 landscape;
+  margin: 10mm 12mm;
+}
+
+body {
+  font-family: "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+  color: #111827;
+  line-height: 1.4;
+  font-size: 20px;
+}
+
+h1 {
+  font-size: 34px;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 4px solid #1d4ed8;
+  color: #0f172a;
+}
+
+h2 {
+  font-size: 24px;
+  margin: 8px 0 4px 0;
+  color: #0f172a;
+}
+
+h3 {
+  font-size: 22px;
+  margin: 10px 0 6px 0;
+}
+
+ul {
+  margin: 6px 0 0 0;
+  padding-left: 24px;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 10px 0;
+  font-size: 17px;
+}
+
+th,
+td {
+  border: 1px solid #94a3b8;
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #e0ecff;
+  color: #0f172a;
+}
+
+.page-break {
+  page-break-before: always;
+}
+
+.callout {
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: #eff6ff;
+  border-left: 6px solid #2563eb;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.chart-block {
+  margin: 8px 0 8px 0;
+  text-align: center;
+}
+
+.chart-image {
+  width: 100%;
+  max-height: 118mm;
+  object-fit: contain;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: white;
+}
+
+.map-image {
+  width: 100%;
+  max-height: 120mm;
+  object-fit: contain;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: white;
+}
+
+.appendix-map-image {
+  width: 100%;
+  max-height: 160mm;
+  object-fit: contain;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: white;
+}
+
+.image-row {
+  display: flex;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.half-image {
+  width: calc(50% - 6px);
+  max-height: 102mm;
+  object-fit: contain;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: white;
+}
+
+.chart-block.tight .chart-image {
+  max-height: 92mm;
+}
+
+.chart-block.tight .map-image {
+  max-height: 96mm;
+}
+
+.chart-block.tight .appendix-map-image {
+  max-height: 150mm;
+}
+
+.image-row.tight .half-image {
+  max-height: 80mm;
+}
+
+.compact-list {
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+.compact-list li {
+  margin-bottom: 4px;
+}
+
+.callout.compact {
+  margin-top: 8px;
+  padding: 10px 12px;
+  font-size: 18px;
+}

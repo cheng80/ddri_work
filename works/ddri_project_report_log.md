@@ -520,13 +520,15 @@ K 탐색 결과:
 
 - 고수요형은 일반수요형보다 지하철 접근성이 더 좋고, 주변 버스정류장 수가 더 많다.
 - 즉, 1차 군집의 수요 차이는 대중교통 접근성과 연결될 가능성이 있다.
-- 반면 공원 거리는 고수요형이 더 짧지 않아, 현재 군집은 레저형보다 교통거점형 해석에 더 가깝다.
+- 반면 공원 거리는 고수요형이 더 짧지 않아, 현재 군집은 레저형보다 교통 접근성 차이와 더 가깝게 연결된다.
+- 다만 강남의 상업지구 성격이나 출퇴근형 수요를 직접 설명하려면 업무·상업 POI와 시간대 세부 지표가 추가로 필요하다.
 
 #### 보고서/PPT에 넣을 수 있는 메시지
 
 - “고수요형 대여소는 일반수요형보다 지하철과 버스 접근성이 더 좋은 경향을 보였다.”
 - “현재 군집은 공원 접근성보다 교통 접근성 차이와 더 강하게 연결된다.”
-- “발표 시에는 고수요형을 교통거점 기반 수요 집중 대여소로 설명할 수 있다.”
+- “발표 시에는 고수요형을 교통 접근성이 상대적으로 더 좋은 고수요 대여소군으로 설명한다.”
+- “상업지구·출퇴근형 해석은 추가 POI와 시간대 지표 보강 후 재검토한다.”
 
 #### 필요한 시각화/표
 
@@ -541,6 +543,28 @@ K 탐색 결과:
 - `works/clustering/data/ddri_cluster_representative_stations.csv`
 
 ---
+
+### 발표 패키지 메모
+
+군집화 발표 직전 바로 사용할 수 있는 정리 파일:
+
+- 1페이지 요약:
+  - `works/clustering/ddri_clustering_presentation_summary.md`
+- 슬라이드 문구/발표 멘트:
+  - `works/clustering/ddri_clustering_slide_script.md`
+- 슬라이드용 수치표:
+  - `works/clustering/data/ddri_clustering_slide_tables.csv`
+- 지도:
+  - `works/clustering/maps/ddri_cluster_map_gangnam.html`
+
+권장 발표 흐름:
+
+1. 왜 군집화했는가
+2. 어떤 feature로 군집화했는가
+3. 왜 `k=2`를 선택했는가
+4. 일반수요형 / 고수요형 차이
+5. 교통 접근성 기반 해석
+6. 지도 시각화
 
 ### Decision 009. 1차 ML target은 `Station별 하루 대여량 (rental_count)`으로 고정
 
@@ -865,6 +889,96 @@ K 탐색 결과:
 
 ---
 
+### Decision 015. 동일 대여소 반납은 이상치로 제거하지 않고 운영 해석용 지표로 관리
+
+#### 결정 내용
+
+- `대여 대여소번호 == 반납대여소번호`인 기록은 이상치로 제거하지 않는다.
+- 대신 아래 지표를 별도 보조 feature 후보로 관리한다.
+  - `same_station_return_count`
+  - `same_station_return_ratio`
+  - `return_count`
+  - `net_flow`
+
+#### 쉬운 설명
+
+- 같은 대여소에서 빌리고 같은 대여소로 반납하면, 하루가 끝났을 때 그 대여소의 자전거 수는 크게 달라지지 않을 수 있다.
+- 하지만 그 자전거는 운행 중 실제로 사용되었고, 그 시간 동안은 다른 이용자가 바로 쓸 수 없다.
+- 따라서 이런 기록은 `쓸모없는 이동`이나 `이상치`가 아니라, 대여 수요는 있었지만 재고 변화는 작았던 사례로 보는 것이 맞다.
+
+#### 결정 이유
+
+- 군집화와 수요 예측의 target은 `대여량`이므로, self-return도 실제 수요로 포함하는 것이 자연스럽다.
+- 적정 보유 대수는 단순히 하루 끝 재고만 보는 문제가 아니라, 시간대별 점유와 순간 부족 가능성까지 함께 봐야 한다.
+- self-return을 제거하면 실제 이용 수요를 과소평가할 위험이 있다.
+- 반대로 이 값을 별도 지표로 두면 `수요는 있었지만 순재고 변화는 작았던 날`을 해석하는 데 도움이 된다.
+
+#### 현재 코드 적용 상태
+
+- 현재 전처리에서는 self-return 제거 규칙이 없다.
+- 즉, 결측치/비정상 시간·거리/기준 밖 대여소만 제거하고 self-return 기록은 유지하고 있다.
+
+관련 코드:
+
+- `works/clustering/ddri_station_clustering_baseline.py`
+- `works/prediction/ddri_station_day_dataset_builder.py`
+
+#### 프로젝트 적용 원칙
+
+- 군집화:
+  - self-return을 이상치로 제거하지 않음
+  - 현재 군집화 feature에는 직접 넣지 않았지만, 향후 운영 해석 보조 지표로 확장 가능
+- 예측 데이터셋:
+  - self-return 비율과 순유출입(`net_flow`)을 실제 컬럼으로 생성
+  - 특히 `적정 보유 대수` 해석 단계에서 중요하게 사용할 수 있음
+
+#### 내부 실행 결과
+
+생성 파일:
+
+- `works/prediction/data/ddri_station_day_flow_metrics_summary.csv`
+- `works/prediction/data/ddri_station_day_train_baseline_dataset.csv`
+- `works/prediction/data/ddri_station_day_test_baseline_dataset.csv`
+
+요약:
+
+| dataset | rows | rental_count_sum | return_count_sum | same_station_return_count_sum | same_station_return_ratio_mean | net_flow_mean |
+|---|---:|---:|---:|---:|---:|---:|
+| train_2023_2024 | 114,923 | 1,860,583 | 1,816,593 | 194,456 | 0.092752 | 0.382778 |
+| test_2025 | 56,610 | 825,111 | 802,222 | 88,382 | 0.097062 | 0.404328 |
+
+해석:
+
+- self-return은 학습/테스트 모두 평균적으로 약 9%대 비중을 보였다.
+- 따라서 이 기록을 이상치로 제거하면 실제 이용 수요를 의미 있게 잃게 된다.
+- 반면 `return_count`, `same_station_return_ratio`, `net_flow`를 함께 보면 수요와 재고 변동을 분리해서 해석할 수 있다.
+
+#### 보고서/PPT에 넣을 수 있는 쉬운 메시지
+
+- “같은 대여소에서 빌리고 같은 대여소로 반납한 기록은 이상치로 제거하지 않았다.”
+- “이 경우 하루 말 재고 변화는 작을 수 있지만, 실제 이용 수요와 자전거 점유는 발생했기 때문이다.”
+- “따라서 self-return은 제거 대상이 아니라, 재고 변동성 해석용 보조 지표로 관리하는 것이 더 적절하다.”
+- “실제 station-day 집계 결과 self-return 비율은 평균 약 9%대로 확인되어, 무시하기 어려운 운영 지표였다.”
+
+#### 필요한 시각화/표
+
+- [x] self-return 비율 설명 차트
+- [x] 대여량, 반납량, 순유출입 관계 요약 차트
+- [ ] 적정 보유 대수 해석용 보조 지표 정의 표
+
+#### 반영 문서
+
+- `works/ddri_prediction_dataset_design.md`
+- `works/presentation/ddri_project_temp_presentation.md`
+- `works/presentation/ddri_clustering_presentation_a4_landscape.md`
+
+#### 시각화 저장 경로
+
+- `works/prediction/images/ddri_flow_metrics_summary.png`
+- `works/prediction/images/ddri_same_station_return_ratio_boxplot.png`
+
+---
+
 ## 4. 참고자료 로그
 
 ### 4.1 로컬 참고자료
@@ -943,12 +1057,14 @@ K 탐색 결과:
 - `이용거리(M) <= 0` 제거
 - 공통 대여소 기준에 속하지 않는 대여 대여소 제거
 - 강남구 기준 대여소 마스터에 속하지 않는 반납 대여소 제거
+- 동일 대여소 대여-반납(self-return)은 제거하지 않고 유지
 
 적용 이유:
 
 - 0분 이하 이용시간, 0m 이하 이용거리는 정상 운행으로 보기 어렵다.
 - 이번 군집화 목적은 `강남구 공통 대여소의 내부 이용 패턴` 분석이므로 기준 밖 대여소 이동은 제외한다.
 - 외부 지역 반납 이동은 강남구 내부 패턴 해석을 흐릴 수 있으므로 이상치로 간주한다.
+- self-return은 하루 말 재고 변화는 작을 수 있어도 실제 대여와 자전거 점유가 발생하므로 이상치보다 운영 해석용 지표로 보는 것이 더 적절하다.
 
 #### 적용 파일 및 근거
 
