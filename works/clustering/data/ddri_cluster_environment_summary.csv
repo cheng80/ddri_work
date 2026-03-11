@@ -1,0 +1,3 @@
+cluster,cluster_name,park_distance_m,subway_distance_m,bus_stop_count_300m,bus_stop_count_500m,avg_rental
+0,일반수요형,1036.82,551.64,26.98,60.48,11.91
+1,고수요형,1170.43,387.75,32.56,68.09,31.18

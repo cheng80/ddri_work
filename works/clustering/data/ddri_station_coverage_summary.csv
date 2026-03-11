@@ -1,0 +1,7 @@
+group,station_count
+common_station_master,169
+train_feature_station_count,164
+test_feature_station_count,162
+missing_in_train,5
+missing_in_test,7
+missing_in_both,4

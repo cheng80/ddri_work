@@ -1,0 +1,4 @@
+group_name,rows_before,rows_after,dropped_missing,dropped_nonpositive,dropped_noncommon_rent,dropped_outside_gangnam_return
+test_2025,869397,825111,0,15022,29264,0
+train_2023,1012480,917202,0,68978,26300,0
+train_2024,1014918,943381,0,54057,17480,0
