@@ -95,10 +95,96 @@ def build_ratio_boxplot(df: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def build_correlation_heatmap(df: pd.DataFrame) -> None:
+    corr_cols = [
+        "rental_count",
+        "return_count",
+        "same_station_return_ratio",
+        "net_flow",
+        "temperature_mean",
+        "humidity_mean",
+        "precipitation_sum",
+    ]
+    label_map = {
+        "rental_count": "대여량",
+        "return_count": "반납량",
+        "same_station_return_ratio": "self-return 비율",
+        "net_flow": "순유출입",
+        "temperature_mean": "평균 기온",
+        "humidity_mean": "평균 습도",
+        "precipitation_sum": "강수량 합",
+    }
+    corr_df = df[corr_cols].corr().round(2).rename(index=label_map, columns=label_map)
+
+    fig, ax = plt.subplots(figsize=(8, 6), dpi=160)
+    sns.heatmap(corr_df, annot=True, cmap="YlGnBu", fmt=".2f", linewidths=0.5, ax=ax)
+    ax.set_title("예측 입력/운영 지표 상관관계 히트맵")
+    ax.set_xlabel("")
+    ax.set_ylabel("")
+    plt.tight_layout()
+    fig.savefig(IMG_DIR / "ddri_prediction_feature_correlation_heatmap.png", bbox_inches="tight")
+    plt.close(fig)
+
+
+def build_holiday_weekend_comparison(df: pd.DataFrame) -> None:
+    holiday_df = (
+        df.groupby("is_holiday")["rental_count"]
+        .mean()
+        .reset_index()
+        .replace({"is_holiday": {0: "비공휴일", 1: "공휴일"}})
+        .rename(columns={"is_holiday": "구분", "rental_count": "평균 대여량"})
+    )
+    weekend_df = (
+        df.groupby("is_weekend")["rental_count"]
+        .mean()
+        .reset_index()
+        .replace({"is_weekend": {0: "평일", 1: "주말"}})
+        .rename(columns={"is_weekend": "구분", "rental_count": "평균 대여량"})
+    )
+
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.5), dpi=160)
+    sns.barplot(data=holiday_df, x="구분", y="평균 대여량", hue="구분", palette="Set2", legend=False, ax=axes[0])
+    axes[0].set_title("공휴일/비공휴일 평균 대여량")
+    axes[0].set_xlabel("")
+    axes[0].set_ylabel("평균 대여량")
+    sns.barplot(data=weekend_df, x="구분", y="평균 대여량", hue="구분", palette="Set3", legend=False, ax=axes[1])
+    axes[1].set_title("평일/주말 평균 대여량")
+    axes[1].set_xlabel("")
+    axes[1].set_ylabel("평균 대여량")
+    plt.tight_layout()
+    fig.savefig(IMG_DIR / "ddri_holiday_weekend_rental_comparison.png", bbox_inches="tight")
+    plt.close(fig)
+
+
+def build_monthly_target_trend(df: pd.DataFrame) -> None:
+    plot_df = df.copy()
+    plot_df["date"] = pd.to_datetime(plot_df["date"])
+    plot_df["month"] = plot_df["date"].dt.to_period("M").astype(str)
+    monthly = (
+        plot_df.groupby(["dataset", "month"])["rental_count"]
+        .mean()
+        .reset_index(name="avg_rental_count")
+    )
+
+    fig, ax = plt.subplots(figsize=(14, 4.5), dpi=160)
+    sns.lineplot(data=monthly, x="month", y="avg_rental_count", hue="dataset", marker="o", ax=ax)
+    ax.set_title("월별 평균 대여량 추이")
+    ax.set_xlabel("월")
+    ax.set_ylabel("평균 대여량")
+    ax.tick_params(axis="x", rotation=45)
+    ax.legend(title="데이터셋")
+    plt.tight_layout()
+    fig.savefig(IMG_DIR / "ddri_monthly_avg_rental_trend.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def main():
     df = load_labeled_frames()
     build_summary_chart(df)
     build_ratio_boxplot(df)
+    build_correlation_heatmap(df)
+    build_holiday_weekend_comparison(df)
+    build_monthly_target_trend(df)
 
 
 if __name__ == "__main__":

@@ -96,13 +96,26 @@ pdf_options:
 
 <ul class="compact-list">
   <li><code>k = 2</code>에서 silhouette가 가장 높음</li>
-  <li>1차 baseline으로 가장 분리도가 좋은 구조</li>
-  <li>발표 기준으로도 설명력이 가장 안정적임</li>
+  <li>1차 baseline에서는 분리도와 설명력이 가장 안정적임</li>
 </ul>
 
 <div class="page-break"></div>
 
-# 4. 군집 결과와 분포
+# 4. 입력 특성과 시간대 패턴
+
+<div class="image-row heatmap-row">
+  <img class="half-image" src="../../01_clustering/07_images/ddri_feature_correlation_heatmap.png" alt="feature correlation heatmap">
+  <img class="half-image" src="../../01_clustering/07_images/ddri_weekday_hour_heatmap.png" alt="weekday hour heatmap">
+</div>
+
+<ul class="compact-list">
+  <li>대여량 관련 feature끼리 높은 상관을 보이며, 수요 규모 축이 핵심 분리축임</li>
+  <li>시간대 패턴은 아침·퇴근 시간대 피크가 뚜렷해 강남구 수요 배경을 설명함</li>
+</ul>
+
+<div class="page-break"></div>
+
+# 5. 군집 결과와 분포
 
 | 군집 | 해석 | 평균 대여량 | 평일 평균 | 주말 평균 | 출퇴근 비율 | 야간 비율 |
 |---|---|---:|---:|---:|---:|---:|
@@ -122,28 +135,35 @@ pdf_options:
 
 <div class="page-break"></div>
 
-# 5. 환경 기반 해석 고도화
+# 6. 군집 프로파일
 
-| 군집 | 공원 거리(m) | 지하철 거리(m) | 300m 버스정류장 수 | 평균 대여량 |
-|---|---:|---:|---:|---:|
-| 일반수요형 | 1036.82 | 551.64 | 26.98 | 11.91 |
-| 고수요형 | 1170.43 | 387.75 | 32.56 | 31.18 |
-
-<div class="chart-block tight">
-  <img class="chart-image" src="../../01_clustering/03_environment/images/ddri_cluster_environment_comparison.png" alt="cluster environment comparison">
+<div class="chart-block">
+  <img class="chart-image" src="../../01_clustering/07_images/ddri_cluster_profile_heatmap.png" alt="cluster profile heatmap">
 </div>
 
 <ul class="compact-list">
-  <li>고수요형은 지하철 접근성이 더 좋음</li>
-  <li>고수요형은 300m 내 버스정류장 수도 더 많음</li>
-  <li>공원 접근성 차이는 핵심 설명 변수로 보기 어려움</li>
+  <li>군집 1은 평균 대여량, 평일 평균, 주말 평균이 모두 높음</li>
+  <li>이번 baseline의 주된 분리축은 수요 규모 차이로 해석 가능</li>
 </ul>
+
+<div class="page-break"></div>
+
+# 7. 환경 기반 해석 고도화
+
+## 핵심 수치
+
+- 일반수요형: 지하철 거리 `551.64m`, 300m 버스정류장 수 `26.98`
+- 고수요형: 지하철 거리 `387.75m`, 300m 버스정류장 수 `32.56`
+
+<div class="chart-block">
+  <img class="chart-image" src="../../01_clustering/03_environment/images/ddri_cluster_environment_comparison.png" alt="cluster environment comparison">
+</div>
 
 <div class="callout compact">환경 해석의 현재 결론 = 고수요형은 교통 접근성이 더 우수한 대여소군</div>
 
 <div class="page-break"></div>
 
-# 6. 군집 분포 지도
+# 8. 군집 분포 지도
 
 <div class="chart-block tight">
   <img class="map-image" src="./ddri_cluster_static_map.png" alt="cluster static map">
@@ -151,7 +171,7 @@ pdf_options:
 
 <ul class="compact-list">
   <li>고수요형 대표: <code>매봉역 3번출구앞</code>, <code>수서역 5번출구</code>, <code>대모산입구역 4번 출구 앞</code></li>
-  <li>일반수요형 대표: <code>압구정파출소 앞</code>, <code>도심공항타워 앞</code>, <code>천주교 대치 2동 교회 옆</code></li>
+  <li>일반수요형 대표: <code>압구정파출소 앞</code>, <code>도심공항타워 앞</code></li>
   <li>고수요형이 교통 접근성이 좋은 지점 주변에 상대적으로 분포</li>
   <li>인터랙티브 원본: <code>works/01_clustering/04_maps/ddri_cluster_map_gangnam.html</code></li>
 </ul>
@@ -166,12 +186,12 @@ pdf_options:
 
 <ul class="compact-list">
   <li>발표 중 전체 분포를 크게 보여줄 때 사용하는 보조 슬라이드</li>
-  <li>본문 6페이지의 요약형 지도 설명 뒤에 이어서 제시</li>
+  <li>본문 8페이지의 요약형 지도 설명 뒤에 이어서 제시</li>
 </ul>
 
 <div class="page-break"></div>
 
-# 7. 결론과 다음 단계
+# 9. 결론과 다음 단계
 
 ## 결론
 

@@ -1195,3 +1195,73 @@ K 탐색 결과:
 
 - 현재 없음
 - 이후 작업 중 필수 기준이나 데이터가 부족하면 여기에 누적 기록
+
+---
+
+## 8. 문서화/근거 차트 정책
+
+### Decision 015. 대표 노트북은 설명형 실험 문서로 유지하고, 근거 차트는 선정 이유 설명용으로 확장
+
+#### 결정 내용
+
+- 대표 노트북은 실행 코드만 있는 형태가 아니라, 충분한 마크다운 설명과 코드 주석을 포함한 `설명형 실험 문서`로 관리한다.
+- 전처리, 군집화, 환경 해석, 예측 데이터셋 단계별로 근거 차트를 최대한 확장하되, `왜 이 기준을 선택했는지`를 설명하는 차트를 우선한다.
+- 이 기준의 정본은 아래 문서로 고정한다.
+  - `works/00_overview/07_ddri_notebook_and_evidence_chart_policy.md`
+
+#### 결정 이유
+
+- 현재 프로젝트는 개인 메모가 아니라 팀 단위 재현, 발표, 인수인계가 가능한 구조가 필요하다.
+- 코드만 있는 노트북은 만든 사람은 이해하지만, 읽는 사람은 흐름을 따라가기 어렵다.
+- 발표/보고서에서도 결과 차트만으로는 부족하고, 데이터 선정 및 방법 선택의 근거 차트가 함께 있어야 설명력이 올라간다.
+
+#### 보고서/PPT에 넣을 수 있는 메시지
+
+- “이 프로젝트는 재실행용 스크립트와 설명형 노트북을 분리해 재현성과 열람성을 함께 확보했다.”
+- “차트는 결과 제시용뿐 아니라 데이터 선정과 전처리 기준의 근거를 설명하는 용도로 확장했다.”
+
+#### 필요한 시각화/표
+
+- [x] 전처리 전후 비교 차트
+- [x] 제거 사유별 차트
+- [x] self-return / 순유출입 차트
+- [ ] 군집 입력 특성 상관관계 히트맵
+- [ ] 군집 프로파일 히트맵
+- [ ] 휴일/주말 비교 차트
+- [ ] 예측 입력 상관관계 히트맵
+
+#### 관련 정책 문서
+
+- `works/00_overview/07_ddri_notebook_and_evidence_chart_policy.md`
+
+### Decision 016. 군집화/예측 baseline에 상관관계, 프로파일, 시계열 근거 차트를 추가
+
+#### 결정 내용
+
+- 기존의 결과 소개 차트 외에, 선정 이유를 설명하는 근거 차트를 추가 생성했다.
+- 군집화 파트에는 아래 차트를 추가했다.
+  - 입력 특성 상관관계 히트맵
+  - 군집 프로파일 히트맵
+  - 군집별 대여소 수 차트
+  - 월별 대여 건수 추이
+  - 요일-시간대 히트맵
+- 예측 데이터셋 파트에는 아래 차트를 추가했다.
+  - 예측 입력/운영 지표 상관관계 히트맵
+  - 공휴일/비공휴일, 평일/주말 평균 대여량 비교
+  - 월별 평균 대여량 추이
+
+#### 결정 이유
+
+- 기존 차트만으로는 `왜 이 feature를 쓰는지`, `왜 k=2를 유지하는지`, `왜 운영 보조 지표를 남겼는지` 설명이 부족했다.
+- heatmap, 분포, 시계열 추이 차트를 함께 두면 발표와 보고서에서 해석의 근거를 더 직접적으로 제시할 수 있다.
+
+#### 시각화 저장 경로
+
+- `works/01_clustering/07_images/ddri_feature_correlation_heatmap.png`
+- `works/01_clustering/07_images/ddri_cluster_profile_heatmap.png`
+- `works/01_clustering/07_images/ddri_cluster_size.png`
+- `works/01_clustering/07_images/ddri_monthly_rental_trend.png`
+- `works/01_clustering/07_images/ddri_weekday_hour_heatmap.png`
+- `works/03_prediction/03_images/ddri_prediction_feature_correlation_heatmap.png`
+- `works/03_prediction/03_images/ddri_holiday_weekend_rental_comparison.png`
+- `works/03_prediction/03_images/ddri_monthly_avg_rental_trend.png`

@@ -11,6 +11,7 @@
 3. `03_ddri_prediction_target_definition.md`
 4. `04_ddri_prediction_dataset_design.md`
 5. `05_ddri_workspace_structure_guide.md`
+6. `07_ddri_notebook_and_evidence_chart_policy.md`
 
 직접 열람 링크:
 
@@ -19,5 +20,6 @@
 - [03_ddri_prediction_target_definition.md](/Users/cheng80/Desktop/ddri_work/works/00_overview/03_ddri_prediction_target_definition.md)
 - [04_ddri_prediction_dataset_design.md](/Users/cheng80/Desktop/ddri_work/works/00_overview/04_ddri_prediction_dataset_design.md)
 - [05_ddri_workspace_structure_guide.md](/Users/cheng80/Desktop/ddri_work/works/00_overview/05_ddri_workspace_structure_guide.md)
+- [07_ddri_notebook_and_evidence_chart_policy.md](/Users/cheng80/Desktop/ddri_work/works/00_overview/07_ddri_notebook_and_evidence_chart_policy.md)
 
 이 폴더를 프로젝트 전체 기준 문서의 실제 경로로 사용한다.

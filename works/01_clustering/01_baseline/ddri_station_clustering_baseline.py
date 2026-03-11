@@ -271,6 +271,122 @@ def save_kmeans_outputs(train_features):
     return final_k, k_search_df, cluster_summary
 
 
+def save_feature_correlation_heatmap(train_features: pd.DataFrame) -> None:
+    corr_df = train_features[FEATURE_COLS].corr().round(2)
+    rename_map = {col: FEATURE_LABELS[col] for col in FEATURE_COLS}
+    corr_df = corr_df.rename(index=rename_map, columns=rename_map)
+
+    fig, ax = plt.subplots(figsize=(9, 7))
+    sns.heatmap(corr_df, annot=True, cmap="YlGnBu", fmt=".2f", linewidths=0.5, ax=ax)
+    ax.set_title("군집화 입력 특성 상관관계 히트맵")
+    ax.set_xlabel("")
+    ax.set_ylabel("")
+    plt.tight_layout()
+    fig.savefig(OUTPUT_IMG_DIR / "ddri_feature_correlation_heatmap.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def save_cluster_profile_heatmap(cluster_summary: pd.DataFrame) -> None:
+    heatmap_df = cluster_summary.copy()
+    heatmap_df.index = [f"군집 {idx}" for idx in heatmap_df.index]
+    heatmap_df = heatmap_df.rename(columns=FEATURE_LABELS)
+
+    fig, ax = plt.subplots(figsize=(10, 4.5))
+    sns.heatmap(heatmap_df, annot=True, cmap="OrRd", fmt=".2f", linewidths=0.5, ax=ax)
+    ax.set_title("군집별 주요 특성 프로파일 히트맵")
+    ax.set_xlabel("특성")
+    ax.set_ylabel("군집")
+    plt.tight_layout()
+    fig.savefig(OUTPUT_IMG_DIR / "ddri_cluster_profile_heatmap.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def save_cluster_size_chart(train_features: pd.DataFrame) -> None:
+    cluster_count_df = (
+        train_features["cluster"]
+        .value_counts()
+        .sort_index()
+        .rename_axis("cluster")
+        .reset_index(name="station_count")
+    )
+    cluster_count_df["cluster_label"] = cluster_count_df["cluster"].map(lambda x: f"군집 {x}")
+
+    fig, ax = plt.subplots(figsize=(6, 4.5))
+    sns.barplot(
+        data=cluster_count_df,
+        x="cluster_label",
+        y="station_count",
+        hue="cluster_label",
+        palette="Set2",
+        legend=False,
+        ax=ax,
+    )
+    ax.set_title("군집별 대여소 수")
+    ax.set_xlabel("군집")
+    ax.set_ylabel("대여소 수")
+    for patch, value in zip(ax.patches, cluster_count_df["station_count"]):
+        ax.annotate(f"{value}", (patch.get_x() + patch.get_width() / 2, patch.get_height()), ha="center", va="bottom")
+    plt.tight_layout()
+    fig.savefig(OUTPUT_IMG_DIR / "ddri_cluster_size.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def save_weekday_hour_heatmap(train_df: pd.DataFrame) -> None:
+    plot_df = train_df.copy()
+    plot_df["weekday"] = plot_df["대여일시"].dt.dayofweek
+    plot_df["hour"] = plot_df["대여일시"].dt.hour
+    weekday_labels = {
+        0: "월",
+        1: "화",
+        2: "수",
+        3: "목",
+        4: "금",
+        5: "토",
+        6: "일",
+    }
+    heatmap_df = (
+        plot_df.groupby(["weekday", "hour"])
+        .size()
+        .unstack(fill_value=0)
+        .reindex(index=range(7), fill_value=0)
+        .rename(index=weekday_labels)
+    )
+
+    fig, ax = plt.subplots(figsize=(14, 4.5))
+    sns.heatmap(heatmap_df, cmap="Blues", ax=ax)
+    ax.set_title("학습 구간 요일-시간대별 대여 건수 히트맵")
+    ax.set_xlabel("시간")
+    ax.set_ylabel("요일")
+    plt.tight_layout()
+    fig.savefig(OUTPUT_IMG_DIR / "ddri_weekday_hour_heatmap.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def save_monthly_rental_trend(train_df: pd.DataFrame, test_df: pd.DataFrame) -> None:
+    frames = []
+    for label, df in [("학습(2023~2024)", train_df), ("테스트(2025)", test_df)]:
+        monthly = (
+            df.assign(month=df["대여일시"].dt.to_period("M").astype(str))
+            .groupby("month")
+            .size()
+            .reset_index(name="rental_count")
+        )
+        monthly["dataset"] = label
+        frames.append(monthly)
+    plot_df = pd.concat(frames, ignore_index=True)
+
+    fig, ax = plt.subplots(figsize=(14, 5))
+    sns.lineplot(data=plot_df, x="month", y="rental_count", hue="dataset", marker="o", ax=ax)
+    ax.set_title("월별 대여 건수 추이")
+    ax.set_xlabel("월")
+    ax.set_ylabel("대여 건수")
+    ax.tick_params(axis="x", rotation=45)
+    ax.legend(title="구간")
+    plt.tight_layout()
+    fig.savefig(OUTPUT_IMG_DIR / "ddri_monthly_rental_trend.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
 def save_coverage_summary(master_ids, train_ids, test_ids):
     summary = pd.DataFrame(
         [
@@ -322,6 +438,12 @@ def main():
     test_features.to_csv(OUTPUT_DATA_DIR / "ddri_station_cluster_features_test_2025.csv", index=False)
 
     final_k, k_search_df, cluster_summary = save_kmeans_outputs(train_features)
+    labeled_train_features = pd.read_csv(OUTPUT_DATA_DIR / "ddri_station_cluster_features_train_with_labels.csv")
+    save_feature_correlation_heatmap(train_features)
+    save_cluster_profile_heatmap(cluster_summary)
+    save_cluster_size_chart(labeled_train_features)
+    save_weekday_hour_heatmap(train_df)
+    save_monthly_rental_trend(train_df, test_df)
     save_coverage_summary(
         set(common_station_ids),
         set(train_features["station_id"]),

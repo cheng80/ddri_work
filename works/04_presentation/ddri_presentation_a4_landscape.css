@@ -43,6 +43,8 @@ table {
   border-collapse: collapse;
   margin: 8px 0 10px 0;
   font-size: 17px;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 th,
@@ -70,11 +72,15 @@ th {
   border-radius: 8px;
   font-size: 20px;
   font-weight: 700;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .chart-block {
   margin: 8px 0 8px 0;
   text-align: center;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .chart-image {
@@ -108,6 +114,8 @@ th {
   display: flex;
   gap: 12px;
   margin: 8px 0;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .half-image {
@@ -135,9 +143,20 @@ th {
   max-height: 80mm;
 }
 
+.image-row.heatmap-row {
+  margin: 6px 0 4px 0;
+  gap: 10px;
+}
+
+.image-row.heatmap-row .half-image {
+  max-height: 104mm;
+}
+
 .compact-list {
   margin-top: 4px;
   font-size: 18px;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .compact-list li {

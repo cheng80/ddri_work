@@ -82,8 +82,57 @@ def build_cleaning_charts():
     plt.close(fig)
 
 
+def build_duplicate_chart():
+    dup_summary = pd.read_csv(DATA_DIR / "ddri_duplicate_check_summary.csv")
+    plot_df = pd.DataFrame(
+        [
+            {
+                "dataset": "전체(36개 파일)",
+                "중복률(%)": round((dup_summary["dup_all"].iloc[0] / dup_summary["rows"].iloc[0]) * 100, 4),
+            }
+        ]
+    )
+
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    sns.barplot(data=plot_df, x="dataset", y="중복률(%)", palette="crest", ax=ax)
+    ax.set_title("데이터셋별 중복 로그 비율")
+    ax.set_xlabel("데이터셋")
+    ax.set_ylabel("중복률(%)")
+    for patch, value in zip(ax.patches, plot_df["중복률(%)"]):
+        ax.annotate(f"{value:.4f}", (patch.get_x() + patch.get_width() / 2, patch.get_height()), ha="center", va="bottom")
+    plt.tight_layout()
+    fig.savefig(IMG_DIR / "ddri_duplicate_rate.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def build_outlier_chart():
+    outlier_df = pd.read_csv(DATA_DIR / "ddri_feature_iqr_outlier_summary.csv")
+    label_map = {
+        "avg_rental": "평균 대여량",
+        "rental_std": "대여량 표준편차",
+        "weekday_avg": "평일 평균",
+        "weekend_avg": "주말 평균",
+        "peak_ratio": "출퇴근 비율",
+        "night_ratio": "야간 비율",
+        "weekday_weekend_gap": "평일-주말 차이",
+    }
+    outlier_df["feature_label"] = outlier_df["feature"].map(label_map).fillna(outlier_df["feature"])
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    sns.barplot(data=outlier_df, x="feature_label", y="outlier_count", palette="flare", ax=ax)
+    ax.set_title("IQR 기준 특성별 극단치 후보 수")
+    ax.set_xlabel("특성")
+    ax.set_ylabel("극단치 후보 수")
+    ax.tick_params(axis="x", rotation=25)
+    plt.tight_layout()
+    fig.savefig(IMG_DIR / "ddri_feature_iqr_outlier_counts.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main():
     build_cleaning_charts()
+    build_duplicate_chart()
+    build_outlier_chart()
     print("saved report charts")
 
 

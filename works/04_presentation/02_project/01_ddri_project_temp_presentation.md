@@ -170,6 +170,10 @@ pdf_options:
   <img class="chart-image" src="../../03_prediction/03_images/ddri_flow_metrics_summary.png" alt="flow metrics summary">
 </div>
 
+<div class="chart-block tight">
+  <img class="chart-image" src="../../03_prediction/03_images/ddri_prediction_feature_correlation_heatmap.png" alt="prediction feature correlation heatmap">
+</div>
+
 ## 보류 항목
 
 - 생활인구
