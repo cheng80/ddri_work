@@ -1,400 +1,291 @@
-# Ddri 2차 군집화 추가 지표 후보 정리
+# Ddri 2차 군집화 지구판단 피처 후보 정리
 
 작성일: 2026-03-12  
-목적: 1차 군집화에 없는 추가 지표 후보를 정리하고, 각 지표의 산출 방식과 고저차 데이터 확보 경로를 명확히 한다.
+목적: 2차 군집화를 `운영 성격`보다 `지구 판단` 중심으로 재설계하기 위해, 우선순위가 있는 피처 후보를 정리한다.
 
-## 1. 범위
+## 1. 왜 재편하는가
 
-이 문서는 아래 6개 추가 지표를 대상으로 한다.
+1차 군집화는 이용 패턴 기반 baseline으로는 의미가 있었지만, 발표에서 더 중요한 질문은 아래에 가깝다.
 
-- `same_station_return_ratio` (동일 대여소 반납 비율)
-- `net_flow_mean` (평균 순유출입)
-- `abs_net_flow_mean` (평균 절대 순유출입)
-- `morning_peak_ratio` (아침 출근 시간대 비율)
-- `evening_peak_ratio` (저녁 퇴근 시간대 비율)
-- `lunch_ratio` (점심 시간대 비율)
+- 이 대여소는 주거지 성격인가
+- 업무지구 / 상업지구 성격인가
+- 환승 거점인가
+- 생활권 / 레저권 성격인가
 
-또한 고저차 관련 지표를 만들기 위한 데이터 확보 방안도 함께 정리한다.
+이 질문에 답하려면 `출발 패턴`만으로는 부족하고, `도착 패턴`과 `시간대별 순유입`, `입지 환경`을 더 직접적으로 봐야 한다.
 
-## 2. 공통 원천 데이터
+따라서 2차 군집화는 `지구판단 중심 피처 세트`로 재구성하는 것이 더 적절하다.
 
-### 2.1 원천 파일
+## 2. 기본 원칙
 
-- `3조 공유폴더/2023 강남구 따릉이 이용정보/*.csv`
-- `3조 공유폴더/2024 강남구 따릉이 이용정보/*.csv`
-- `3조 공유폴더/2025 강남구 따릉이 이용정보/*.csv`
+- 1차 군집화의 기존 7개 피처는 baseline으로 유지한다.
+- 2차 군집화는 `지구판단용 신규 피처`를 우선 검토한다.
+- 지금 만든 운영 성격 피처 6개는 버리지 않되, `주력`이 아니라 `보조`로 둔다.
+- 이후 고저차 데이터를 붙일 경우에도, 운영 피처 중심이 아니라 `지구판단용 피처 세트` 위에 결합하는 것이 맞다.
 
-### 2.2 주요 원천 컬럼
+## 3. 우선순위 체계
 
-- `대여일시`
-- `대여 대여소번호`
-- `반납일시`
-- `반납대여소번호`
-- `이용시간(분)`
-- `이용거리(M)`
+### 우선순위 1. 발표용 주력 피처
 
-### 2.3 공통 전처리 기준
+발표에서 `이 대여소가 어떤 지구 성격인가`를 설명할 때 가장 직접적인 후보다.
 
-현재 프로젝트의 baseline 전처리 기준을 그대로 따른다.
+### 우선순위 2. 지구판단 보조 피처
 
-- `대여일시`, `반납일시`, `대여 대여소번호`, `반납대여소번호`, `이용시간(분)`, `이용거리(M)` 결측 제거
-- `이용시간(분) > 0`
-- `이용거리(M) > 0`
-- 대여 대여소는 공통 대여소 마스터에 포함된 경우만 유지
-- 반납 대여소는 해당 연도 강남구 유효 대여소 마스터에 포함된 경우만 유지
+주력 피처만으로 부족한 해석을 보완하는 용도다.
 
-관련 코드:
+### 우선순위 3. 고도화 / 후속 결합 피처
 
-- [ddri_station_clustering_baseline.py](/Users/cheng80/Desktop/ddri_work/works/01_clustering/01_baseline/ddri_station_clustering_baseline.py)
-- [ddri_station_day_dataset_builder.py](/Users/cheng80/Desktop/ddri_work/works/03_prediction/04_scripts/ddri_station_day_dataset_builder.py)
+당장 발표보다 이후 정교화에 더 적합한 피처다.
 
-## 3. 추가 지표 정의
+## 4. 우선순위 1. 발표용 주력 피처
 
-### 3.1 요약 표
-
-| 컬럼명 | 한글명 | 최종 grain | 원천 컬럼 | 산출 개념 |
-|---|---|---|---|---|
-| `same_station_return_ratio` | 동일 대여소 반납 비율 | `station` | `대여일시`, `대여 대여소번호`, `반납일시`, `반납대여소번호` | 같은 대여소에서 빌리고 같은 날 같은 대여소로 반납한 비율 |
-| `net_flow_mean` | 평균 순유출입 | `station` | `대여일시`, `대여 대여소번호`, `반납일시`, `반납대여소번호` | 일 단위 대여량에서 일 단위 반납량을 뺀 값의 평균 |
-| `abs_net_flow_mean` | 평균 절대 순유출입 | `station` | `대여일시`, `대여 대여소번호`, `반납일시`, `반납대여소번호` | 일 단위 순유출입 절댓값의 평균 |
-| `morning_peak_ratio` | 아침 출근 시간대 비율 | `station` | `대여일시`, `대여 대여소번호` | 전체 대여 중 아침 시간대 대여 비중 |
-| `evening_peak_ratio` | 저녁 퇴근 시간대 비율 | `station` | `대여일시`, `대여 대여소번호` | 전체 대여 중 저녁 시간대 대여 비중 |
-| `lunch_ratio` | 점심 시간대 비율 | `station` | `대여일시`, `대여 대여소번호` | 전체 대여 중 점심 시간대 대여 비중 |
-
-### 3.2 이벤트 단위 중간 컬럼
-
-아래 중간 컬럼을 먼저 만든다.
-
-- `station_id` = `대여 대여소번호`
-- `return_station_id` = `반납대여소번호`
-- `date` = `대여일시`의 날짜 부분
-- `return_date` = `반납일시`의 날짜 부분
-- `hour` = `대여일시`의 시(hour)
-
-## 4. 지표별 산출 방식
-
-### 4.1 `same_station_return_ratio` | 동일 대여소 반납 비율
+### 4.1 `arrival_7_10_ratio` | 7~10시 도착 비율
 
 정의:
 
-- 특정 대여소에서 발생한 전체 대여 중,
-- 같은 날 같은 대여소로 다시 반납된 건의 비율
+- 전체 반납 중 `07:00~10:00` 시간대 도착 비율
 
-이벤트 단위 조건:
+왜 중요한가:
 
-- `station_id == return_station_id`
-- `date == return_date`
+- 아침 시간대 도착이 많다는 것은 사람들이 그 지점으로 출근하거나 이동해 모인다는 뜻일 수 있다.
+- 업무지구 / 상업업무 혼합지구 해석에 직접적이다.
 
-먼저 일 단위 지표를 만든다.
+해석 예시:
 
-- `rental_count(station_id, date)` = 해당 날짜 해당 대여소 출발 대여 건수
-- `same_station_return_count(station_id, date)` = 위 조건을 만족하는 건수
+- 높음: 아침 도착 집중형, 업무지구 후보
 
-그다음 군집화용 `station` 단위로 집계한다.
-
-권장 식:
-
-```text
-same_station_return_ratio
-= sum(same_station_return_count by station_id)
-  / sum(rental_count by station_id)
-```
-
-설명:
-
-- 일별 평균 비율보다 기간 전체 합 비율을 권장한다.
-- 이유는 소규모 대여소에서 일별 비율이 과도하게 흔들리는 문제를 줄일 수 있기 때문이다.
-
-### 4.2 `net_flow_mean` | 평균 순유출입
+### 4.2 `arrival_11_14_ratio` | 11~14시 도착 비율
 
 정의:
 
-- 대여소 기준으로 하루 동안 얼마나 자전거가 빠져나갔는지 또는 들어왔는지의 평균
+- 전체 반납 중 `11:00~14:00` 시간대 도착 비율
 
-먼저 일 단위 지표를 만든다.
+왜 중요한가:
 
-- `rental_count(station_id, date)` = 해당 날짜 해당 대여소 출발 대여 건수
-- `return_count(station_id, date)` = 해당 날짜 해당 대여소 반납 건수
-- `net_flow(station_id, date) = rental_count - return_count`
+- 점심 시간대 도착이 많으면 오피스 밀집 지역, 상업지구, 생활편의 중심지 가능성을 시사한다.
 
-그다음 군집화용 `station` 단위로 집계한다.
+해석 예시:
 
-```text
-net_flow_mean
-= mean(net_flow by station_id over all dates)
-```
+- 높음: 점심 이동 도착형, 상권 / 오피스권 후보
 
-해석:
-
-- 양수: 그 대여소에서 평균적으로 더 많이 빠져나감
-- 음수: 그 대여소로 평균적으로 더 많이 들어옴
-
-### 4.3 `abs_net_flow_mean` | 평균 절대 순유출입
+### 4.3 `arrival_17_20_ratio` | 17~20시 도착 비율
 
 정의:
 
-- 방향은 무시하고, 하루 기준 재고 변동이 얼마나 큰지 보는 지표
+- 전체 반납 중 `17:00~20:00` 시간대 도착 비율
 
-먼저 일 단위 지표를 만든다.
+왜 중요한가:
 
-```text
-abs_net_flow(station_id, date) = abs(net_flow(station_id, date))
-```
+- 저녁 시간대 도착이 많다는 것은 퇴근 후 해당 지역으로 돌아오는 흐름일 수 있다.
+- 주거지 성격을 설명하는 데 더 직접적이다.
 
-그다음 군집화용 `station` 단위로 집계한다.
+해석 예시:
 
-```text
-abs_net_flow_mean
-= mean(abs_net_flow by station_id over all dates)
-```
+- 높음: 저녁 도착 집중형, 주거지구 후보
 
-해석:
-
-- `net_flow_mean`은 방향성을 본다.
-- `abs_net_flow_mean`은 변동 강도를 본다.
-
-### 4.4 `morning_peak_ratio` | 아침 출근 시간대 비율
+### 4.4 `morning_net_inflow` | 아침 순유입
 
 정의:
 
-- 전체 대여 중 아침 출근 시간대에 발생한 대여 비율
+- `07:00~10:00` 시간대의 `반납량 - 대여량`
 
-권장 시간대:
+왜 중요한가:
 
-- `07:00`, `08:00`, `09:00`
+- 단순 도착 비율보다 더 직접적으로 “그 시간대에 자전거가 들어오는 지점인가”를 보여준다.
 
-산출 식:
+해석 예시:
 
-```text
-morning_peak_ratio
-= count(hour in [7, 8, 9] by station_id)
-  / count(all rentals by station_id)
-```
+- 양수: 아침 시간대 유입 거점, 업무지구 후보
+- 음수: 아침 시간대 유출 거점, 주거지 출발지 후보
 
-해석:
-
-- 출근형 대여소일수록 값이 높을 가능성이 있다.
-
-### 4.5 `evening_peak_ratio` | 저녁 퇴근 시간대 비율
+### 4.5 `evening_net_inflow` | 저녁 순유입
 
 정의:
 
-- 전체 대여 중 저녁 퇴근 시간대에 발생한 대여 비율
+- `17:00~20:00` 시간대의 `반납량 - 대여량`
 
-권장 시간대:
+왜 중요한가:
 
-- `18:00`, `19:00`, `20:00`
+- 퇴근 시간대의 도착 / 출발 구조를 직접적으로 보여준다.
 
-산출 식:
+해석 예시:
 
-```text
-evening_peak_ratio
-= count(hour in [18, 19, 20] by station_id)
-  / count(all rentals by station_id)
-```
+- 양수: 저녁 시간대 유입 거점, 주거지 후보
+- 음수: 저녁 시간대 유출 거점, 업무지구 출발지 후보
 
-해석:
+## 5. 우선순위 2. 지구판단 보조 피처
 
-- 퇴근형 또는 저녁 이동 집중 대여소 분리에 도움이 된다.
+이 피처들은 지금 이미 생성했거나 바로 만들 수 있지만, `지구판단의 주력`보다는 보조 축에 가깝다.
 
-### 4.6 `lunch_ratio` | 점심 시간대 비율
+### 5.1 `morning_peak_ratio`
 
-정의:
+- 출발 기준 아침 시간대 비율
+- 주거지 `출발` 성격을 보완하는 데 유용
 
-- 전체 대여 중 점심 시간대에 발생한 대여 비율
+### 5.2 `evening_peak_ratio`
 
-권장 시간대:
+- 출발 기준 저녁 시간대 비율
+- 업무지구 `퇴근 출발` 성격을 보완하는 데 유용
 
-- `11:00`, `12:00`, `13:00`
+### 5.3 `lunch_ratio`
 
-산출 식:
+- 출발 기준 점심 시간대 비율
+- 상권 / 오피스권 내 점심 이동 해석 보조용
 
-```text
-lunch_ratio
-= count(hour in [11, 12, 13] by station_id)
-  / count(all rentals by station_id)
-```
+### 5.4 `net_flow_mean`
 
-해석:
+- 전체 일평균 순유출입
+- 도착 시간대 피처와 함께 보면 주거지 / 업무지구 방향 해석을 보완할 수 있음
 
-- 오피스 밀집 지역, 상업지구, 점심권 단거리 이동 수요를 포착하는 데 유용할 수 있다.
+### 5.5 `abs_net_flow_mean`
 
-## 5. 권장 산출 순서
+- 전체 일평균 절대 순유출입
+- 재고 변동성이 큰 거점인지 파악 가능
 
-1. 원천 CSV를 baseline 전처리 기준으로 정제한다.
-2. 이벤트 단위에서 `station_id`, `return_station_id`, `date`, `return_date`, `hour`를 만든다.
-3. `station-day` 기준으로 `rental_count`, `return_count`, `same_station_return_count`, `net_flow`를 만든다.
-4. 이를 다시 `station` 기준으로 요약해 `same_station_return_ratio`, `net_flow_mean`, `abs_net_flow_mean`을 만든다.
-5. 이벤트 단위에서 `hour`를 이용해 `morning_peak_ratio`, `evening_peak_ratio`, `lunch_ratio`를 만든다.
+### 5.6 `same_station_return_ratio`
 
-## 6. 고저차 지표 후보
+- 제자리 회전형 성격을 보여주는 보조 지표
+- 지구판단 직접력은 낮지만 생활권 / 순환형 이용 여부를 보조적으로 설명할 수 있음
 
-고저차는 따릉이 이용 패턴에 영향을 줄 수 있으므로 2차 군집화 후보로 타당하다.
+## 6. 우선순위 3. 고도화 / 후속 결합 피처
 
-추천 후보:
+### 6.1 교통 접근성
 
-- `station_elevation_m` (대여소 표고)
-- `slope_mean_300m` (반경 300m 평균 경사도)
-- `slope_max_300m` (반경 300m 최대 경사도)
-- `elevation_diff_nearest_subway` (가장 가까운 지하철역과의 표고 차)
-- `elevation_diff_nearest_park` (가장 가까운 공원과의 표고 차)
+이미 있거나 바로 결합 가능한 피처:
 
-## 7. 고저차 데이터 확보 방안
+- `subway_distance_m`
+- `bus_stop_count_300m`
+- `bus_stop_count_500m`
 
-### 7.1 1순위: 서울시 경사도 / 등고선 파일 데이터
+왜 중요한가:
 
-가장 실무적으로 좋은 시작점은 서울시 파일 데이터를 직접 쓰는 방식이다.
+- 업무지구 / 환승거점 / 생활권 구분에서 설명력이 크다.
 
-장점:
+### 6.2 고저차
 
-- 서울시 공식 파일 데이터
-- 경사도 SHP와 등고선 SHP를 바로 내려받을 수 있음
-- 강남구 대여소라는 현재 프로젝트 범위와 맞음
-- API 호출 비용 없이 오프라인 재현 가능
+후속 추가 후보:
 
-활용 방식:
+- `station_elevation_m`
+- `slope_mean_300m`
+- `slope_max_300m`
+- `elevation_diff_nearest_subway`
 
-- `서울시 경사도.zip`을 받아 GIS 또는 Python에서 읽는다.
-- 대여소 좌표를 경사도 격자 또는 폴리곤과 spatial join 한다.
-- 반경 버퍼 100m, 300m 기준 평균/최대 경사도를 계산할 수 있다.
-- `서울시 등고선.zip`을 함께 쓰면 표고 차 근사도 가능하다.
+왜 중요한가:
 
-출처:
+- 자전거 이동은 경사 영향을 직접 받으므로, 같은 도착 패턴이라도 실제 이용 성격이 달라질 수 있다.
 
-- 서울시 경사도 데이터셋
-  - https://data.seoul.go.kr/dataList/OA-22241/F/1/datasetView.do
+### 6.3 POI / 생활권
 
-확인한 내용:
+후속 추가 후보:
 
-- 서울 열린데이터광장에는 `서울시 등고선.zip`과 `서울시 경사도.zip`이 파일 형태로 제공된다.
-- 데이터 설명에는 경사도를 추출할 수 있는 표고점, 등고선 SHP 파일 제공이라고 적혀 있다.
+- 업무시설 밀도
+- 상업시설 밀도
+- 주거시설 비중
+- 생활인구
 
-### 7.2 2순위: Open-Meteo Elevation API
+왜 중요한가:
 
-간단히 대여소별 표고값만 붙이고 싶으면 가장 빠른 선택지다.
+- 지구판단을 최종적으로 확정하는 데 가장 직접적인 근거가 될 수 있다.
 
-장점:
+## 7. 지금 만든 6개 피처를 어떻게 볼 것인가
 
-- HTTP 호출만으로 사용 가능
-- 여러 좌표를 한 번에 요청 가능
-- 90m 해상도 DEM 기반
-- 구현 난도가 낮음
+현재 생성한 아래 6개 피처는 버릴 필요는 없다.
 
-주의:
+- `same_station_return_ratio`
+- `net_flow_mean`
+- `abs_net_flow_mean`
+- `morning_peak_ratio`
+- `evening_peak_ratio`
+- `lunch_ratio`
 
-- 점 표고값은 쉽게 가져올 수 있지만, 주변 경사도 계산은 별도 로직이 더 필요하다.
-- 아주 세밀한 도시 미세 지형 해석에는 한계가 있다.
+다만 역할은 아래처럼 재정의하는 것이 맞다.
 
-활용 방식:
+- 기존 판단: 2차 군집화의 주력 후보
+- 수정 판단: `지구판단 보조 피처`
 
-- 각 대여소의 `lat`, `lon`을 API에 전달
-- `station_elevation_m` 생성
-- 필요하면 주변 격자 샘플을 추가로 조회해 간이 slope를 계산
+즉:
 
-출처:
+- 이 피처들만으로 주거지 / 상업지구 / 업무지구를 직접 판정하기는 약하다.
+- 하지만 `도착 시간대 피처`와 결합하면 해석력이 올라간다.
 
-- Open-Meteo Elevation API
-  - https://open-meteo.com/en/docs/elevation-api
+## 8. 고저차를 나중에 붙일 때 지금 피처를 계속 쓸지 여부
 
-확인한 내용:
+결론:
 
-- `/v1/elevation` 엔드포인트 사용
-- 위경도 배열 입력 가능
-- Copernicus DEM 2021 GLO-90 기반
+- 지금 만든 6개 피처를 폐기할 필요는 없다.
+- 그러나 고저차를 붙이는 중심 세트는 `새로운 지구판단 피처 세트`가 되어야 한다.
 
-### 7.3 3순위: Google Maps Elevation API
+즉 권장 구조는 아래와 같다.
 
-정식 상용 API로 안정성이 높고, 경로 기반 표고 샘플링도 지원한다.
+### 권장 구조
 
-장점:
+#### A. 주력 세트
 
-- 단일 좌표 표고 조회 가능
-- path 기반 샘플링 지원
-- 문서화와 SDK 지원이 잘 되어 있음
+- `arrival_7_10_ratio`
+- `arrival_11_14_ratio`
+- `arrival_17_20_ratio`
+- `morning_net_inflow`
+- `evening_net_inflow`
+- `subway_distance_m`
+- `bus_stop_count_300m`
 
-주의:
+#### B. 보조 세트
 
-- API 키와 과금 관리가 필요함
-- 공개 결과 사용 시 정책과 attribution 확인 필요
+- `morning_peak_ratio`
+- `evening_peak_ratio`
+- `lunch_ratio`
+- `net_flow_mean`
+- `abs_net_flow_mean`
+- `same_station_return_ratio`
 
-활용 방식:
+#### C. 고도화 세트
 
-- 대여소 좌표별 표고 조회
-- 대여소-인근 지하철역 경로의 고도 변화 샘플링
-- `elevation_diff_nearest_subway` 같은 지표 생성
+- `station_elevation_m`
+- `slope_mean_300m`
+- `slope_max_300m`
+- `elevation_diff_nearest_subway`
 
-출처:
+따라서 고저차는 `현재 6개 운영 피처 세트`에 붙이는 것이 아니라, `도착 시간대 중심의 지구판단 세트`에 붙이는 것이 더 타당하다.
 
-- Google Elevation API overview
-  - https://developers.google.com/maps/documentation/elevation/overview
-- Google Elevation API policies
-  - https://developers.google.com/maps/documentation/elevation/policies
+## 9. 권장 구현 순서
 
-### 7.4 4순위: OpenTopography Global Datasets API
+### 1단계. 내일 발표용 최소 세트
 
-직접 DEM 원천을 받아 분석하고 싶을 때 적합하다.
+가장 먼저 만들 후보:
 
-장점:
+- `arrival_7_10_ratio`
+- `arrival_11_14_ratio`
+- `arrival_17_20_ratio`
+- `morning_net_inflow`
+- `evening_net_inflow`
 
-- COP30, COP90, NASADEM, ALOS World 3D 등 여러 DEM 접근 가능
-- DEM 원천을 받아 로컬에서 경사도와 표고 차를 재현성 있게 계산 가능
+### 2단계. 보조 해석 결합
 
-주의:
+- `morning_peak_ratio`
+- `evening_peak_ratio`
+- `lunch_ratio`
+- `net_flow_mean`
+- `abs_net_flow_mean`
 
-- API 사용과 후처리 난도가 높다.
-- 프로젝트 초기 탐색보다는 고도화 단계에 더 적합하다.
+### 3단계. 환경 결합
 
-출처:
+- `subway_distance_m`
+- `bus_stop_count_300m`
 
-- OpenTopography for Developers
-  - https://opentopography.org/developers
+### 4단계. 후속 고도화
 
-### 7.5 5순위: Copernicus DEM 직접 다운로드
+- 고저차
+- POI
+- 생활인구
 
-장기적으로는 가장 재현성이 높은 방법 중 하나다.
+## 10. 최종 판단
 
-장점:
+현재 발표 목적이 `군집 판단`이라면, 2차 피처 설계는 `운영 성격 중심`보다 `지구 판단 중심`이 더 맞다.
 
-- 공식 DEM 원천을 직접 확보 가능
-- 로컬 분석 파이프라인에 편입하기 좋음
+따라서:
 
-주의:
+- 지금 만든 6개 피처는 보조 피처로 유지
+- 새로 만들어야 할 핵심 피처는 `도착 시간대 비율`과 `시간대별 순유입`
+- 이후 고저차는 그 새 세트에 결합
 
-- 다운로드와 인증 과정이 다소 무겁다.
-- 서울시 단일 프로젝트에는 과할 수 있다.
-
-출처:
-
-- Copernicus DEM documentation
-  - https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM.html
-- Copernicus bulk download FAQ
-  - https://documentation.dataspace.copernicus.eu/FAQ.html
-
-## 8. 고저차 데이터 확보 추천안
-
-현재 프로젝트 기준 추천 순서는 아래와 같다.
-
-1. 서울시 경사도 파일을 우선 사용한다.
-2. 빠른 검증이 필요하면 Open-Meteo Elevation API로 대여소 표고를 먼저 붙인다.
-3. 고저차가 실제로 군집 분리에 의미가 보이면, 서울시 경사도 파일 또는 OpenTopography/Copernicus DEM 기반으로 정교화한다.
-
-실무 권장안:
-
-- `station_elevation_m`: Open-Meteo 또는 Google Elevation API로 빠르게 생성
-- `slope_mean_300m`, `slope_max_300m`: 서울시 경사도 SHP로 생성
-- `elevation_diff_nearest_subway`: 대여소 표고와 최근접 지하철역 표고 차로 생성
-
-## 9. 다음 구현 메모
-
-코드 구현 시에는 아래 순서가 안전하다.
-
-1. 기존 cleaning 로직을 재사용하는 station-level feature builder 작성
-2. 운영 지표 3종 생성
-   - `same_station_return_ratio`
-   - `net_flow_mean`
-   - `abs_net_flow_mean`
-3. 시간대 비율 3종 생성
-   - `morning_peak_ratio`
-   - `evening_peak_ratio`
-   - `lunch_ratio`
-4. 서울시 경사도 파일 확보 후 spatial join 기반 slope feature 추가
+이 방향이 현재 발표 목적과 이후 고도화 방향을 동시에 만족시킨다.
