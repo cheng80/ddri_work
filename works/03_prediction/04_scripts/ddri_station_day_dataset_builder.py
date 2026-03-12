@@ -40,10 +40,19 @@ def load_clean_events(paths, valid_return_ids, common_ids):
             ["대여일시", "반납일시", "대여 대여소번호", "반납대여소번호", "이용시간(분)", "이용거리(M)"]
         ].notna().all(axis=1)
         mask_positive = (df["이용시간(분)"] > 0) & (df["이용거리(M)"] > 0)
+        mask_short_same_station_return = (
+            (df["대여 대여소번호"] == df["반납대여소번호"]) & (df["이용시간(분)"] <= 5)
+        )
         mask_rent_common = df["대여 대여소번호"].isin(common_ids)
         mask_return_valid = df["반납대여소번호"].isin(valid_return_ids)
 
-        clean_df = df.loc[mask_complete & mask_positive & mask_rent_common & mask_return_valid].copy()
+        clean_df = df.loc[
+            mask_complete
+            & mask_positive
+            & ~mask_short_same_station_return
+            & mask_rent_common
+            & mask_return_valid
+        ].copy()
         clean_df["station_id"] = clean_df["대여 대여소번호"].astype(int)
         clean_df["return_station_id"] = clean_df["반납대여소번호"].astype(int)
         clean_df["date"] = clean_df["대여일시"].dt.normalize()

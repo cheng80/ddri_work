@@ -114,10 +114,19 @@ def clean_rental_file(path: Path, valid_station_ids: set[int], common_station_id
         ["대여일시", "반납일시", "대여 대여소번호", "반납대여소번호", "이용시간(분)", "이용거리(M)"]
     ].notna().all(axis=1)
     mask_positive = (df["이용시간(분)"] > 0) & (df["이용거리(M)"] > 0)
+    mask_short_same_station_return = (
+        (df["대여 대여소번호"] == df["반납대여소번호"]) & (df["이용시간(분)"] <= 5)
+    )
     mask_rent_common = df["대여 대여소번호"].isin(common_station_ids)
     mask_return_gangnam = df["반납대여소번호"].isin(valid_station_ids)
 
-    clean_df = df.loc[mask_complete & mask_positive & mask_rent_common & mask_return_gangnam].copy()
+    clean_df = df.loc[
+        mask_complete
+        & mask_positive
+        & ~mask_short_same_station_return
+        & mask_rent_common
+        & mask_return_gangnam
+    ].copy()
     clean_df["대여 대여소번호"] = clean_df["대여 대여소번호"].astype(int)
     clean_df["반납대여소번호"] = clean_df["반납대여소번호"].astype(int)
 
@@ -127,8 +136,19 @@ def clean_rental_file(path: Path, valid_station_ids: set[int], common_station_id
         "rows_after": len(clean_df),
         "dropped_missing": int((~mask_complete).sum()),
         "dropped_nonpositive": int((mask_complete & ~mask_positive).sum()),
-        "dropped_noncommon_rent": int((mask_complete & mask_positive & ~mask_rent_common).sum()),
-        "dropped_outside_gangnam_return": int((mask_complete & mask_positive & mask_rent_common & ~mask_return_gangnam).sum()),
+        "dropped_short_same_station_return": int((mask_complete & mask_positive & mask_short_same_station_return).sum()),
+        "dropped_noncommon_rent": int(
+            (mask_complete & mask_positive & ~mask_short_same_station_return & ~mask_rent_common).sum()
+        ),
+        "dropped_outside_gangnam_return": int(
+            (
+                mask_complete
+                & mask_positive
+                & ~mask_short_same_station_return
+                & mask_rent_common
+                & ~mask_return_gangnam
+            ).sum()
+        ),
     }
     return clean_df, stats
 
