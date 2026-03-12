@@ -39,17 +39,17 @@ pdf_options:
 ## 전처리 기준
 
 - 결측치 제거: `대여일시`, `반납일시`, `대여 대여소번호`, `반납대여소번호`, `이용시간(분)`, `이용거리(M)`
-- 이상치 제거: `이용시간(분) <= 0`, `이용거리(M) <= 0`
+- 이상치 제거: `이용시간(분) <= 0`, `이용거리(M) <= 0`, `동일 대여소 반납 + 5분 이하`
 - 운영 범위 정리: 공통 기준 밖 대여소, 강남구 외 반납 사례 제거
-- 동일 대여소 반납은 제거하지 않고 유지
+- 나머지 동일 대여소 반납은 제거하지 않고 유지
 
 ## 전처리 및 해석 원칙
 
 - 없는 자료는 임의 생성하지 않음
 - 메인 모델은 기존 운영 스테이션 중심으로 설계
-- self-return은 수요에서 제거하지 않고 운영 해석용 보조 지표로 관리
+- `동일 대여소 + 5분 이하`만 제거하고, 나머지 self-return은 운영 해석용 보조 지표로 관리
 
-<div class="callout compact">self-return 유지, 수요는 보존하고 재고 변동은 별도 해석</div>
+<div class="callout compact">5분 이하 즉시 반납만 제거, 나머지 self-return은 보존하고 재고 변동은 별도 해석</div>
 
 <div class="chart-block tight">
   <img class="chart-image" src="../../03_prediction/03_images/ddri_flow_metrics_summary.png" alt="flow metrics summary">
