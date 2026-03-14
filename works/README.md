@@ -40,8 +40,6 @@ works/
 ├── 04_presentation/
 │   ├── 01_clustering/
 │   │   └── 군집화 A4 문서, 스피치 노트, 정적 지도 생성 스크립트
-│   ├── 02_project/
-│   │   └── 전체 프로젝트 발표 문서
 │   ├── README.md
 │   └── 공통 발표 CSS
 └── lsy/
@@ -65,3 +63,4 @@ works/
 - 현재 군집화 공식 산출물은 `01_clustering/08_integrated` 기준으로 관리한다.
 - `archive_1st`는 삭제 대상이 아니라, 1차 군집화 비교와 추적을 위한 보관 영역이다.
 - `02_data_collection`과 `03_prediction`은 아직 별도 정리 축을 유지한다.
+- `04_presentation`은 현재 군집화 발표 자료만 유지하며, 최종 프로젝트 발표 자료는 나중에 새로 만든다.

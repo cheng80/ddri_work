@@ -13,6 +13,8 @@
 5. `05_ddri_workspace_structure_guide.md`
 6. `06_ddareungi_project_inventory_2026-03-11.md`
 7. `07_ddri_notebook_and_evidence_chart_policy.md`
+8. `08_ddri_service_output_logic_draft.md`
+9. `09_ddri_cluster_specific_modeling_strategy.md`
 
 직접 열람 링크:
 
@@ -23,6 +25,8 @@
 - [05_ddri_workspace_structure_guide.md](/Users/cheng80/Desktop/ddri_work/works/00_overview/05_ddri_workspace_structure_guide.md)
 - [06_ddareungi_project_inventory_2026-03-11.md](/Users/cheng80/Desktop/ddri_work/works/00_overview/06_ddareungi_project_inventory_2026-03-11.md)
 - [07_ddri_notebook_and_evidence_chart_policy.md](/Users/cheng80/Desktop/ddri_work/works/00_overview/07_ddri_notebook_and_evidence_chart_policy.md)
+- [08_ddri_service_output_logic_draft.md](/Users/cheng80/Desktop/ddri_work/works/00_overview/08_ddri_service_output_logic_draft.md)
+- [09_ddri_cluster_specific_modeling_strategy.md](/Users/cheng80/Desktop/ddri_work/works/00_overview/09_ddri_cluster_specific_modeling_strategy.md)
 
 이 폴더를 프로젝트 전체 기준 문서의 실제 경로로 사용한다.
 
@@ -33,3 +37,5 @@
 3. 예측 목표/데이터셋: `03`, `04`
 4. 현재 작업물 구조: `05`, `06`
 5. 노트북/차트 운영 기준: `07`
+6. 서비스 출력 로직 초안: `08`
+7. 군집별 모델링 전략: `09`

@@ -8,9 +8,12 @@
 
 - 데이터셋 생성 스크립트: [ddri_station_day_dataset_builder.py](/Users/cheng80/Desktop/ddri_work/works/03_prediction/04_scripts/ddri_station_day_dataset_builder.py)
 - 데이터셋 설명 노트북: [01_ddri_station_day_dataset_explainer.ipynb](/Users/cheng80/Desktop/ddri_work/works/03_prediction/04_scripts/01_ddri_station_day_dataset_explainer.ipynb)
+- 베이스라인 모델 노트북: [02_ddri_station_day_baseline_modeling.ipynb](/Users/cheng80/Desktop/ddri_work/works/03_prediction/04_scripts/02_ddri_station_day_baseline_modeling.ipynb)
 - 운영 지표 차트 스크립트: [ddri_flow_metrics_chart_builder.py](/Users/cheng80/Desktop/ddri_work/works/03_prediction/04_scripts/ddri_flow_metrics_chart_builder.py)
 - 학습 데이터셋: [ddri_station_day_train_baseline_dataset.csv](/Users/cheng80/Desktop/ddri_work/works/03_prediction/02_data/ddri_station_day_train_baseline_dataset.csv)
 - 테스트 데이터셋: [ddri_station_day_test_baseline_dataset.csv](/Users/cheng80/Desktop/ddri_work/works/03_prediction/02_data/ddri_station_day_test_baseline_dataset.csv)
+- 모델 성능 비교표: [ddri_station_day_baseline_model_metrics.csv](/Users/cheng80/Desktop/ddri_work/works/03_prediction/02_data/ddri_station_day_baseline_model_metrics.csv)
+- 중요도 차트: [ddri_station_day_lightgbm_feature_importance.png](/Users/cheng80/Desktop/ddri_work/works/03_prediction/03_images/ddri_station_day_lightgbm_feature_importance.png)
 
 세부 구분:
 
@@ -20,3 +23,8 @@
 - `04_scripts`
 
 설계 문서, 데이터, 이미지, 스크립트는 각 번호 폴더 기준으로 열람하면 된다.
+
+현재 baseline 모델링 기준:
+
+- 검증 전략: `Train=2023`, `Validation=2024`, `Test=2025`
+- 기준 노트북: `02_ddri_station_day_baseline_modeling.ipynb`

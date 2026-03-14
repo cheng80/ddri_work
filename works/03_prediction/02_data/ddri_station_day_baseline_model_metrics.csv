@@ -1,0 +1,5 @@
+﻿model,split,rmse,mae,r2
+LinearRegression,validation_2024,6.8732,4.9723,0.7464
+LinearRegression,test_2025_refit,6.353,4.6139,0.733
+LightGBM,validation_2024,6.0146,4.3282,0.8058
+LightGBM,test_2025_refit,5.3106,3.8473,0.8134
