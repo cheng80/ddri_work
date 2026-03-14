@@ -6,9 +6,11 @@ import pandas as pd
 BASE_DIR = Path("/Users/cheng80/Desktop/ddri_work")
 RAW_DIR = BASE_DIR / "3조 공유폴더"
 CLUSTER_DIR = BASE_DIR / "works" / "01_clustering" / "06_data"
-CALENDAR_DIR = BASE_DIR / "works" / "02_data_collection" / "01_calendar" / "data"
+CALENDAR_DIR = BASE_DIR / "works" / "archive_data_collection" / "02_data_collection" / "01_calendar" / "data"
 OUTPUT_DIR = BASE_DIR / "works" / "03_prediction" / "02_data"
+SUPPORT_DATA_DIR = BASE_DIR / "works" / "03_prediction" / "support_data"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+SUPPORT_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 RENTAL_COLS = [
     "대여일시",
@@ -103,7 +105,7 @@ def build_weather_daily():
         RAW_DIR / "2023-2024년 강남구 날씨데이터(00시-24시)" / "gangnam_weather_1year_2023.csv",
         RAW_DIR / "2023-2024년 강남구 날씨데이터(00시-24시)" / "gangnam_weather_1year_2024.csv",
     ]
-    extra_dir = BASE_DIR / "works" / "02_data_collection" / "02_weather" / "data"
+    extra_dir = BASE_DIR / "works" / "archive_data_collection" / "02_data_collection" / "02_weather" / "data"
     extra_paths = sorted(extra_dir.glob("ddri_weather_*_hourly.csv"))
     weather_paths.extend(extra_paths)
     frames = []
@@ -171,10 +173,10 @@ def main():
     weather_train_daily = weather_daily[weather_daily["date"].dt.year.isin([2023, 2024])].copy()
     weather_test_daily = weather_daily[weather_daily["date"].dt.year == 2025].copy()
 
-    target_train.to_csv(OUTPUT_DIR / "ddri_station_day_target_train_2023_2024.csv", index=False)
-    station_day_test_2025.to_csv(OUTPUT_DIR / "ddri_station_day_target_test_2025.csv", index=False)
-    weather_train_daily.to_csv(OUTPUT_DIR / "ddri_weather_daily_2023_2024.csv", index=False)
-    weather_test_daily.to_csv(OUTPUT_DIR / "ddri_weather_daily_2025.csv", index=False)
+    target_train.to_csv(SUPPORT_DATA_DIR / "ddri_station_day_target_train_2023_2024.csv", index=False)
+    station_day_test_2025.to_csv(SUPPORT_DATA_DIR / "ddri_station_day_target_test_2025.csv", index=False)
+    weather_train_daily.to_csv(SUPPORT_DATA_DIR / "ddri_weather_daily_2023_2024.csv", index=False)
+    weather_test_daily.to_csv(SUPPORT_DATA_DIR / "ddri_weather_daily_2025.csv", index=False)
 
     station_day_metrics_summary = pd.DataFrame(
         [
@@ -198,7 +200,7 @@ def main():
             },
         ]
     )
-    station_day_metrics_summary.to_csv(OUTPUT_DIR / "ddri_station_day_flow_metrics_summary.csv", index=False)
+    station_day_metrics_summary.to_csv(SUPPORT_DATA_DIR / "ddri_station_day_flow_metrics_summary.csv", index=False)
 
     train_dataset = (
         target_train.merge(calendar, on="date", how="left")
@@ -233,17 +235,17 @@ def main():
     test_exception_rows = test_dataset[test_dataset["cluster_label"].isna()].copy()
     test_main_dataset = test_dataset[test_dataset["cluster_label"].notna()].copy()
     test_main_dataset.to_csv(OUTPUT_DIR / "ddri_station_day_test_main_eval_dataset.csv", index=False)
-    test_exception_rows.to_csv(OUTPUT_DIR / "ddri_station_day_test_exception_cases.csv", index=False)
+    test_exception_rows.to_csv(SUPPORT_DATA_DIR / "ddri_station_day_test_exception_cases.csv", index=False)
 
-    print("saved train target:", OUTPUT_DIR / "ddri_station_day_target_train_2023_2024.csv")
-    print("saved test target:", OUTPUT_DIR / "ddri_station_day_target_test_2025.csv")
-    print("saved weather daily:", OUTPUT_DIR / "ddri_weather_daily_2023_2024.csv")
-    print("saved weather daily:", OUTPUT_DIR / "ddri_weather_daily_2025.csv")
-    print("saved flow summary:", OUTPUT_DIR / "ddri_station_day_flow_metrics_summary.csv")
+    print("saved train target:", SUPPORT_DATA_DIR / "ddri_station_day_target_train_2023_2024.csv")
+    print("saved test target:", SUPPORT_DATA_DIR / "ddri_station_day_target_test_2025.csv")
+    print("saved weather daily:", SUPPORT_DATA_DIR / "ddri_weather_daily_2023_2024.csv")
+    print("saved weather daily:", SUPPORT_DATA_DIR / "ddri_weather_daily_2025.csv")
+    print("saved flow summary:", SUPPORT_DATA_DIR / "ddri_station_day_flow_metrics_summary.csv")
     print("saved baseline train dataset:", OUTPUT_DIR / "ddri_station_day_train_baseline_dataset.csv")
     print("saved baseline test dataset:", OUTPUT_DIR / "ddri_station_day_test_baseline_dataset.csv")
     print("saved test main eval dataset:", OUTPUT_DIR / "ddri_station_day_test_main_eval_dataset.csv")
-    print("saved test exception cases:", OUTPUT_DIR / "ddri_station_day_test_exception_cases.csv")
+    print("saved test exception cases:", SUPPORT_DATA_DIR / "ddri_station_day_test_exception_cases.csv")
     print("train_rows=", len(train_dataset))
     print("test_rows=", len(test_dataset))
     print("test_main_rows=", len(test_main_dataset))

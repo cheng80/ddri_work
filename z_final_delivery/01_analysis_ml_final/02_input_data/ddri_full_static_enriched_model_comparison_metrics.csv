@@ -1,0 +1,7 @@
+﻿model,split,rmse,mae,r2
+LightGBM_RMSE_Full_Original,validation_2024,0.9728,0.6229,0.4472
+LightGBM_RMSE_Full_Original,test_2025_refit,0.8624,0.5592,0.4368
+LightGBM_RMSE_Full_Static_Enriched,validation_2024,0.972,0.6229,0.4481
+LightGBM_RMSE_Full_Static_Enriched,test_2025_refit,0.862,0.5588,0.4374
+Cluster_Routed_Static_Enriched,validation_2024,0.969,0.6195,0.4515
+Cluster_Routed_Static_Enriched,test_2025_refit,0.8681,0.5587,0.4294

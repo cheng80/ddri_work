@@ -1,0 +1,5 @@
+﻿model,split,rmse,mae,r2
+LightGBM_RMSE_Full_Static_WeatherInteraction,validation_2024,0.9701,0.6207,0.4503
+LightGBM_RMSE_Full_Static_WeatherInteraction,test_2025_refit,0.8604,0.5561,0.4394
+Cluster_Routed_Exact_With_WeatherFull,validation_2024,0.9682,0.6191,0.4525
+Cluster_Routed_Exact_With_WeatherFull,test_2025_refit,0.8673,0.5586,0.4303

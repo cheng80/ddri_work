@@ -1,0 +1,5 @@
+﻿구분(track),표시명(label),모델(model),테스트 RMSE(test_rmse),비고(note),최선 대비 차이(delta_vs_best),최선 대비 차이 x1000(delta_x1000)
+rep15_cluster02,대표 15개 cluster02 / Representative 15 cluster02,subset_d_current_compact_best + LightGBM_Poisson,0.799,cluster02 final recommendation,0.0,0.0
+rep15_all_static_base,대표 15개 기본안 / Representative 15 static base,rep15_static_base,0.9196,rep15 full baseline for weather comparison,0.1206,120.6
+rep15_all_static_weather_full,대표 15개 weather_full / Representative 15 weather_full,rep15_static_weather_full,0.9198,weather_full did not improve rep15,0.1208,120.8
+rep15_cluster01,대표 15개 cluster01 / Representative 15 cluster01,subset_a_commute_transit + LightGBM_Poisson,1.3108,cluster01 final recommendation,0.5118,511.8
