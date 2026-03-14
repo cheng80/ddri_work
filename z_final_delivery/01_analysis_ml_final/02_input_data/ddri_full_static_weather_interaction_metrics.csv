@@ -1,0 +1,5 @@
+﻿model,split,rmse,mae,r2
+LightGBM_RMSE_Full_Static_Enriched,validation_2024,0.972,0.6229,0.4481
+LightGBM_RMSE_Full_Static_Enriched,test_2025_refit,0.862,0.5588,0.4374
+LightGBM_RMSE_Full_Static_WeatherInteraction,validation_2024,0.9701,0.6207,0.4503
+LightGBM_RMSE_Full_Static_WeatherInteraction,test_2025_refit,0.8604,0.5561,0.4394

@@ -10,11 +10,11 @@
   - 대표 15개 상위 5개 오류 스테이션의 시간대 패턴을 확장 재생성하는 노트북
 - `12_ddri_rep15_top5_feature_linkage_and_subset_priority.ipynb`
   - 상위 오류 5개 스테이션을 군집별 보강 피처와 연결하고 subset 우선순위를 정리하는 노트북
-- `08_ddri_rep15_station_error_priority_summary.md`
+- `archive_docs/08_ddri_rep15_station_error_priority_summary.md`
   - 대표 15개 오류 우선순위 해석 요약
-- `09_ddri_rep15_top2_station_hourly_error_summary.md`
+- `archive_docs/09_ddri_rep15_top2_station_hourly_error_summary.md`
   - `2377`, `2348` 시간대 오차 패턴 요약
-- `11_ddri_rep15_top5_station_hourly_error_summary.md`
+- `archive_docs/11_ddri_rep15_top5_station_hourly_error_summary.md`
   - 상위 5개 오류 스테이션 시간대 패턴 확장 요약
 - `12_ddri_rep15_top5_feature_linkage_summary.md`
   - 상위 오류 5개와 군집별 subset 우선순위 연결 요약

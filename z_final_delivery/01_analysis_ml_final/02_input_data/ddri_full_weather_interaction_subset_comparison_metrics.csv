@@ -1,0 +1,11 @@
+﻿feature_set,model,split,rmse,mae,r2
+static_enriched_base,static_enriched_base,validation_2024,0.972,0.6229,0.4481
+static_enriched_base,static_enriched_base,test_2025_refit,0.862,0.5588,0.4374
+weather_full,weather_full,validation_2024,0.9701,0.6207,0.4503
+weather_full,weather_full,test_2025_refit,0.8604,0.5561,0.4394
+weather_commute_core,weather_commute_core,validation_2024,0.9729,0.6229,0.4471
+weather_commute_core,weather_commute_core,test_2025_refit,0.8617,0.5587,0.4378
+weather_time_band_core,weather_time_band_core,validation_2024,0.9727,0.6229,0.4473
+weather_time_band_core,weather_time_band_core,test_2025_refit,0.8616,0.5582,0.4378
+weather_precip_intensity_core,weather_precip_intensity_core,validation_2024,0.9726,0.6228,0.4474
+weather_precip_intensity_core,weather_precip_intensity_core,test_2025_refit,0.862,0.5589,0.4374

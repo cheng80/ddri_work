@@ -1,66 +1,68 @@
 # works
 
 `works/`는 프로젝트 실작업 폴더다.  
-작업자가 현재 기준 구조를 빠르게 파악할 수 있도록 핵심 폴더를 트리로 정리한다.
+현재는 `정본 경로`와 `보관/중간 산출물 경로`를 구분해서 읽는 것이 중요하다.
 
-## Tree
+## 1. 먼저 볼 경로
 
-```text
-works/
-├── 00_overview/
-│   └── 전체 기준 문서, 계획, 로그, 설계 문서
-├── 01_clustering/
-│   ├── 05_presentation/
-│   │   └── 군집화 요약 문서, 발표 스크립트
-│   ├── 08_integrated/
-│   │   ├── pipeline/
-│   │   │   └── 통합 군집화 생성 스크립트, 노트북, 작업 메모
-│   │   ├── final/
-│   │   │   ├── features/
-│   │   │   └── results/
-│   │   │       └── 최종 군집화 결과 CSV, 차트, 지도, 리포트
-│   │   ├── intermediate/
-│   │   │   └── 반납 시간대·환경 보강·비교 실험 중간 산출물
-│   │   ├── source_data/
-│   │   │   └── 2차 통합 군집화에 계속 사용하는 공통 기준표
-│   │   └── 통합 군집화 작업 루트
-│   ├── archive_1st/
-│   │   └── 기존 1차 군집화 결과 보관본
-│   └── README.md
-├── 02_data_collection/
-│   ├── 01_calendar/
-│   ├── 02_weather/
-│   └── 수집 원천과 정리본
-├── 03_prediction/
-│   ├── 01_dataset_design/
-│   ├── 02_data/
-│   ├── 03_images/
-│   ├── 04_scripts/
-│   └── 대여소별 수요 예측용 데이터셋/스크립트/이미지
-├── 04_presentation/
-│   ├── 01_clustering/
-│   │   └── 군집화 A4 문서, 스피치 노트, 정적 지도 생성 스크립트
-│   ├── README.md
-│   └── 공통 발표 CSS
-└── lsy/
-    └── 개인 작업/참고 자료
-```
+1. [00_overview](/Users/cheng80/Desktop/ddri_work/works/00_overview)
+2. [01_clustering/08_integrated/final](/Users/cheng80/Desktop/ddri_work/works/01_clustering/08_integrated/final)
+3. [05_prediction_long](/Users/cheng80/Desktop/ddri_work/works/05_prediction_long)
+4. [06_prediction_long_full](/Users/cheng80/Desktop/ddri_work/works/06_prediction_long_full)
+5. [04_presentation/01_clustering](/Users/cheng80/Desktop/ddri_work/works/04_presentation/01_clustering)
 
-## Quick Guide
+## 2. 폴더 역할
 
-- 군집화 최신본부터 볼 때:
-  - [01_clustering/08_integrated](/Users/cheng80/Desktop/ddri_work/works/01_clustering/08_integrated)
-  - [04_presentation/01_clustering](/Users/cheng80/Desktop/ddri_work/works/04_presentation/01_clustering)
-- 군집화 구버전 비교가 필요할 때:
-  - [01_clustering/archive_1st](/Users/cheng80/Desktop/ddri_work/works/01_clustering/archive_1st)
-- 예측 파트로 넘어갈 때:
-  - [03_prediction](/Users/cheng80/Desktop/ddri_work/works/03_prediction)
-- 전체 기준 문서를 먼저 볼 때:
-  - [00_overview](/Users/cheng80/Desktop/ddri_work/works/00_overview)
+### `00_overview`
 
-## Notes
+- 프로젝트 기준 문서
+- 현재는 과밀 해소 중이며, 핵심 정본 위주로 압축 중
 
-- 현재 군집화 공식 산출물은 `01_clustering/08_integrated` 기준으로 관리한다.
-- `archive_1st`는 삭제 대상이 아니라, 1차 군집화 비교와 추적을 위한 보관 영역이다.
-- `02_data_collection`과 `03_prediction`은 아직 별도 정리 축을 유지한다.
-- `04_presentation`은 현재 군집화 발표 자료만 유지하며, 최종 프로젝트 발표 자료는 나중에 새로 만든다.
+### `01_clustering`
+
+- 최신 정본:
+  - `08_integrated/final/`
+- 재생성/작업 경로:
+  - `08_integrated/pipeline/`
+- 중간 산출물:
+  - `08_integrated/intermediate/`
+- 구버전 보관:
+  - `archive_1st/`
+
+### `archive_data_collection`
+
+- 학습용 원본 CSV 생성에 이미 반영된 외부 데이터 수집 보관 경로
+- 기존 `02_data_collection`을 메인 읽기 경로에서 archive로 이동한 상태
+
+### `03_prediction`
+
+- `station-day` baseline 정본과 보조 경로
+- 핵심은 `02_data/`와 `04_scripts/`
+- 설명/재생성용 산출물은 `support_data/`, `support_images/`, `support_scripts/`로 분리
+
+### `04_presentation`
+
+- 현재는 군집화 발표 정본 위주로 유지
+- PDF, 지도 이미지, 재생성 스크립트는 `support_assets/`, `support_scripts/`로 분리
+
+### `05_prediction_long`
+
+- 대표 대여소 `15개` 기준 `station-hour` 실험 정본 경로
+- `cheng80/` 하위에는 개인 대리 실험 및 오류 분석 정리본이 있음
+
+### `06_prediction_long_full`
+
+- 전체 `161개` 스테이션 `station-hour` 실험 정본 경로
+- 원본 데이터는 외부 공유폴더, 저장소 안은 `output/` 중심 관리
+
+## 3. 현재 읽기 원칙
+
+- 최신 군집화 결과는 `01_clustering/08_integrated/final` 기준으로 읽는다
+- `03_prediction`은 최종 주력 실험이 아니라 `station-day` baseline 참조 경로로 읽는다
+- 대표 대여소 핵심 결론은 `05_prediction_long` 기준으로 읽는다
+- 전체 스테이션 baseline은 `06_prediction_long_full` 기준으로 읽는다
+- `archive_1st/`, `archive_data_collection/`, `intermediate/`는 보관/중간 경로로 보고, `support_*`는 활성 보조 경로로 본다
+
+## 4. 참고
+
+- 구조 정리 기간 동안의 점검 문서는 루트 [cleanup](/Users/cheng80/Desktop/ddri_work/cleanup) 폴더에서 별도로 관리한다

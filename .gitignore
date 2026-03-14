@@ -176,6 +176,9 @@ analysis_benchmark.json
 # API keys (로컬 전용, 커밋 금지)
 cheng80/api_keys.env
 
+# Large generated experiment outputs
+works/06_prediction_long_full/
+
 ############################################################
 # Symbols / Debug
 ############################################################

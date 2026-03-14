@@ -1,5 +1,0 @@
-﻿model,split,rmse,mae,r2
-LightGBM_RMSE_Full,validation_2024,0.9735,0.6234,0.4463
-LightGBM_RMSE_Full,test_2025_refit,0.8624,0.5594,0.4369
-LightGBM_Poisson_Full,validation_2024,0.9827,0.626,0.4359
-LightGBM_Poisson_Full,test_2025_refit,0.8704,0.5613,0.4262
