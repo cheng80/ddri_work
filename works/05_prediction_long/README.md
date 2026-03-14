@@ -14,6 +14,21 @@
 - `data/ddri_prediction_long_train_2023_2024.csv`
 - `data/ddri_prediction_long_test_2025.csv`
 - `build_prediction_long_dataset.ipynb`
+- `03_ddri_station_hour_model_comparison.ipynb`
+- `output/data/ddri_station_hour_model_metrics.csv`
+- `output/data/ddri_station_hour_lightgbm_feature_importance.csv`
+- `output/images/ddri_station_hour_lightgbm_feature_importance.png`
+
+## 폴더 운영 원칙
+
+혼선을 줄이기 위해 원본 데이터와 생성 산출물을 분리한다.
+
+- `data/`
+  - 원본 학습/테스트 long-format CSV만 유지
+- `output/data/`
+  - 모델 성능표, 오류 요약표, 비교표 등 생성 CSV
+- `output/images/`
+  - 모델 비교 차트, 오차 차트, feature importance 등 생성 이미지
 
 ## 대표 대여소 구성
 
@@ -257,3 +272,72 @@
 5. 시간 파생 변수 생성
 6. 날씨 및 공휴일 정보 병합
 7. 학습용 / 테스트용 CSV 저장
+
+## 모델 비교 결과
+
+대표 대여소 15개 `station-hour` 데이터셋 기준으로 아래 모델을 비교했다.
+
+- `LightGBM_RMSE`
+- `LightGBM_Poisson`
+- `CatBoost_RMSE`
+- `CatBoost_Poisson`
+
+검증 전략:
+
+- Train: `2023`
+- Validation: `2024`
+- Final Train: `2023 + 2024`
+- Test: `2025`
+
+결과 파일:
+
+- `output/data/ddri_station_hour_model_metrics.csv`
+- `output/data/ddri_station_hour_lightgbm_feature_importance.csv`
+- `output/images/ddri_station_hour_lightgbm_feature_importance.png`
+- `04_ddri_station_hour_evidence_charts.ipynb`
+- `output/data/ddri_station_hour_hourly_actual_vs_predicted.csv`
+- `output/data/ddri_station_hour_station_group_error_summary.csv`
+- `output/data/ddri_station_hour_station_error_summary.csv`
+- `output/images/ddri_station_hour_model_comparison_test_rmse.png`
+- `output/images/ddri_station_hour_hourly_actual_vs_predicted.png`
+- `output/images/ddri_station_hour_station_group_mae.png`
+- `output/images/ddri_station_hour_residual_distribution.png`
+- `output/images/ddri_station_hour_actual_vs_predicted_scatter.png`
+
+현재 요약:
+
+- validation 기준으로는 `LightGBM_Poisson`이 근소하게 좋음
+- `2025` 테스트 기준으로는 `LightGBM_RMSE`가 가장 안정적임
+- 현재 1차 기본 후보 모델은 `LightGBM_RMSE`로 본다
+
+## 근거 차트 보강
+
+대표 대여소 실험은 초입 baseline 단계였기 때문에 처음에는 feature importance 차트만 있었다.
+
+이후 설명 근거를 보강하기 위해 아래 노트북과 차트를 추가했다.
+
+- 노트북:
+  - `04_ddri_station_hour_evidence_charts.ipynb`
+
+### 생성 차트
+
+- 모델별 `2025` 테스트 RMSE 비교
+- 시간대별 평균 실제값 vs 예측값
+- `station_group`별 MAE 비교
+- residual 분포 히스토그램
+- 실제값 vs 예측값 scatter
+
+### 생성 표
+
+- 시간대별 실제/예측 평균:
+  - `output/data/ddri_station_hour_hourly_actual_vs_predicted.csv`
+- 대표 그룹별 오류 요약:
+  - `output/data/ddri_station_hour_station_group_error_summary.csv`
+- 대표 대여소별 오류 요약:
+  - `output/data/ddri_station_hour_station_error_summary.csv`
+
+### 현재 해석
+
+- 대표 그룹 중 `아침 도착 업무 집중형`의 오차가 가장 크다.
+- 상위 오류 대여소에는 `2377 수서역 5번출구`, `2348 포스코사거리(기업은행)`, `4917 일원에코파크 주차장`이 포함된다.
+- 시간대 평균 기준으로는 출근 시간대와 일부 피크 구간에서 오차가 상대적으로 커진다.

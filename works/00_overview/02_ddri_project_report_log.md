@@ -1541,3 +1541,594 @@ K 탐색 결과:
 - 그러나 현재는 메인 7개 피처보다 분리도가 낮아, 메인 군집화를 교체할 만큼 강하지 않았다.
 - 따라서 POI 피처는 이번 발표에서는 `후반 실험 결과`로만 제시하고, 메인 군집화 피처에는 채택하지 않는다.
 - 이후 예측 모델 단계에서 군집별 보조 변수 후보로 재검토할 수 있다.
+
+---
+
+### Decision 022. station-day 베이스라인 모델은 연 단위 time-based validation과 누수 제거 기준으로 먼저 비교한다
+
+#### 배경
+
+- 기존 station-day 베이스라인 데이터셋에는 아래 운영 지표가 포함되어 있었다.
+  - `return_count`
+  - `same_station_return_count`
+  - `same_station_return_ratio`
+  - `net_flow`
+- 그러나 이 값들은 모두 같은 날짜의 실제 운영 결과이므로, 예측 시점에는 알 수 없는 정보다.
+- 이를 그대로 feature에 넣으면 타깃 누수가 발생해 비정상적으로 높은 성능이 나올 수 있다.
+
+#### 결정 내용
+
+- station-day 1차 베이스라인 모델에서는 같은 날 운영 지표를 feature에서 제외한다.
+- 검증 전략은 계절성과 날씨 영향을 반영하기 위해 아래처럼 연 단위로 고정한다.
+  - Train: `2023`
+  - Validation: `2024`
+  - Test: `2025`
+- 대신 아래 조합으로 먼저 비교한다.
+  - 시간 feature
+  - 공휴일 feature
+  - 일 단위 날씨 feature
+  - 정적 스테이션 정보
+  - `cluster_label`
+  - 과거 수요 기반 `lag/rolling` feature
+
+#### 모델 비교 구성
+
+- 튜닝 단계:
+  - Train: `2023-01-01 ~ 2023-12-31`
+  - Validation: `2024-01-01 ~ 2024-12-31`
+- 최종 평가 단계:
+  - Final Train: `2023-01-01 ~ 2024-12-31`
+  - Test: `2025-01-01 ~ 2025-12-31`
+- 비교 모델:
+  - `LinearRegression`
+  - `LightGBMRegressor`
+
+#### 생성 feature
+
+- `rental_count_lag1`
+- `rental_count_lag7`
+- `rolling_mean_7`
+- `rolling_std_7`
+
+#### 생성 파일
+
+- 모델링 노트북:
+  - `works/03_prediction/04_scripts/02_ddri_station_day_baseline_modeling.ipynb`
+- 성능 비교표:
+  - `works/03_prediction/02_data/ddri_station_day_baseline_model_metrics.csv`
+- LightGBM 중요도:
+  - `works/03_prediction/02_data/ddri_station_day_lightgbm_feature_importance.csv`
+  - `works/03_prediction/03_images/ddri_station_day_lightgbm_feature_importance.png`
+
+#### 내부 실행 결과
+
+- `LinearRegression`
+  - validation RMSE: `6.8732`
+  - validation MAE: `4.9723`
+  - validation R²: `0.7464`
+  - test RMSE: `6.3530`
+  - test MAE: `4.6139`
+  - test R²: `0.7330`
+
+- `LightGBM`
+  - validation RMSE: `6.0146`
+  - validation MAE: `4.3282`
+  - validation R²: `0.8058`
+  - test RMSE: `5.3106`
+  - test MAE: `3.8473`
+  - test R²: `0.8134`
+
+#### 추가 확인
+
+- 누수 피처를 포함한 초기 실험에서는 비정상적으로 거의 완벽한 성능이 나왔다.
+- 이는 `return_count`와 `net_flow` 등이 같은 날짜의 실제 정보를 포함해 타깃을 역산할 수 있었기 때문이다.
+- 따라서 이후 보고서와 모델 비교에서는 해당 운영 지표를 baseline 직접 feature로 쓰지 않는다.
+- 추가로 분기 validation은 계절 대표성이 약하다는 참고 전략 문서를 반영해, 연 단위 validation으로 수정했다.
+
+#### 현재 해석
+
+- 1차 station-day 베이스라인에서는 `LightGBM`이 `LinearRegression`보다 일관되게 우세하다.
+- 중요 피처 상위에는 `station_id`, `temperature_max`, `rolling_mean_7`, `humidity_mean`, `precipitation_sum`, `rental_count_lag7`, `rental_count_lag1`이 포함되었다.
+- 즉, 스테이션 고유성 + 날씨 + 과거 수요가 현재 baseline 예측력의 핵심 축으로 보인다.
+
+#### 보고서/PPT에 넣을 수 있는 메시지
+
+- “같은 날 운영 지표는 예측 시점에 알 수 없는 정보이므로 baseline feature에서 제외하고, lag 기반 시계열 feature로 대체했다.”
+- “연 단위 시계열 검증 기준에서 LightGBM이 LinearRegression보다 더 낮은 오차와 높은 설명력을 보였다.”
+- “현재 baseline은 날씨, 공휴일, 정적 스테이션 정보, 과거 수요의 조합만으로도 2025 테스트셋에서 안정적인 예측력을 확인했다.”
+
+#### 필요한 시각화/표
+
+- [x] 모델별 성능 비교표
+- [x] LightGBM feature importance 차트
+- [ ] validation / test 예측 오차 분포 차트
+- [ ] 상위 오류 스테이션 사례 표
+
+---
+
+### Decision 023. 대표 대여소 station-hour 추천 모델은 `LightGBM`과 `CatBoost`, 그리고 `RMSE/Poisson objective`를 비교해 판단한다
+
+#### 배경
+
+- `works/05_prediction_long` 데이터는 시간 단위 카운트 예측 문제다.
+- 실제 학습 데이터에서 `rental_count = 0` 비율이 높고, `hour`, `station_group`, `cluster`, `holiday`, `weather` 등 범주형·비선형 효과가 함께 존재한다.
+- 추천 문서에서는 `CatBoost`, `LightGBM`, `XGBoost`가 후보로 제안되었고, objective는 `Poisson` 또는 `Tweedie` 검토가 권장되었다.
+
+#### 결정 내용
+
+- 1차 비교는 아래 4개 조합으로 제한한다.
+  - `LightGBM_RMSE`
+  - `LightGBM_Poisson`
+  - `CatBoost_RMSE`
+  - `CatBoost_Poisson`
+- 검증 전략은 계절성을 반영해 연 단위로 고정한다.
+  - Train: `2023`
+  - Validation: `2024`
+  - Final Train: `2023 + 2024`
+  - Test: `2025`
+
+#### 사용 데이터
+
+- 학습:
+  - `works/05_prediction_long/data/ddri_prediction_long_train_2023_2024.csv`
+- 테스트:
+  - `works/05_prediction_long/data/ddri_prediction_long_test_2025.csv`
+
+#### 생성 feature
+
+- 기본 입력:
+  - `station_id`
+  - `station_group`
+  - `cluster`
+  - `mapped_dong_code`
+  - `hour`
+  - `weekday`
+  - `month`
+  - `holiday`
+  - `temperature`
+  - `humidity`
+  - `precipitation`
+  - `wind_speed`
+- 시계열 파생:
+  - `lag_1h`
+  - `lag_24h`
+  - `lag_168h`
+  - `rolling_mean_24h`
+  - `rolling_mean_168h`
+  - `rolling_std_24h`
+
+#### 생성 파일
+
+- 모델 비교 노트북:
+  - `works/05_prediction_long/03_ddri_station_hour_model_comparison.ipynb`
+- 성능 비교표:
+  - `works/05_prediction_long/data/ddri_station_hour_model_metrics.csv`
+- LightGBM 중요도:
+  - `works/05_prediction_long/data/ddri_station_hour_lightgbm_feature_importance.csv`
+  - `works/05_prediction_long/images/ddri_station_hour_lightgbm_feature_importance.png`
+
+#### 내부 실행 결과
+
+- `LightGBM_RMSE`
+  - validation RMSE: `1.0066`
+  - validation MAE: `0.6121`
+  - validation R²: `0.5703`
+  - test RMSE: `0.8927`
+  - test MAE: `0.5455`
+  - test R²: `0.5608`
+
+- `LightGBM_Poisson`
+  - validation RMSE: `1.0003`
+  - validation MAE: `0.6074`
+  - validation R²: `0.5757`
+  - test RMSE: `0.8967`
+  - test MAE: `0.5402`
+  - test R²: `0.5568`
+
+- `CatBoost_RMSE`
+  - validation RMSE: `1.0088`
+  - validation MAE: `0.6139`
+  - validation R²: `0.5685`
+  - test RMSE: `0.9007`
+  - test MAE: `0.5488`
+  - test R²: `0.5528`
+
+- `CatBoost_Poisson`
+  - validation RMSE: `1.0081`
+  - validation MAE: `0.6095`
+  - validation R²: `0.5691`
+  - test RMSE: `0.9049`
+  - test MAE: `0.5460`
+  - test R²: `0.5487`
+
+#### 현재 해석
+
+- validation만 보면 `LightGBM_Poisson`이 근소 우세하다.
+- 하지만 최종 `2025` 테스트 기준으로는 `LightGBM_RMSE`가 가장 안정적이다.
+- 이번 대표 대여소 15개 station-hour 실험에서는 `CatBoost`가 기대만큼 우세하지 않았다.
+- 따라서 현재 1차 기본 후보는 `LightGBM_RMSE`로 두고, `Poisson objective`는 보조 후보로 유지한다.
+
+#### 중요 피처
+
+LightGBM 기준 상위 피처:
+
+- `hour`
+- `lag_168h`
+- `lag_1h`
+- `station_id`
+- `temperature`
+- `lag_24h`
+- `rolling_mean_24h`
+- `rolling_mean_168h`
+
+즉, 시간대 정보와 과거 반복 패턴, 그리고 날씨가 핵심 설명 변수로 보인다.
+
+#### 보고서/PPT에 넣을 수 있는 메시지
+
+- “대표 대여소 station-hour 예측에서는 추천 모델 후보를 직접 비교한 결과 LightGBM 계열이 가장 안정적이었다.”
+- “Poisson objective는 validation에서 유리했지만, 최종 2025 테스트에서는 RMSE objective가 더 좋은 종합 성능을 보였다.”
+- “시간대 예측에서는 `hour`, `1시간/24시간/1주 lag`, 날씨가 핵심 설명 변수로 확인되었다.”
+
+#### 필요한 시각화/표
+
+- [x] 모델별 성능 비교표
+- [x] LightGBM feature importance 차트
+- [ ] station_group별 성능 비교표
+- [ ] 시간대별 오차 분포 차트
+
+---
+
+### Decision 024. 전체 161개 스테이션 `station-hour` 실험은 대표 대여소 15개 실험과 별도 경로에서 관리한다
+
+#### 배경
+
+- `works/05_prediction_long`는 대표 대여소 15개를 이용한 설명용/보조 실험 경로다.
+- 반면 전체 공통 스테이션 `161개` `station-hour` 데이터는 실제 서비스 확장용 핵심 실험 트랙이다.
+- 두 실험은 목적, 데이터 크기, 결과 해석이 다르므로 같은 폴더에서 관리하면 혼선이 생긴다.
+
+#### 결정 내용
+
+- 전체 스테이션 `station-hour` 원본 데이터는 계속 아래 공유폴더에 둔다.
+  - `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/`
+- 전체 스테이션 `station-hour` 실험 노트북, 성능표, 차트는 아래 별도 경로에서 관리한다.
+  - `works/06_prediction_long_full/`
+- 따라서 앞으로 `works/05_prediction_long`에는 대표 대여소 15개 실험만 남긴다.
+
+#### 생성 파일
+
+- 실험 관리 README:
+  - `works/06_prediction_long_full/README.md`
+
+#### 현재 해석
+
+- 대표 대여소 실험은 유형별 패턴 설명용으로 유지한다.
+- 전체 161개 스테이션 실험은 운영자 재배치 지원과 일반 사용자 잔여 자전거 예측 기능으로 직접 연결되는 본 실험 트랙으로 취급한다.
+- 다음 ML 작업은 `works/06_prediction_long_full` 기준으로 진행한다.
+
+---
+
+### Decision 025. 전체 161개 스테이션 `station-hour` 1차 baseline은 `LightGBM_RMSE` 단일 모델로 먼저 확인한다
+
+#### 배경
+
+- 전체 공통 스테이션 `station-hour` 데이터는 `2,824,584행` 학습셋과 `1,410,360행` 테스트셋을 가지는 본 서비스용 대형 데이터다.
+- 대표 대여소 15개 실험에서 `LightGBM_RMSE`가 가장 안정적인 결과를 보였으므로, 전체 스테이션 확장에서도 같은 모델로 먼저 기준선을 확인하는 것이 효율적이다.
+- 또한 대표 대여소 노트북에서 `rolling_mean/std`가 스테이션 경계를 명확히 분리하지 못하는 계산 방식이 있었기 때문에, 전체 스테이션 baseline에서는 `station_id`별 rolling으로 수정해 적용한다.
+
+#### 결정 내용
+
+- 전체 161개 스테이션 baseline 1차 모델은 `LightGBM_RMSE_Full`로 고정한다.
+- 검증 전략은 그대로 유지한다.
+  - Train: `2023`
+  - Validation: `2024`
+  - Final Train: `2023 + 2024`
+  - Test: `2025`
+- 입력 피처는 정적 스테이션 정보 + 시간 변수 + 날씨 + lag/rolling 피처를 사용한다.
+
+#### 사용 데이터
+
+- 원본 데이터:
+  - `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/ddri_prediction_long_train_2023_2024.csv`
+  - `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/ddri_prediction_long_test_2025.csv`
+
+#### 생성 feature
+
+- 기본 입력:
+  - `station_id`
+  - `cluster`
+  - `mapped_dong_code`
+  - `hour`
+  - `weekday`
+  - `month`
+  - `holiday`
+  - `temperature`
+  - `humidity`
+  - `precipitation`
+  - `wind_speed`
+- 시계열 파생:
+  - `lag_1h`
+  - `lag_24h`
+  - `lag_168h`
+  - `rolling_mean_24h`
+  - `rolling_mean_168h`
+  - `rolling_std_24h`
+
+#### 생성 파일
+
+- baseline 노트북:
+  - `works/06_prediction_long_full/01_ddri_station_hour_full_baseline.ipynb`
+- 성능 비교표:
+  - `works/06_prediction_long_full/data/ddri_station_hour_full_model_metrics.csv`
+- LightGBM 중요도:
+  - `works/06_prediction_long_full/data/ddri_station_hour_full_lightgbm_feature_importance.csv`
+  - `works/06_prediction_long_full/images/ddri_station_hour_full_lightgbm_feature_importance.png`
+- 스테이션별 오류 요약:
+  - `works/06_prediction_long_full/data/ddri_station_hour_full_station_error_summary.csv`
+
+#### 내부 실행 결과
+
+- `LightGBM_RMSE_Full`
+  - validation RMSE: `0.9735`
+  - validation MAE: `0.6234`
+  - validation R²: `0.4463`
+  - test RMSE: `0.8624`
+  - test MAE: `0.5594`
+  - test R²: `0.4369`
+
+#### 중요 피처
+
+상위 피처:
+
+- `station_id`
+- `hour`
+- `weekday`
+- `lag_168h`
+- `lag_1h`
+- `temperature`
+- `lag_24h`
+- `rolling_mean_168h`
+
+즉, 전체 스테이션 범위에서도 스테이션 고유성, 시간대, 반복 수요 패턴, 날씨가 핵심 축으로 유지된다.
+
+#### 현재 해석
+
+- 대표 대여소 15개 실험보다 성능은 다소 낮아졌지만, 전체 서비스 범위를 포괄한 본실험 baseline으로는 합리적인 출발점이다.
+- 2025 테스트 RMSE가 validation보다 낮게 나온 것은 전체 스테이션 공통 패턴이 2025 테스트에서 더 안정적으로 맞아떨어진 일부 영향으로 해석할 수 있다.
+- 다음 단계는 `Poisson objective`, `CatBoost`, 그리고 스테이션별 상위 오류 사례 분석이다.
+
+#### 보고서/PPT에 넣을 수 있는 메시지
+
+- “대표 대여소 설명용 실험과 별도로, 전체 161개 공통 스테이션을 대상으로 한 서비스용 station-hour baseline을 구축했다.”
+- “전체 스테이션 범위에서도 station_id, hour, 과거 수요 lag, 날씨가 핵심 설명 변수로 유지되었다.”
+- “전체 서비스 범위 확장 시 설명력은 일부 낮아졌지만, 운영자/사용자 기능 확장을 위한 실사용 기준선을 확보했다.”
+
+---
+
+### Decision 026. 전체 161개 스테이션 `station-hour` objective 비교에서는 `LightGBM_RMSE_Full`을 기본 모델로 유지한다
+
+#### 배경
+
+- baseline 실험에서 `LightGBM_RMSE_Full`이 전체 161개 스테이션 기준선을 확보했다.
+- 다음 판단은 count target 특성을 고려한 `Poisson objective`가 실제로 더 유리한지 확인하는 것이었다.
+- 초기 `CatBoost`까지 포함한 전체 비교는 계산 시간이 과도하게 길어져, 본 트랙에서는 먼저 LightGBM objective 비교로 범위를 좁혔다.
+
+#### 결정 내용
+
+- 전체 161개 스테이션 본실험의 objective 비교는 아래 2개로 우선 확정한다.
+  - `LightGBM_RMSE_Full`
+  - `LightGBM_Poisson_Full`
+- `CatBoost`는 전체 데이터 전체 반복학습보다 계산비용이 커서, 필요 시 축소 실험 또는 경량 설정으로 분리한다.
+
+#### 생성 파일
+
+- 비교 노트북:
+  - `works/06_prediction_long_full/02_ddri_station_hour_full_model_comparison.ipynb`
+- 비교표:
+  - `works/06_prediction_long_full/data/ddri_station_hour_full_model_comparison_metrics.csv`
+- LightGBM 중요도:
+  - `works/06_prediction_long_full/data/ddri_station_hour_full_model_comparison_lightgbm_feature_importance.csv`
+  - `works/06_prediction_long_full/images/ddri_station_hour_full_model_comparison_lightgbm_feature_importance.png`
+
+#### 내부 실행 결과
+
+- `LightGBM_RMSE_Full`
+  - validation RMSE: `0.9735`
+  - validation MAE: `0.6234`
+  - validation R²: `0.4463`
+  - test RMSE: `0.8624`
+  - test MAE: `0.5594`
+  - test R²: `0.4369`
+
+- `LightGBM_Poisson_Full`
+  - validation RMSE: `0.9827`
+  - validation MAE: `0.6260`
+  - validation R²: `0.4359`
+  - test RMSE: `0.8704`
+  - test MAE: `0.5613`
+  - test R²: `0.4262`
+
+#### 현재 해석
+
+- 전체 161개 스테이션 기준에서는 `Poisson objective`가 `RMSE objective`를 넘지 못했다.
+- 따라서 full-data 트랙의 기본 objective는 `RMSE`로 유지한다.
+- 이후 고도화는 objective 변경보다 스테이션별 오류 분석, 추가 피처, 서비스 후처리 연결이 우선이다.
+
+#### 보고서/PPT에 넣을 수 있는 메시지
+
+- “전체 161개 스테이션 full-data 실험에서는 count-aware Poisson objective보다 기본 RMSE objective가 더 안정적인 결과를 보였다.”
+- “full-data 트랙에서는 모델 종류를 무리하게 늘리기보다, LightGBM 기준선 위에서 오류 분석과 서비스 연결성을 먼저 확보하는 것이 더 효율적이다.”
+
+---
+
+### Decision 027. 대표 대여소 단계는 군집별 최적화 자체가 아니라, 군집별 본실험 전의 탐색/설명 단계로 해석한다
+
+#### 배경
+
+- 군집화를 수행한 이유는 최종적으로 군집별 수요 구조 차이를 해석하고, 필요하면 군집별로 다른 피처 조합과 모델 전략을 적용하기 위함이다.
+- 하지만 현재까지는 대표 대여소 15개 실험과 전체 161개 공통 baseline 실험이 먼저 진행되었다.
+- 이때 대표 대여소 단계가 군집별 최적화의 최종단계인지, 아니면 그 전 단계인지 해석을 분명히 할 필요가 생겼다.
+
+#### 결정 내용
+
+- 대표 대여소 15개 `station-hour` 실험은 군집별 본격 최적화의 최종단계가 아니다.
+- 이 단계는 아래 목적을 가진다.
+  - 군집별 시간대 패턴 설명
+  - 시간대 예측 구조의 빠른 탐색
+  - 전체 스테이션 실험 전 모델/피처 전략 감 잡기
+- 전체 161개 `station-hour` 실험은 서비스용 공통 baseline 단계로 해석한다.
+- 이후 군집화를 예측모델까지 완성하려면, 다음 단계는 `군집별 subset 기반 모델링`이어야 한다.
+
+#### 문서 반영
+
+- 전략 문서:
+  - `works/00_overview/09_ddri_cluster_specific_modeling_strategy.md`
+
+#### 현재 해석
+
+- 대표 대여소 단계는 설명용/탐색용 중간 단계다.
+- 전체 161개 baseline은 서비스 범위 기준선 확보다.
+- 진짜 군집별 모델링은 아직 시작 전이며, 다음 ML 고도화 단계에서 수행해야 한다.
+
+#### 보고서/PPT에 넣을 수 있는 메시지
+
+- “대표 대여소 실험은 군집별 최적 모델을 확정하기 위한 마지막 단계가 아니라, 군집별 패턴 설명과 시간대 예측 구조 탐색을 위한 중간 단계였다.”
+- “서비스 적용을 위해 먼저 전체 161개 스테이션 공통 baseline을 확보했고, 이후 군집별 subset 실험으로 고도화할 계획이다.”
+
+---
+
+### Decision 028. 대표 대여소 `station-hour` 실험에도 군집화 파트처럼 설명용 근거 차트를 누적한다
+
+#### 배경
+
+- 대표 대여소 `station-hour` 실험은 모델 비교표와 feature importance까지만 생성되어, 군집화 파트에 비해 설명 근거가 부족했다.
+- 실제 보고서와 발표에서는 “왜 이 모델을 기준선으로 삼는가”, “어느 그룹에서 오차가 큰가”, “시간대 패턴을 얼마나 따라가는가”를 보여주는 차트가 필요하다.
+
+#### 결정 내용
+
+- 대표 대여소 `station-hour` 실험에도 별도 evidence notebook을 추가한다.
+- 현재 우세 모델인 `LightGBM_RMSE` 기준으로 아래 근거 자료를 만든다.
+  - 모델별 `2025` 테스트 RMSE 비교 차트
+  - 시간대별 평균 실제값 vs 예측값 차트
+  - `station_group`별 MAE 차트
+  - residual 분포 차트
+  - 실제값 vs 예측값 scatter
+  - 그룹/스테이션별 오류 요약표
+
+#### 생성 파일
+
+- evidence notebook:
+  - `works/05_prediction_long/04_ddri_station_hour_evidence_charts.ipynb`
+- 요약표:
+  - `works/05_prediction_long/data/ddri_station_hour_hourly_actual_vs_predicted.csv`
+  - `works/05_prediction_long/data/ddri_station_hour_station_group_error_summary.csv`
+  - `works/05_prediction_long/data/ddri_station_hour_station_error_summary.csv`
+- 차트:
+  - `works/05_prediction_long/images/ddri_station_hour_model_comparison_test_rmse.png`
+  - `works/05_prediction_long/images/ddri_station_hour_hourly_actual_vs_predicted.png`
+  - `works/05_prediction_long/images/ddri_station_hour_station_group_mae.png`
+  - `works/05_prediction_long/images/ddri_station_hour_residual_distribution.png`
+  - `works/05_prediction_long/images/ddri_station_hour_actual_vs_predicted_scatter.png`
+
+#### 내부 해석
+
+- 대표 그룹 중 `아침 도착 업무 집중형`의 MAE가 가장 높다.
+- 상위 오류 대여소에는 `2377`, `2348`, `4917`이 포함된다.
+- 시간대 평균 패턴은 전반적으로 따라가지만, 출근 피크 구간과 일부 고수요 구간에서 오차가 상대적으로 커진다.
+
+#### 보고서/PPT에 넣을 수 있는 메시지
+
+- “대표 대여소 실험도 군집화 파트처럼 설명 근거 차트를 보강해, 모델 선정과 오류 특성을 시각적으로 설명할 수 있도록 정리했다.”
+- “대표 그룹별 오차를 보면 아침 도착 업무 집중형에서 상대적으로 어려운 패턴이 확인되며, 이는 이후 군집별 subset 실험 필요성을 뒷받침한다.”
+
+---
+
+### Decision 029. `works/05_prediction_base`는 미사용 잔여 폴더로 판단하고 제거한다
+
+#### 배경
+
+- `works/05_prediction_base`는 초기에 예측 기초 데이터셋을 따로 두려던 흔적이지만, 현재 실사용 예측 트랙은 아래 세 경로로 정리되었다.
+  - `works/03_prediction`
+  - `works/05_prediction_long`
+  - `works/06_prediction_long_full`
+- 실제로 `works/05_prediction_base` 아래에는 비어 있는 `data/`만 남아 있었고, 현재 파이프라인에서 참조되지 않는다.
+
+#### 결정 내용
+
+- `works/05_prediction_base` 폴더를 삭제한다.
+- 이후 예측 관련 active 경로는 아래처럼 해석한다.
+  - `works/03_prediction`: station-day baseline
+  - `works/05_prediction_long`: 핵심 15개 검증용 station-hour
+  - `works/06_prediction_long_full`: 161개 재배치 확장용 station-hour
+
+#### 현재 해석
+
+- `works/05_prediction_base`는 현 시점에서는 불필요한 잔여 폴더였다.
+- 작업 구조를 단순화하기 위해 제거하는 것이 맞다.
+
+---
+
+### Decision 030. `works/04_presentation/02_project` 임시 발표 자료는 제거하고, 발표 폴더에는 군집화 자료만 유지한다
+
+#### 배경
+
+- `works/04_presentation/02_project`에는 과거 임시 프로젝트 발표 자료가 남아 있었지만, 현재 프로젝트 상태와 정확히 동기화되어 있지 않았다.
+- 현재는 군집화 파트만 별도 발표 자료로 정리되어 있고, 프로젝트 전체 발표는 아직 최종 분석/ML/서비스 설계가 끝나지 않은 상태다.
+- 이런 상황에서 임시 발표 자료를 유지하면 나중에 실제 최종 발표 자료와 혼동될 가능성이 높다.
+
+#### 결정 내용
+
+- `works/04_presentation/02_project` 폴더를 제거한다.
+- 현재 `works/04_presentation`에는 `01_clustering`만 유지한다.
+- 전체 프로젝트 발표 자료와 최종 분석 레포트는 추후 최종 단계에서 새로 작성한다.
+
+#### 현재 해석
+
+- 지금 발표 폴더는 “현재 유효한 발표 자료”만 남기는 것이 맞다.
+- 군집화 발표 자료는 유지하고, 프로젝트 전체 발표는 나중에 최종 결과 기준으로 다시 만드는 편이 더 안전하다.
+
+---
+
+### Decision 031. `works/05_prediction_long`는 원본 데이터와 생성 산출물을 분리해 관리한다
+
+#### 배경
+
+- `works/05_prediction_long/data` 안에는 원본 train/test long-format CSV와 모델 성능표, 오류 요약표가 함께 섞여 있었다.
+- 이렇게 두면 나중에 원본 데이터와 실험 생성물을 구분하기 어렵고, 폴더 해석도 불명확해진다.
+
+#### 결정 내용
+
+- `data/`에는 아래 원본 데이터만 유지한다.
+  - `ddri_prediction_long_train_2023_2024.csv`
+  - `ddri_prediction_long_test_2025.csv`
+- 생성 산출물은 아래로 이동한다.
+  - `output/data/`
+  - `output/images/`
+- 관련 노트북도 새 저장 경로를 따르도록 수정한다.
+
+#### 현재 해석
+
+- `works/05_prediction_long/data`는 이제 원본 데이터 전용 경로다.
+- 실험 결과 표와 차트는 `output/` 아래에서 확인하는 것이 맞다.
+
+---
+
+### Decision 032. `works/06_prediction_long_full`는 원본 데이터가 외부에 있으므로 `output/`만 생성한다
+
+#### 배경
+
+- `works/06_prediction_long_full`는 대표 대여소 실험과 달리, 원본 train/test CSV를 직접 보관하지 않는다.
+- 실제 원본 데이터는 아래 공유폴더에 존재한다.
+  - `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/`
+- 따라서 이 폴더 안에서 `data/`, `images/`를 따로 둘 필요가 없고, 생성 산출물만 `output/`으로 모으는 편이 더 명확하다.
+
+#### 결정 내용
+
+- `works/06_prediction_long_full` 아래 생성물은 모두 `output/`으로 저장한다.
+  - `output/data/`
+  - `output/images/`
+- 관련 노트북 저장 경로도 이 구조를 따르도록 수정한다.
+
+#### 현재 해석
+
+- `works/06_prediction_long_full`는 원본 데이터 폴더가 아니라, 전체 161개 스테이션 실험 노트북과 생성물만 관리하는 경로다.
+- 따라서 이 폴더에서는 `output/`만 보면 된다.
