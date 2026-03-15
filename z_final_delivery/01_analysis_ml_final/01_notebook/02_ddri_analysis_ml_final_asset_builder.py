@@ -6,6 +6,7 @@ from typing import Iterable
 
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 import numpy as np
 import pandas as pd
 
@@ -74,14 +75,56 @@ def save_delta_chart(
     plt.close(fig)
 
 
+def save_rmse_chart(
+    df: pd.DataFrame,
+    output_path: Path,
+    title_ko: str,
+    title_en: str,
+    rmse_col: str = "테스트 RMSE(test_rmse)",
+    label_col: str = "표시명(label)",
+    colors: Iterable[str] | None = None,
+) -> None:
+    """RMSE 값을 0.01 단위 눈금으로 표시하는 차트."""
+    labels = [wrap_label(x) for x in df[label_col]]
+    rmse_values = df[rmse_col].astype(float).to_numpy()
+    plot_colors = list(colors) if colors is not None else ["#94a3b8"] * len(df)
+
+    fig, ax = plt.subplots(figsize=(15.5, 6.8))
+    y = np.arange(len(df))
+    ax.barh(y, rmse_values, color=plot_colors, height=0.68)
+    ax.set_yticks(y)
+    ax.set_yticklabels(labels, fontsize=13)
+    ax.invert_yaxis()
+    ax.set_xlabel("테스트 오차 RMSE", fontsize=14)
+    ax.set_title(f"{title_ko}\n{title_en}", fontsize=22)
+    ax.grid(axis="x", color="#cbd5e1", linewidth=1, alpha=0.9)
+    ax.set_axisbelow(True)
+
+    # RMSE 0.01 단위 눈금 (범위가 크면 0.05)
+    v_min, v_max = rmse_values.min(), rmse_values.max()
+    rng = v_max - v_min
+    tick = 0.01 if rng <= 0.05 else (0.05 if rng <= 0.3 else 0.1)
+    ax.xaxis.set_major_locator(mticker.MultipleLocator(tick))
+    pad = max(0.02, rng * 0.15)
+    ax.set_xlim(max(0, v_min - pad), v_max + pad * 2)
+
+    for i, v in enumerate(rmse_values):
+        fmt = ".4f" if v < 0.1 else ".3f"
+        ax.text(v + pad * 0.3, i, f"{v:{fmt}}", va="center", fontsize=13, color="#334155")
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=180, bbox_inches="tight")
+    plt.close(fig)
+
+
 def build_rep15_chart() -> None:
     df = read_csv(OUTPUT_DIR / "ddri_analysis_ml_final_rep15_metrics.csv")
     colors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444"]
-    save_delta_chart(
+    save_rmse_chart(
         df,
         OUTPUT_DIR / "ddri_analysis_ml_final_rep15_test_rmse.png",
-        "대표 15개 최선 대비 차이 확대",
-        "Representative 15 Delta vs Best (x1000)",
+        "대표 15개 테스트 오차",
+        "Representative 15 Test RMSE",
         colors=colors,
     )
 
@@ -89,11 +132,11 @@ def build_rep15_chart() -> None:
 def build_full161_chart() -> None:
     df = read_csv(OUTPUT_DIR / "ddri_analysis_ml_final_full161_metrics.csv")
     colors = ["#10b981"] + ["#94a3b8"] * (len(df) - 1)
-    save_delta_chart(
+    save_rmse_chart(
         df,
         OUTPUT_DIR / "ddri_analysis_ml_final_full161_test_rmse.png",
-        "강남구 161개 최선 대비 차이 확대",
-        "Gangnam 161 Delta vs Best (x1000)",
+        "강남구 161개 테스트 오차",
+        "Gangnam 161 Test RMSE",
         colors=colors,
     )
 
@@ -108,13 +151,13 @@ def build_routing_chart() -> None:
         "full161_exact_cluster_routing",
     ]
     df = df[df["구분(track)"].isin(keep)].copy()
-    df = df.sort_values("최선 대비 차이 x1000(delta_x1000)")
+    df = df.sort_values("테스트 RMSE(test_rmse)")
     colors = ["#10b981"] + ["#ef4444"] * (len(df) - 1)
-    save_delta_chart(
+    save_rmse_chart(
         df,
         OUTPUT_DIR / "ddri_analysis_ml_final_routing_vs_single_test_rmse.png",
-        "단일 최종안 대비 뒤처짐 확대",
-        "Lag vs Single Best (x1000)",
+        "단일 최종안 vs 군집 분기 테스트 오차",
+        "Single Best vs Routing Test RMSE",
         colors=colors,
     )
 
@@ -153,14 +196,21 @@ def build_weather_chart() -> None:
             }
         )
     df = pd.DataFrame.from_records(records).sort_values("테스트 RMSE(test_rmse)")
-    best = df["테스트 RMSE(test_rmse)"].min()
-    df["최선 대비 차이 x1000(delta_x1000)"] = (df["테스트 RMSE(test_rmse)"] - best) * 1000
+    df["표시명(label)"] = [
+        "전체 날씨 상호작용",
+        "시간대 핵심 조합",
+        "출퇴근 핵심 조합",
+        "강수 강도 핵심 조합",
+        "정적 피처 기준선",
+        "단순 가중치",
+        "월별 가중치",
+    ]
     colors = ["#10b981"] + ["#94a3b8"] * (len(df) - 1)
-    save_delta_chart(
+    save_rmse_chart(
         df,
         OUTPUT_DIR / "ddri_analysis_ml_final_weather_interaction_test_rmse.png",
-        "weather interaction 최선 대비 차이 확대",
-        "Weather Interaction Delta vs Best (x1000)",
+        "날씨 상호작용 피처 테스트 오차",
+        "Weather Interaction Test RMSE",
         colors=colors,
     )
 

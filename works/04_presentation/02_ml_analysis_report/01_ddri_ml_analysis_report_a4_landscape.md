@@ -342,12 +342,8 @@ pdf_options:
 | `대표 15개 weather_full` | `rep15_static_weather_full` | `0.9198` | weather_full 상호작용 피처는 대표셋에서 이득 없음 |
 | `cluster01` | `subset_a_commute_transit + LightGBM_Poisson` | `1.3108` | 가장 어려운 군집이지만 개선 여지 큼 |
 
-- 아래 차트는 표의 수치를 그대로 두고, `최선 대비 차이`만 확대해 보여준다.
-
-<div class="page-break"></div>
-
 <div class="chart-block">
-  <img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_rep15_test_rmse.png" alt="대표 15개 비교 차트">
+  <img class="chart-image" src="./support_assets/ddri_ml_report_2page_rep15_summary.png" alt="대표 15개 핵심 결과">
 </div>
 
 <div class="callout compact">대표 15개 실험의 핵심 성과는 `군집별 최종 운영 모델 확정`이 아니라, `군집별로 유효한 피처 축을 발굴했다`는 데 있다.</div>
@@ -386,12 +382,8 @@ pdf_options:
 | `static routing` | `0.8681` | `7.7` | routing 계열 중 하위권 |
 | `exact cluster routing` | `0.8681` | `7.7` | 15개 군집 피처가 161개에 그대로 일반화되지 않음 |
 
-- 아래 차트는 표의 수치 중 `최선 대비 차이`만 확대해서 보여준다.
-
-<div class="page-break"></div>
-
 <div class="chart-block">
-  <img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_full161_test_rmse.png" alt="161개 운영 모델 비교 차트">
+  <img class="chart-image" src="./support_assets/ddri_ml_report_2page_final_model_summary.png" alt="161개 운영 모델 비교">
 </div>
 
 <div class="callout">강남구 전체 운영 기준선은 `static enriched + weather_full interaction(상호작용 피처)`으로 고정한다.</div>
@@ -479,13 +471,9 @@ pdf_options:
 | `161 static routing` | `0.8681` | `7.7` | static enriched routing도 열세 |
 | `161 exact cluster routing` | `0.8681` | `7.7` | 15개 군집 피처 일반화 실패 |
 
-<div class="page-break"></div>
-
 <div class="chart-block">
-  <img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_routing_vs_single_test_rmse.png" alt="라우팅 대 단일모델 비교 차트">
+  <img class="chart-image" src="./support_assets/ddri_ml_report_2page_final_model_summary.png" alt="161개 운영 모델 비교">
 </div>
-
-<div class="page-break"></div>
 
 <div class="chart-block">
   <img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_role_structure.png" alt="15개와 161개 역할 구조 차트">
