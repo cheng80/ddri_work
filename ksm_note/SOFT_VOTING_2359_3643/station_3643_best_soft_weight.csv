@@ -1,0 +1,2 @@
+weight_lightgbm,weight_xgboost,weight_random_forest,rmse,mae,r2,exact_match_hits_rounded,exact_match_rate_rounded,bucket_accuracy_0_1_2_3plus,n_samples
+0.75,0.25,0.0,0.9192368318462569,0.6317319980317595,0.2639600521069968,4781.0,0.5442850637522769,0.5522540983606558,8784.0
