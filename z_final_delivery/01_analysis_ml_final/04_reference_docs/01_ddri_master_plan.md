@@ -19,17 +19,17 @@
   - 분석 해석, 전처리 설명, 모델 실험 로그, 결과 비교는 반드시 노트북에 남김
 - [x] 발표/레포트용 차트는 결과 소개보다 `선정 근거 설명용 차트`를 우선 생성
 - [x] 정책 문서는 `works/00_overview/07_ddri_notebook_and_evidence_chart_policy.md`를 정본으로 사용
-- [x] 군집화 이후 예측 단계는 `대표 대여소 탐색 -> 전체 스테이션 공통 baseline -> 군집별 축소 피처 조합(subset) 최적화` 순서로 해석
+- [x] 군집화 이후 예측 단계는 `대표 대여소 탐색 -> 전체 스테이션 공통 baseline(기준선 모델) -> 군집별 축소 피처 조합(subset(축소 피처 조합)) 최적화` 순서로 해석
 
 ## 0.1 용어 정리
 
-- `subset`(축소 피처 조합)
+- `subset(축소 피처 조합)`(축소 피처 조합)
   - 전체 후보 피처 중 일부만 골라 만든 피처 묶음
-- `objective`(학습 목표 함수)
+- `objective(학습 목표 함수)`(학습 목표 함수)
   - 모델이 무엇을 더 잘 맞추도록 학습할지 정하는 기준
-- `RMSE objective`
+- `RMSE(제곱평균제곱근오차) objective(학습 목표 함수)`
   - 일반 회귀형 학습 목표 함수
-- `Poisson objective`
+- `Poisson objective(학습 목표 함수)`
   - 수요량, 건수처럼 `0 이상 count 데이터`에 맞춘 학습 목표 함수
 
 ## 1. 현재 문제 정의
@@ -93,13 +93,13 @@
 1. 통합 군집화 최종 결과 정리 완료
 2. 발표용 군집화 문서 및 PDF 정리 완료
 3. `station-day` 베이스라인 예측 데이터셋 생성 완료
-4. 대표 대여소 15개 기준 `station-hour` long-format 예측 데이터셋 생성 완료
-5. 전체 공통 스테이션 161개 기준 `station-hour` long-format 예측 데이터셋 생성 완료
-6. 전체 스테이션 `station-hour` 실험 관리 경로를 대표 대여소 실험과 분리
+4. 대표 대여소 15개 기준 `station-hour(대여소-시간 단위)` long-format 예측 데이터셋 생성 완료
+5. 전체 공통 스테이션 161개 기준 `station-hour(대여소-시간 단위)` long-format 예측 데이터셋 생성 완료
+6. 전체 스테이션 `station-hour(대여소-시간 단위)` 실험 관리 경로를 대표 대여소 실험과 분리
 7. 예측용 차트 일부 생성 완료
 8. station-day 베이스라인 모델 비교 완료
-9. 대표 대여소 station-hour 추천 모델 비교 및 근거 차트 보강 완료
-10. 전체 161개 스테이션 station-hour baseline 및 objective 비교 완료
+9. 대표 대여소 station-hour(대여소-시간 단위) 추천 모델 비교 및 근거 차트 보강 완료
+10. 전체 161개 스테이션 station-hour(대여소-시간 단위) baseline(기준선 모델) 및 objective(학습 목표 함수) 비교 완료
 11. ML 오류 분석과 서비스 후처리 로직 정교화는 아직 미완료
 12. 실시간 서비스 연결용 외부 API 후보 확보
 13. 팀 공통 군집별 모델링 프로토콜을 대표 대여소 실험 경로에 배치 완료
@@ -118,16 +118,16 @@
 - 통합 군집화 최종 결과:
   - `works/01_clustering/08_integrated/final/results/second_clustering_results/`
 - 통합 군집화 최종 피처:
-  - `works/01_clustering/08_integrated/final/features/`
+  - `works/01_clustering/08_integrated/final/feature(입력 변수)s/`
 - station-day 예측 데이터:
   - `works/03_prediction/02_data/`
-- 대표 대여소 station-hour 예측 데이터:
+- 대표 대여소 station-hour(대여소-시간 단위) 예측 데이터:
   - `works/05_prediction_long/`
   - 군집별 권장안:
     - `works/05_prediction_long/cheng80/07_ddri_cluster_final_recommendation.md`
-- 전체 스테이션 station-hour 예측 데이터:
+- 전체 스테이션 station-hour(대여소-시간 단위) 예측 데이터:
   - `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/`
-- 전체 스테이션 station-hour 실험 관리:
+- 전체 스테이션 station-hour(대여소-시간 단위) 실험 관리:
   - `works/06_prediction_long_full/`
 - 발표 자료:
   - `works/04_presentation/`
@@ -141,10 +141,10 @@
 
 - 실시간 재고 기준 API는 `OA-15493 bikeList`로 사용한다.
 - 서비스 대상 `161개` 스테이션은 `station_id ↔ ST-xxxx ↔ 운영 상태` 매핑 테이블을 별도 lookup으로 고정한다.
-- 대표 대여소 `station-hour` 단계는 `군집별 본실험 전의 탐색/설명 단계`로 해석한다.
-- 전체 `161개` 스테이션 `station-hour` 기본 모델은 `LightGBM_RMSE_Full`로 유지한다.
-- 군집별 최종 권장안은 `공통 baseline + cluster01 우선 커스텀`으로 정리한다.
-- 대표 오류 기준 다음 subset 실험 우선순위는 `cluster01 -> cluster02 -> cluster00 -> cluster04`로 둔다.
+- 대표 대여소 `station-hour(대여소-시간 단위)` 단계는 `군집별 본실험 전의 탐색/설명 단계`로 해석한다.
+- 전체 `161개` 스테이션 `station-hour(대여소-시간 단위)` 기본 모델은 `LightGBM_RMSE(제곱평균제곱근오차)(RMSE(제곱평균제곱근오차) 기준 LightGBM)_Full`로 유지한다.
+- 군집별 최종 권장안은 `공통 baseline(기준선 모델) + cluster01 우선 커스텀`으로 정리한다.
+- 대표 오류 기준 다음 subset(축소 피처 조합) 실험 우선순위는 `cluster01 -> cluster02 -> cluster00 -> cluster04`로 둔다.
 - 통합 군집화 정본 구조는 `works/01_clustering/08_integrated/{final,intermediate,pipeline,source_data}` 기준으로 유지한다.
 - 대표 대여소 실험 경로는 `원본 데이터(공유폴더)`와 `Git 관리 산출물(works/05_prediction_long)`을 분리해 유지한다.
 - 전체 스테이션 실험 경로는 `works/06_prediction_long_full`에서 `output/` 중심으로 관리한다.
@@ -154,7 +154,7 @@
 
 - `cheng80/02_ddri_api_operational_rules.md`
 - `works/05_prediction_long/cheng80/07_ddri_cluster_final_recommendation.md`
-- `works/05_prediction_long/cheng80/rep15_error_analysis/12_ddri_rep15_top5_feature_linkage_summary.md`
+- `works/05_prediction_long/cheng80/rep15_error_analysis/12_ddri_rep15_top5_feature(입력 변수)_linkage_summary.md`
 - `works/06_prediction_long_full/README.md`
 
 ## 3.2 서비스 후처리 최소 고정안
@@ -169,7 +169,7 @@
   - `reallocation_priority`
 - 일반 사용자용 핵심 지표:
   - `predicted_remaining_bikes`
-  - `bike_availability_flag`
+  - `bike_availability_flag(과거 시점 값)`
   - `availability_level`
 - 가장 단순한 1차 계산식:
   - `predicted_remaining_bikes = current_bike_stock - predicted_rental_count`
@@ -203,7 +203,7 @@
 
 ### 체크리스트
 
-- [x] baseline 이용 패턴 군집화 수행
+- [x] baseline(기준선 모델) 이용 패턴 군집화 수행
 - [x] 반납 시간대 기반 지구판단 피처 생성
 - [x] 순유입/교통 접근성 결합 입력 확정
 - [x] 생활인구 결합 완료
@@ -213,7 +213,7 @@
 - [x] 통합 군집화 차트/지도/정적 이미지 생성
 - [x] 발표 문서와 스피치 노트 반영
 - [x] 작업물 구조를 `08_integrated/final/intermediate/pipeline` 기준으로 재정리
-- [x] POI 보강 실험 산출물 추가 생성
+- [x] POI(관심지점 정보) 보강 실험 산출물 추가 생성
 
 ### 완료 기준 점검
 
@@ -233,12 +233,12 @@
 - [x] 내부 데이터와 외부 데이터 결합 키 설계
 - [x] 날씨 결합 기준 설계
 - [x] 공휴일 결합 기준 설계
-- [x] 환경 feature 결합 전략 설계
-- [x] 군집 label을 예측 feature로 포함할지 결정
+- [x] 환경 feature(입력 변수) 결합 전략 설계
+- [x] 군집 label을 예측 feature(입력 변수)로 포함할지 결정
 - [x] 학습용 최종 스키마 문서화
 - [x] station-day 베이스라인 데이터셋 생성
-- [x] 대표 대여소 15개 기준 station-hour long-format 데이터셋 생성
-- [x] 전체 공통 스테이션 161개 기준 station-hour long-format 데이터셋 생성
+- [x] 대표 대여소 15개 기준 station-hour(대여소-시간 단위) long-format 데이터셋 생성
+- [x] 전체 공통 스테이션 161개 기준 station-hour(대여소-시간 단위) long-format 데이터셋 생성
 - [x] 대표 대여소 선정 기준과 그룹 정의 문서화
 - [x] 대표 대여소 실험 경로와 전체 스테이션 실험 경로 분리
 
@@ -252,15 +252,15 @@
 ### 현재 결과 위치
 
 - station-day 베이스라인:
-  - `works/03_prediction/02_data/ddri_station_day_train_baseline_dataset.csv`
-  - `works/03_prediction/02_data/ddri_station_day_test_baseline_dataset.csv`
-- 대표 대여소 station-hour long-format:
+  - `works/03_prediction/02_data/ddri_station_day_train_baseline(기준선 모델)_dataset.csv`
+  - `works/03_prediction/02_data/ddri_station_day_test_baseline(기준선 모델)_dataset.csv`
+- 대표 대여소 station-hour(대여소-시간 단위) long-format:
   - `3조 공유폴더/대표대여소_예측데이터_15개/raw_data/ddri_prediction_long_train_2023_2024.csv`
   - `3조 공유폴더/대표대여소_예측데이터_15개/raw_data/ddri_prediction_long_test_2025.csv`
-- 전체 공통 스테이션 station-hour long-format:
+- 전체 공통 스테이션 station-hour(대여소-시간 단위) long-format:
   - `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/ddri_prediction_long_train_2023_2024.csv`
   - `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/ddri_prediction_long_test_2025.csv`
-- 전체 공통 스테이션 station-hour 실험 관리:
+- 전체 공통 스테이션 station-hour(대여소-시간 단위) 실험 관리:
   - `works/06_prediction_long_full/README.md`
 
 ## 7. Phase 4. ML 베이스라인 구축
@@ -271,14 +271,14 @@
 
 - [x] 베이스라인 데이터셋 생성
 - [x] train/validation/test 분리 전략 확정
-- [x] baseline 모델 1개 이상 학습
+- [x] baseline(기준선 모델) 모델 1개 이상 학습
 - [x] 트리 기반 모델 1개 이상 학습
 - [x] 평가 지표 계산
-- [x] feature importance 또는 해석 자료 생성
+- [x] feature(입력 변수) importance(피처 중요도) 또는 해석 자료 생성
 - [x] 2025 테스트 평가 결과 정리
-- [x] 전체 161개 스테이션 station-hour baseline 1차 학습
+- [x] 전체 161개 스테이션 station-hour(대여소-시간 단위) baseline(기준선 모델) 1차 학습
 - [ ] 오류 사례 분석
-  - 여기서 `오류 상위 스테이션`은 스테이션별 `MAE` 또는 `RMSE`가 큰 순서대로 정렬했을 때 상위에 오는, 즉 모델이 특히 잘 못 맞추는 스테이션을 뜻함
+  - 여기서 `오류 상위 스테이션`은 스테이션별 `MAE(평균절대오차)` 또는 `RMSE(제곱평균제곱근오차)`가 큰 순서대로 정렬했을 때 상위에 오는, 즉 모델이 특히 잘 못 맞추는 스테이션을 뜻함
 - [ ] 운영자용 재배치 판단 지표 초안 정의
 - [ ] 일반 사용자용 `예상 잔여 자전거 수` 계산 로직 초안 정의
 - [x] 실시간 따릉이 API 입력 스키마 1차 확인
@@ -293,27 +293,27 @@
 
 ### 현재 판단
 
-- `LinearRegression`과 `LightGBM` 2개 모델의 baseline 비교 완료
-- 연 단위 time-based validation(`Train=2023`, `Validation=2024`)과 2025 테스트셋 평가 완료
-- LightGBM이 현재 baseline 우세 모델로 확인됨
-- 대표 대여소 `station-hour` 실험에서는 `LightGBM_RMSE`가 2025 테스트 기준 우세 모델로 확인됨
-- 대표 대여소 `station-hour` 실험의 설명 근거 차트와 그룹/스테이션 오류 요약표를 추가 생성함
-- 전체 161개 스테이션 `station-hour` baseline에서는 `LightGBM_RMSE_Full`이 validation RMSE `0.9735`, test RMSE `0.8624`를 기록함
-- 전체 161개 스테이션 `station-hour` objective 비교에서도 `LightGBM_RMSE_Full`이 `LightGBM_Poisson_Full`보다 우세함
-- 전체 161개 스테이션 `station-hour`는 대표 대여소 실험과 분리된 별도 경로에서 관리하기로 확정
-- 대표 대여소 단계는 군집별 최적화 전의 탐색/설명 단계이며, 다음 ML 고도화는 군집별 subset 실험으로 넘어가야 함
+- `LinearRegression`과 `LightGBM` 2개 모델의 baseline(기준선 모델) 비교 완료
+- 연 단위 time-based validation(`Train(학습)=2023`, `Validation(검증)=2024`)과 2025 테스트셋 평가 완료
+- LightGBM이 현재 baseline(기준선 모델) 우세 모델로 확인됨
+- 대표 대여소 `station-hour(대여소-시간 단위)` 실험에서는 `LightGBM_RMSE(제곱평균제곱근오차)(RMSE(제곱평균제곱근오차) 기준 LightGBM)`가 2025 테스트 기준 우세 모델로 확인됨
+- 대표 대여소 `station-hour(대여소-시간 단위)` 실험의 설명 근거 차트와 그룹/스테이션 오류 요약표를 추가 생성함
+- 전체 161개 스테이션 `station-hour(대여소-시간 단위)` baseline(기준선 모델)에서는 `LightGBM_RMSE(제곱평균제곱근오차)(RMSE(제곱평균제곱근오차) 기준 LightGBM)_Full`이 validation RMSE(제곱평균제곱근오차) `0.9735`, test RMSE(제곱평균제곱근오차) `0.8624`를 기록함
+- 전체 161개 스테이션 `station-hour(대여소-시간 단위)` objective(학습 목표 함수) 비교에서도 `LightGBM_RMSE(제곱평균제곱근오차)(RMSE(제곱평균제곱근오차) 기준 LightGBM)_Full`이 `LightGBM_Poisson(Poisson 기준 LightGBM)_Full`보다 우세함
+- 전체 161개 스테이션 `station-hour(대여소-시간 단위)`는 대표 대여소 실험과 분리된 별도 경로에서 관리하기로 확정
+- 대표 대여소 단계는 군집별 최적화 전의 탐색/설명 단계이며, 다음 ML 고도화는 군집별 subset(축소 피처 조합) 실험으로 넘어가야 함
 - 팀원 분업 실험을 위해 대표 대여소 15개 `5개 군집 x 3개 대여소` 기준 공통 전처리·validation·test·평가 규칙 문서를 별도로 고정함
 - 팀원 분업 실험을 바로 시작할 수 있도록 `works/05_prediction_long`에 공통 노트북 템플릿을 추가함
 - `2024-01-01` 날씨 누락 원천 파일을 `Open-Meteo Archive API`로 다시 받아 정정했고, 대표 대여소 학습 CSV와 전체 스테이션 `full_data` 학습 CSV를 재생성해 해당 날짜 날씨 결측을 제거함
 - `works/06_prediction_long_full` 실험 노트북도 새 원본 기준으로 재실행해 데이터-실험 기준을 일치시킴
 - 팀원 참여가 지연될 경우를 대비해 `works/05_prediction_long/cheng80/` 아래 군집별 대리 실험 폴더 5개와 사전 설정 노트북을 준비함
 - `cheng80` 루트에는 결과 취합 CSV 템플릿, 결과 비교 문서, 2차 실험 판단 기준 문서를 추가해 후속 분석 준비를 완료함
-- `cheng80` 대리 실험 기준 5개 군집 모두 `LightGBM_RMSE`가 validation 우세 모델로 확인되었고, 현재 가장 어려운 군집은 `cluster01(아침 도착 업무 집중형)`으로 해석됨
-- 팀 공용 사용을 위해 `3조 공유폴더/대표대여소_예측데이터_15개/second_round_data/` 경로에 기본 long 데이터 + 정적 교통/환경/POI + 공통 후보 파생 피처를 합친 2차 실험용 통합 피처모음 CSV를 train/test로 생성함
-- `cheng80` 2차 실험 기준 5개 군집 모두 test RMSE가 소폭 개선되었고, 개선폭은 `cluster01`이 가장 컸다
-- `cluster01` 3차 심화 실험에서는 `LightGBM_Poisson`이 test RMSE `1.3189`로 1차/2차보다 더 개선되어, 군집별 심화 최적화 사례로 사용할 수 있게 됨
-- 이어진 `cluster01` subset 실험에서는 `subset_a_commute_transit + LightGBM_Poisson`이 test RMSE `1.3108`로 3차보다 더 개선되어, `출근 피크 + 교통 접근성` 중심 compact custom subset 후보가 확보됨
-- 이어진 `cluster02` subset 재검증에서는 축소 subset보다 `subset_d_current_compact_best + LightGBM_Poisson`이 test RMSE `0.7990`으로 더 좋아져, `생활 리듬 + 주거형 입지` 축을 유지한 objective 전환 후보가 확보됨
+- `cheng80` 대리 실험 기준 5개 군집 모두 `LightGBM_RMSE(제곱평균제곱근오차)(RMSE(제곱평균제곱근오차) 기준 LightGBM)`가 validation 우세 모델로 확인되었고, 현재 가장 어려운 군집은 `cluster01(아침 도착 업무 집중형)`으로 해석됨
+- 팀 공용 사용을 위해 `3조 공유폴더/대표대여소_예측데이터_15개/second_round_data/` 경로에 기본 long 데이터 + 정적 교통/환경/POI(관심지점 정보) + 공통 후보 파생 피처를 합친 2차 실험용 통합 피처모음 CSV를 train/test로 생성함
+- `cheng80` 2차 실험 기준 5개 군집 모두 test RMSE(제곱평균제곱근오차)가 소폭 개선되었고, 개선폭은 `cluster01`이 가장 컸다
+- `cluster01` 3차 심화 실험에서는 `LightGBM_Poisson(Poisson 기준 LightGBM)`이 test RMSE(제곱평균제곱근오차) `1.3189`로 1차/2차보다 더 개선되어, 군집별 심화 최적화 사례로 사용할 수 있게 됨
+- 이어진 `cluster01` subset(축소 피처 조합) 실험에서는 `subset(축소 피처 조합)_a_commute_transit + LightGBM_Poisson(Poisson 기준 LightGBM)`이 test RMSE(제곱평균제곱근오차) `1.3108`로 3차보다 더 개선되어, `출근 피크 + 교통 접근성` 중심 compact custom subset(축소 피처 조합) 후보가 확보됨
+- 이어진 `cluster02` subset(축소 피처 조합) 재검증에서는 축소 subset(축소 피처 조합)보다 `subset(축소 피처 조합)_d_current_compact_best + LightGBM_Poisson(Poisson 기준 LightGBM)`이 test RMSE(제곱평균제곱근오차) `0.7990`으로 더 좋아져, `생활 리듬 + 주거형 입지` 축을 유지한 objective(학습 목표 함수) 전환 후보가 확보됨
 - 대표 대여소 15개 raw/2차 데이터는 GitHub 대용량 제한을 피하기 위해 `3조 공유폴더/대표대여소_예측데이터_15개/` 아래로 이동하고, 노트북/문서 참조 경로를 모두 해당 공유폴더 기준으로 정리함
 - `cheng80/01_ddri_api_verification.ipynb` 기준으로 공식 실시간 API 검증 범위를 `OA-15493 bikeList`로 단순화했고, 비공식 `bikeseoul` 검증은 제외함
 - `OA-15493 bikeList`는 현재 `1~1000`, `1001~2000`, `2001~3000` 범위까지 응답이 확인되었고, `3001~`부터는 데이터가 없었다
@@ -325,21 +325,21 @@
 - 전체 161개 스테이션 오류표와 대표 15개 목록을 대조한 결과, 전체 상위 오류 Top20 중 대표 15개에 포함되는 스테이션은 `2377`, `2348` 2개뿐이었다
 - 반면 대표 15개 내부 오류 순위는 이미 별도로 정리되어 있으므로, 다음 오류 분석은 `대표 15개 우선 -> 겹치는 고오류 스테이션 확인 -> 전체 161개 확장` 순서로 진행하는 것이 합리적이다
 - 대표 15개 상위 오류 5개(`2377`, `2348`, `4917`, `2328`, `2359`)의 시간대 패턴을 추가로 정리한 결과, `2377`·`2348`는 `16~19시` 저녁 피크, `4917`은 `05~08시` 아침 시간대, `2328`은 `08시·11시·16~18시`, `2359`는 `08시·16~18시·20시`가 핵심 확인 구간으로 나타났다
-- 상위 오류 5개를 군집별 보강 피처 후보와 연결한 결과, 다음 subset 실험 우선순위는 `cluster01 -> cluster02 -> cluster00 -> cluster04` 순으로 정리되었고 `cluster03`은 이번 대표 오류 기준에서는 후순위로 둔다
+- 상위 오류 5개를 군집별 보강 피처 후보와 연결한 결과, 다음 subset(축소 피처 조합) 실험 우선순위는 `cluster01 -> cluster02 -> cluster00 -> cluster04` 순으로 정리되었고 `cluster03`은 이번 대표 오류 기준에서는 후순위로 둔다
 - 전체 161개 확장 오류 분석에서는 Top20 중 `rep15`와 겹치는 스테이션이 여전히 `2377`, `2348` 2개뿐이었고, Top20의 `19/20`이 평균적으로 `over_predict` 방향이었다
 - 전체 Top20 개수 기준으로는 `cluster00` 7개, `cluster02` 6개, `cluster03` 5개 순이었고, 군집 크기 대비 집중도는 `cluster02`가 상대적으로 더 높게 나타났다(`concentration_ratio 1.56`)
 - 전체 Top5 시간대 패턴 재생성 결과 `2335`, `2377`, `2348`은 `17~19시` 저녁 피크 오차가 두드러졌고, `2404`, `2405`는 `08시` 아침 시간대 오차가 크게 나타났다
 - 따라서 전체 161개 후속 해석은 `cluster00/cluster01`의 저녁 피크 구간과 `cluster02`의 아침 이동 구간을 우선 확인하는 방향으로 좁힐 수 있다
-- `161개` 전체에 `cluster`별 partial routing을 적용한 결과 validation RMSE는 `0.9687`로 단일 full model(`0.9728`)보다 소폭 좋아졌지만, test RMSE는 `0.8673`으로 단일 full model(`0.8620`)보다 나빠졌다
-- 즉 현재 `full_data`만으로는 군집별 권장안을 부분 반영한 라우팅이 일반화 단계에서 아직 우세하지 않았고, 정적 입지 피처 없이 objective와 일부 시간 파생 피처만으로는 운영 기본안을 대체하기 어렵다고 본다
-- 이후 `161개` 정적 피처를 `poi + environment` 원천에서 `161/161` 완전 매칭으로 복원했고, `static enriched single model`은 test RMSE `0.8620`으로 원본 full baseline(`0.8624`)보다 소폭 개선됐다
-- 반면 `static enriched routing model`은 validation RMSE `0.9690`으로 좋아졌지만 test RMSE `0.8681`로 여전히 열세였으므로, 현재 단계에서는 `군집 라우팅`보다 `정적 피처를 붙인 단일 full model`이 더 현실적인 운영 기본안에 가깝다
-- 같은 `static enriched single model` 위에 `rain_x_commute`, `rain_x_night`, `precipitation_x_commute` 같은 weather interaction을 추가한 결과, validation RMSE `0.9701`, test RMSE `0.8604`로 다시 소폭 개선됐다
-- 따라서 현재 `161개` 기준 가장 유력한 운영 기본안은 `static enriched single model + weather interaction` 조합이며, 다음 후속 실험은 이 기준선 위의 세부 weighting 또는 interaction 조정으로 두는 것이 합리적이다
-- 이어서 `weather_full` 기준 `sample weighting`을 비교한 결과, `weather_full_weight_simple` test RMSE `0.8609`, `weather_full_weight_monthly` test RMSE `0.8605`로 모두 무가중치 `weather_full_no_weight(0.8604)`를 넘지 못했다
-- 따라서 현재 단계에서는 `sample weighting`보다 `weather interaction` 자체가 더 유효했고, 운영 기준선은 계속 `static enriched + weather_full interaction`으로 유지한다
-- 마지막으로 `15개` 군집별 최종 권장 피처에 `weather_full interaction`까지 그대로 얹은 `exact routed + weather_full`을 `161개` 전체에 적용했지만, validation RMSE는 `0.9682`로 다소 좋아진 반면 test RMSE는 `0.8673`으로 다시 `static enriched + weather_full interaction(0.8604)`보다 나빠졌다
-- 따라서 `161개` 운영 모델에서는 군집별 라우팅보다 `단일 full model + 정적 피처 + weather_full interaction` 조합을 유지하는 편이 더 안정적이며, `15개` 군집별 권장안은 운영 모델 자체보다 해석과 피처 발굴 근거로 두는 것이 맞다
+- `161개` 전체에 `cluster`별 partial routing(군집 분기 적용)을 적용한 결과 validation RMSE(제곱평균제곱근오차)는 `0.9687`로 단일 full model(`0.9728`)보다 소폭 좋아졌지만, test RMSE(제곱평균제곱근오차)는 `0.8673`으로 단일 full model(`0.8620`)보다 나빠졌다
+- 즉 현재 `full_data`만으로는 군집별 권장안을 부분 반영한 라우팅이 일반화 단계에서 아직 우세하지 않았고, 정적 입지 피처 없이 objective(학습 목표 함수)와 일부 시간 파생 피처만으로는 운영 기본안을 대체하기 어렵다고 본다
+- 이후 `161개` 정적 피처를 `poi + environment` 원천에서 `161/161` 완전 매칭으로 복원했고, `static enriched single model`은 test RMSE(제곱평균제곱근오차) `0.8620`으로 원본 full baseline(기준선 모델)(`0.8624`)보다 소폭 개선됐다
+- 반면 `static enriched routing(군집 분기 적용) model`은 validation RMSE(제곱평균제곱근오차) `0.9690`으로 좋아졌지만 test RMSE(제곱평균제곱근오차) `0.8681`로 여전히 열세였으므로, 현재 단계에서는 `군집 라우팅`보다 `정적 피처를 붙인 단일 full model`이 더 현실적인 운영 기본안에 가깝다
+- 같은 `static enriched single model` 위에 `rain_x_commute`, `rain_x_night`, `precipitation_x_commute` 같은 weather interaction(상호작용 피처)을 추가한 결과, validation RMSE(제곱평균제곱근오차) `0.9701`, test RMSE(제곱평균제곱근오차) `0.8604`로 다시 소폭 개선됐다
+- 따라서 현재 `161개` 기준 가장 유력한 운영 기본안은 `static enriched single model + weather interaction(상호작용 피처)` 조합이며, 다음 후속 실험은 이 기준선 위의 세부 weighting 또는 interaction(상호작용 피처) 조정으로 두는 것이 합리적이다
+- 이어서 `weather_full(날씨-시간대 상호작용 전체 조합)` 기준 `sample weighting`을 비교한 결과, `weather_full(날씨-시간대 상호작용 전체 조합)_weight_simple` test RMSE(제곱평균제곱근오차) `0.8609`, `weather_full(날씨-시간대 상호작용 전체 조합)_weight_monthly` test RMSE(제곱평균제곱근오차) `0.8605`로 모두 무가중치 `weather_full(날씨-시간대 상호작용 전체 조합)_no_weight(0.8604)`를 넘지 못했다
+- 따라서 현재 단계에서는 `sample weighting`보다 `weather interaction(상호작용 피처)` 자체가 더 유효했고, 운영 기준선은 계속 `static enriched + weather_full(날씨-시간대 상호작용 전체 조합) interaction(상호작용 피처)`으로 유지한다
+- 마지막으로 `15개` 군집별 최종 권장 피처에 `weather_full(날씨-시간대 상호작용 전체 조합) interaction(상호작용 피처)`까지 그대로 얹은 `exact routed + weather_full(날씨-시간대 상호작용 전체 조합)`을 `161개` 전체에 적용했지만, validation RMSE(제곱평균제곱근오차)는 `0.9682`로 다소 좋아진 반면 test RMSE(제곱평균제곱근오차)는 `0.8673`으로 다시 `static enriched + weather_full(날씨-시간대 상호작용 전체 조합) interaction(상호작용 피처)(0.8604)`보다 나빠졌다
+- 따라서 `161개` 운영 모델에서는 군집별 라우팅보다 `단일 full model + 정적 피처 + weather_full(날씨-시간대 상호작용 전체 조합) interaction(상호작용 피처)` 조합을 유지하는 편이 더 안정적이며, `15개` 군집별 권장안은 운영 모델 자체보다 해석과 피처 발굴 근거로 두는 것이 맞다
 - 다만 서비스 출력 로직 자체는 아직 확정되지 않았으므로, API 검증/매핑 정리까지 완료하고 `예상 잔여 자전거 수` 후처리 정의는 다음 단계로 미룬다
 - 따라서 Phase 4는 `베이스라인 1차 완료, 후속 고도화 및 오류 분석 미완료` 상태로 본다
 

@@ -1,26 +1,26 @@
-# DDRI 대표 15개 상위 5개 오류 스테이션 피처 연결 및 축소 피처 조합(subset) 우선순위 요약
+# DDRI 대표 15개 상위 5개 오류 스테이션 피처 연결 및 축소 피처 조합(subset(축소 피처 조합)) 우선순위 요약
 
 작성일: 2026-03-14  
-목적: 대표 15개 상위 오류 5개 스테이션을 군집별 보강 피처 후보와 연결하고, 다음 군집별 축소 피처 조합(subset) 실험 우선순위를 확정한다.
+목적: 대표 15개 상위 오류 5개 스테이션을 군집별 보강 피처 후보와 연결하고, 다음 군집별 축소 피처 조합(subset(축소 피처 조합)) 실험 우선순위를 확정한다.
 
 ## 0. 용어 정리
 
-- `subset`(축소 피처 조합)
+- `subset(축소 피처 조합)`(축소 피처 조합)
   - 전체 후보 피처 중 일부만 골라 만든 피처 묶음
-- `rolling_mean_6h`
+- `rolling(이동 통계)_mean_6h`
   - 최근 6시간 대여량 이동평균
-- `rolling_mean_12h`
+- `rolling(이동 통계)_mean_12h`
   - 최근 12시간 대여량 이동평균
-- `rolling_std_6h`
+- `rolling(이동 통계)_std_6h`
   - 최근 6시간 대여량 이동표준편차
-- `commute_evening_flag`
+- `commute_evening_flag(과거 시점 값)`
   - 퇴근 시간대 여부를 표시하는 피처
 - `is_after_holiday`
   - 공휴일 다음 날 여부를 표시하는 피처
 
 ## 1. 결론 요약
 
-다음 축소 피처 조합(subset) 실험 우선순위는 아래 순서가 적절하다.
+다음 축소 피처 조합(subset(축소 피처 조합)) 실험 우선순위는 아래 순서가 적절하다.
 
 1. `cluster01` 아침 도착 업무 집중형
 2. `cluster02` 주거 도착형
@@ -35,7 +35,7 @@
 - `archive_docs/09_ddri_rep15_top2_station_hourly_error_summary.md`
 - `archive_docs/11_ddri_rep15_top5_station_hourly_error_summary.md`
 
-즉 현재는 `오류 우선순위 -> top2 시간대 패턴 -> top5 확장 패턴 -> 피처 연결 및 축소 피처 조합(subset) 우선순위` 흐름을 이 문서 하나로 수렴해서 읽는 것이 맞다.
+즉 현재는 `오류 우선순위 -> top2 시간대 패턴 -> top5 확장 패턴 -> 피처 연결 및 축소 피처 조합(subset(축소 피처 조합)) 우선순위` 흐름을 이 문서 하나로 수렴해서 읽는 것이 맞다.
 
 ## 1.1 상위 오류 해석 출발점
 
@@ -71,9 +71,9 @@
 - 패턴: 저녁 피크 변동형
 - 우선 피처:
   - `is_commute_hour`
-  - `commute_evening_flag`
-  - `rolling_mean_6h`
-  - `rolling_mean_12h`
+  - `commute_evening_flag(과거 시점 값)`
+  - `rolling(이동 통계)_mean_6h`
+  - `rolling(이동 통계)_mean_12h`
   - `bus_stop_count_300m`
 
 ### `2348` 포스코사거리(기업은행)
@@ -83,9 +83,9 @@
 - 패턴: 저녁 피크 과대예측형
 - 우선 피처:
   - `is_commute_hour`
-  - `commute_evening_flag`
+  - `commute_evening_flag(과거 시점 값)`
   - `is_after_holiday`
-  - `rolling_std_6h`
+  - `rolling(이동 통계)_std_6h`
   - `subway_distance_m`
 
 ### `4917` 일원에코파크 주차장
@@ -108,7 +108,7 @@
   - `is_commute_hour`
   - `restaurant_count_300m`
   - `cafe_count_300m`
-  - `rolling_mean_6h`
+  - `rolling(이동 통계)_mean_6h`
 
 ### `2359` 국립국악중,고교 정문 맞은편
 
@@ -121,7 +121,7 @@
   - `distance_river_boundary_m`
   - `bus_stop_count_300m`
 
-## 3. 군집별 축소 피처 조합(subset) 우선순위 해석
+## 3. 군집별 축소 피처 조합(subset(축소 피처 조합)) 우선순위 해석
 
 ### 1순위 `cluster01`
 
@@ -156,9 +156,9 @@
 `archive_docs/09_ddri_rep15_top2_station_hourly_error_summary.md`의 역할:
 
 - 현재는 `2377`, `2348`가 왜 출발점이었는지 보여주는 중간 단계 문서로만 본다
-- 최종 해석은 top2가 아니라 top5 기준과 축소 피처 조합(subset) 우선순위까지 포함한 이 문서를 기준으로 읽는다
+- 최종 해석은 top2가 아니라 top5 기준과 축소 피처 조합(subset(축소 피처 조합)) 우선순위까지 포함한 이 문서를 기준으로 읽는다
 
 ## 5. 참고 파일
 
-- `output/data/ddri_rep15_top5_feature_linkage_table.csv`
-- `output/data/ddri_cluster_subset_priority_table.csv`
+- `output/data/ddri_rep15_top5_feature(입력 변수)_linkage_table.csv`
+- `output/data/ddri_cluster_subset(축소 피처 조합)_priority_table.csv`

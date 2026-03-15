@@ -27,8 +27,19 @@ def read_csv(path: Path) -> pd.DataFrame:
     return pd.read_csv(path, encoding="utf-8-sig")
 
 
+def normalize_bilingual_label(text: str) -> str:
+    if " / " not in text:
+        return text
+    ko, en = text.split(" / ", 1)
+    ko = ko.strip()
+    en = en.strip()
+    if not en or ko == en:
+        return ko
+    return f"{ko}\n({en})"
+
+
 def wrap_label(text: str) -> str:
-    return text.replace(" / ", "\n/ ")
+    return normalize_bilingual_label(text)
 
 
 def save_delta_chart(
@@ -118,13 +129,13 @@ def build_weather_chart() -> None:
     weight_df = weight_df.rename(columns={"model": "model_key"})
 
     rows = [
-        ("weather_full", "weather_full / weather_full", "weather_full", "대표 개선안"),
-        ("weather_time_band_core", "time band core / time band core", "weather_time_band_core", "시간대 축소안"),
-        ("weather_commute_core", "commute core / commute core", "weather_commute_core", "출퇴근 축소안"),
-        ("weather_precip_intensity_core", "precip intensity core / precip intensity core", "weather_precip_intensity_core", "강수 강도 축소안"),
-        ("static_enriched_base", "static enriched base / static enriched base", "static_enriched_base", "정적 피처 기준선"),
-        ("weather_full_weight_simple", "simple weighting / simple weighting", "weather_full_weight_simple", "단순 가중치"),
-        ("weather_full_weight_monthly", "monthly weighting / monthly weighting", "weather_full_weight_monthly", "월별 가중치"),
+        ("weather_full", "전체 날씨 상호작용 / weather_full", "weather_full", "대표 개선안"),
+        ("weather_time_band_core", "시간대 핵심 조합 / weather_time_band_core", "weather_time_band_core", "시간대 축소안"),
+        ("weather_commute_core", "출퇴근 핵심 조합 / weather_commute_core", "weather_commute_core", "출퇴근 축소안"),
+        ("weather_precip_intensity_core", "강수 강도 핵심 조합 / weather_precip_intensity_core", "weather_precip_intensity_core", "강수 강도 축소안"),
+        ("static_enriched_base", "정적 피처 기준선 / static_enriched_base", "static_enriched_base", "정적 피처 기준선"),
+        ("weather_full_weight_simple", "단순 가중치 / weather_full_weight_simple", "weather_full_weight_simple", "단순 가중치"),
+        ("weather_full_weight_monthly", "월별 가중치 / weather_full_weight_monthly", "weather_full_weight_monthly", "월별 가중치"),
     ]
 
     records = []

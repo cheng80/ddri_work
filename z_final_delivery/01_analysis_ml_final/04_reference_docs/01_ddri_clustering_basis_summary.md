@@ -96,7 +96,7 @@
 ## 패키지 내 로컬 자산
 
 - [ddri_integrated_second_clustering_report.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/01_analysis_ml_final/04_reference_docs/ddri_integrated_second_clustering_report.md)
-- [ddri_final_district_clustering_features_train_2023_2024.csv](/Users/cheng80/Desktop/ddri_work/z_final_delivery/01_analysis_ml_final/02_input_data/ddri_final_district_clustering_features_train_2023_2024.csv)
+- [ddri_final_district_clustering_feature(입력 변수)s_train_2023_2024.csv](/Users/cheng80/Desktop/ddri_work/z_final_delivery/01_analysis_ml_final/02_input_data/ddri_final_district_clustering_feature(입력 변수)s_train_2023_2024.csv)
 - [ddri_second_cluster_summary.csv](/Users/cheng80/Desktop/ddri_work/z_final_delivery/01_analysis_ml_final/02_input_data/ddri_second_cluster_summary.csv)
 - [ddri_second_cluster_representative_stations.csv](/Users/cheng80/Desktop/ddri_work/z_final_delivery/01_analysis_ml_final/02_input_data/ddri_second_cluster_representative_stations.csv)
 - [ddri_second_cluster_hypothesis_crosstab.csv](/Users/cheng80/Desktop/ddri_work/z_final_delivery/01_analysis_ml_final/02_input_data/ddri_second_cluster_hypothesis_crosstab.csv)

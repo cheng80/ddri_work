@@ -124,7 +124,7 @@
 
 - `images/ddri_second_kmeans_elbow_silhouette.png`
 - `images/ddri_second_kmeans_pca_scatter.png`
-- `images/ddri_second_cluster_feature_means.png`
+- `images/ddri_second_cluster_feature(입력 변수)_means.png`
 - `images/ddri_second_cluster_profile_heatmap.png`
 - `images/ddri_second_cluster_size.png`
 - `images/ddri_second_cluster_hypothesis_crosstab.png`
@@ -142,16 +142,16 @@
 - `data/ddri_second_cluster_representative_stations.csv`
 - `data/ddri_second_cluster_hypothesis_crosstab.csv`
 
-## 7. POI 보강 실험 결과
+## 7. POI(관심지점 정보) 보강 실험 결과
 
-상권 해석을 더 직접적으로 보강하기 위해 서울시 사업장 인허가 원천에서 오프라인 상권/생활편의 POI를 별도 가공해 군집화 비교 실험을 수행했다.
+상권 해석을 더 직접적으로 보강하기 위해 서울시 사업장 인허가 원천에서 오프라인 상권/생활편의 POI(관심지점 정보)를 별도 가공해 군집화 비교 실험을 수행했다.
 
 공식 원천:
 
 - `지방행정 인허가 데이터개방`
 - https://www.localdata.go.kr/devcenter/dataDown.do?menuNo=20001
 
-POI 보강 실험에 실제 사용한 피처:
+POI(관심지점 정보) 보강 실험에 실제 사용한 피처:
 
 - `log1p_restaurant_count_300m` : log1p(300m 내 일반음식점 수)
 - `log1p_cafe_count_300m` : log1p(300m 내 커피숍 수)
@@ -173,13 +173,13 @@ POI 보강 실험에 실제 사용한 피처:
 | 실험 | k | 최고 silhouette |
 |---|---:|---:|
 | 메인 통합 군집화 | 5 | 0.2033 |
-| POI 보강 실험 | 5 | 0.1576 |
+| POI(관심지점 정보) 보강 실험 | 5 | 0.1576 |
 
 판단:
 
 - `restaurant`와 `food_retail`을 포함하면 상권 밀집도 설명은 더 자연스러워진다.
 - 그러나 현재는 시간대/순유입/교통 접근성 중심 메인 피처보다 분리도가 낮다.
-- 즉 POI 피처는 `후반 실험 결과`와 `상권 해석 보조 근거`로는 유효하지만, 이번 단계에서 메인 군집화 피처로 채택할 수준은 아니었다.
+- 즉 POI(관심지점 정보) 피처는 `후반 실험 결과`와 `상권 해석 보조 근거`로는 유효하지만, 이번 단계에서 메인 군집화 피처로 채택할 수준은 아니었다.
 
 ## 8. 이후 예측 모델로의 연결
 
@@ -206,6 +206,6 @@ POI 보강 실험에 실제 사용한 피처:
 
 최종 예측 평가는 아래 지표로 진행한다.
 
-- `RMSE`
-- `MAE`
-- `R²`
+- `RMSE(제곱평균제곱근오차)`
+- `MAE(평균절대오차)`
+- `R²(설명력)`

@@ -242,6 +242,10 @@ pdf_options:
 </div>
 
 <div class="chart-block">
+  <img class="chart-image" src="../../01_clustering/08_integrated/final/results/second_clustering_results/images/ddri_second_kmeans_pca_scatter.png" alt="군집 PCA 산점도">
+</div>
+
+<div class="chart-block">
   <img class="appendix-map-image" src="../../01_clustering/08_integrated/final/results/second_clustering_results/images/ddri_second_cluster_static_map.png" alt="강남구 군집 정적 지도">
 </div>
 
@@ -289,6 +293,24 @@ pdf_options:
 | 목적 | 군집별 피처 탐색 | 실제 운영 기준선 선택 |
 | 질문 | 어떤 군집이 어떤 피처에 반응하는가 | 전체 강남구에서 어떤 조합이 가장 안정적인가 |
 | 결과 해석 | 군집별 권장안과 설명 근거 | 운영 모델 최종 선택 |
+
+## 실험명·조합 용어표
+
+| 용어 | 쉬운 설명 | 핵심 포함 피처 |
+|---|---|---|
+| `rep15_static_base` | 대표 15개 전체에 공통으로 적용한 정적 피처 기준선 모델 | 시간 피처, 날씨 기본 피처, 정적 입지 피처 |
+| `rep15_static_weather_full` | 대표 15개 전체에 정적 피처 + 날씨-시간대 상호작용 피처를 같이 넣은 비교안 | `rep15_static_base` + `rain_x_commute`, `rain_x_night`, `precipitation_x_lunch` 등 |
+| `subset_a_commute_transit + LightGBM_Poisson` | `cluster01` 출퇴근-교통 중심 경량 조합 + Poisson 기준 LightGBM | `is_commute_hour`, `commute_morning_flag`, `commute_evening_flag`, `subway_distance_m`, `bus_stop_count_300m` |
+| `subset_d_current_compact_best + LightGBM_Poisson` | `cluster02`에서 가장 성능이 좋았던 경량 조합 + Poisson 기준 LightGBM | `is_night_hour`, `is_weekend`, `is_holiday_eve`, `heavy_rain_flag`, `station_elevation_m`, `bus_stop_count_300m` |
+| `static enriched` | 전체 161개 데이터에 정적 입지 피처를 복원해 붙인 단일 모델 | 시간 피처, 날씨 기본 피처, 정적 입지 피처 |
+| `cluster-aware static gating` | 군집별로 더 의미 있는 정적 피처만 강조해서 넣은 단일 모델 | 정적 입지 피처 + 군집별 gated 정적 피처 |
+| `partial routing` | 군집별로 일부 설정만 나눠 적용한 초기 군집 분기 적용 비교안 | 군집별 학습 설정 일부 분기, 일부 시간/날씨 파생 피처 |
+| `exact cluster routing` | 대표 15개에서 찾은 군집별 피처 조합을 161개 전체에 그대로 옮긴 군집 분기 적용 비교안 | 군집별 권장 피처 조합 |
+| `exact routing + weather_full` | 대표 15개 군집 피처에 `weather_full`까지 함께 붙인 군집 분기 적용 비교안 | 군집별 권장 피처 + `weather_full` 상호작용 피처 |
+| `weather_full` | 비/강수량과 출퇴근·점심·야간 시간대를 함께 묶은 전체 상호작용 피처 조합 | `rain_x_commute`, `rain_x_morning_commute`, `rain_x_evening_commute`, `rain_x_night`, `rain_x_lunch`, `precipitation_x_commute`, `precipitation_x_night`, `precipitation_x_lunch` |
+| `weather_time_band_core` | 시간대 중심 핵심 상호작용 조합 | `rain_x_night`, `rain_x_lunch`, `precipitation_x_night`, `precipitation_x_lunch` 중심 |
+| `weather_commute_core` | 출퇴근 시간대 중심 핵심 상호작용 조합 | `rain_x_commute`, `rain_x_morning_commute`, `rain_x_evening_commute`, `precipitation_x_commute` 중심 |
+| `weather_precip_intensity_core` | 강수 강도 중심 핵심 상호작용 조합 | `heavy_rain_x_commute`, `heavy_rain_x_night`, `precipitation_x_commute`, `precipitation_x_night` 중심 |
 
 <div class="page-break"></div>
 
