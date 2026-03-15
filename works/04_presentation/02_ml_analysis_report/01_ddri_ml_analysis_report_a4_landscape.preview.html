@@ -9,6 +9,151 @@
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -25,7 +170,6 @@
     }
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
-  <link rel="stylesheet" href="../ddri_presentation_a4_landscape.css" />
 </head>
 <body>
 <header id="title-block-header">
@@ -178,6 +322,53 @@
 <li>주요 지표: <code>RMSE</code>, <code>MAE</code>, <code>R²</code></li>
 <li>최종 선택 기준: <code>2025 테스트 성능</code>과 운영 안정성</li>
 </ul>
+<h2 id="용어-정리">용어 정리</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>용어</th>
+<th>쉬운 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RMSE</code>, <code>MAE</code>, <code>R²</code></td>
+<td>모델 성능을 읽는 평가 지표</td>
+</tr>
+<tr>
+<td><code>objective</code> (학습 목표 함수)</td>
+<td>모델이 무엇을 더 잘 맞추도록 학습할지 정하는 기준</td>
+</tr>
+<tr>
+<td><code>RMSE objective</code></td>
+<td>일반 회귀형 목표 함수</td>
+</tr>
+<tr>
+<td><code>Poisson objective</code></td>
+<td>수요량·건수 같은 count 데이터에 맞춘 목표 함수</td>
+</tr>
+<tr>
+<td><code>subset</code> (축소 피처 조합)</td>
+<td>전체 후보 피처 중 일부만 골라 만든 피처 묶음</td>
+</tr>
+<tr>
+<td><code>baseline</code> (기준선 모델)</td>
+<td>이후 개선 여부를 비교하기 위한 기본 모델</td>
+</tr>
+<tr>
+<td><code>routing</code> (군집 분기 적용)</td>
+<td>군집별로 다른 모델이나 다른 피처 조합을 태우는 방식</td>
+</tr>
+<tr>
+<td><code>interaction</code> (상호작용 피처)</td>
+<td>두 조건을 곱하거나 묶어서 함께 반응을 보게 만든 피처</td>
+</tr>
+</tbody>
+</table>
 <h2 id="현재-고정된-문제-해석">현재 고정된 문제 해석</h2>
 <table>
 <colgroup>
@@ -282,7 +473,7 @@
 <tbody>
 <tr>
 <td><code>대표 15개 raw_data</code></td>
-<td>군집별 피처 탐색, subset 실험, 오류 해석</td>
+<td>군집별 피처 탐색, 축소 피처 조합 실험, 오류 해석</td>
 </tr>
 <tr>
 <td><code>161개 full_data</code></td>
@@ -368,8 +559,8 @@
 </table>
 <div class="callout compact">
 전체 161개 운영 모델에서는
-<code>정적 피처 + weather_full interaction</code> 조합이 가장
-안정적이었다.
+<code>정적 피처 + weather_full interaction(날씨-시간대 상호작용 피처)</code>
+조합이 가장 안정적이었다.
 </div>
 <div class="page-break">
 
@@ -480,6 +671,9 @@
 <p><img class="chart-image" src="../../01_clustering/08_integrated/final/results/second_clustering_results/images/ddri_second_cluster_profile_heatmap.png" alt="군집 프로파일 히트맵"></p>
 </div>
 <div class="chart-block">
+<p><img class="chart-image" src="../../01_clustering/08_integrated/final/results/second_clustering_results/images/ddri_second_kmeans_pca_scatter.png" alt="군집 PCA 산점도"></p>
+</div>
+<div class="chart-block">
 <p><img class="appendix-map-image" src="../../01_clustering/08_integrated/final/results/second_clustering_results/images/ddri_second_cluster_static_map.png" alt="강남구 군집 정적 지도"></p>
 </div>
 <div class="callout compact">
@@ -491,15 +685,33 @@
 
 </div>
 <h1 id="예측-모델-설계">06. 예측 모델 설계</h1>
-<h2 id="비교한-모델-축">비교한 모델 축</h2>
+<h2 id="비교한-학습-모델과-학습-목표-함수">비교한 학습 모델과 학습 목표
+함수</h2>
 <ul>
-<li><code>LightGBM_RMSE</code></li>
-<li><code>LightGBM_Poisson</code></li>
-<li>군집별 subset 실험</li>
+<li>비교 모델:
+<ul>
+<li><code>LightGBM</code></li>
+<li><code>CatBoost</code></li>
+</ul></li>
+<li>학습 목표 함수(objective):
+<ul>
+<li><code>RMSE objective</code></li>
+<li><code>Poisson objective</code></li>
+</ul></li>
+<li>추가 실험 축:
+<ul>
+<li>군집별 <code>축소 피처 조합(subset)</code> 실험</li>
 <li>정적 피처 확장 실험</li>
-<li>weather interaction 실험</li>
-<li>routing 실험</li>
+<li>weather interaction(날씨-시간대 상호작용 피처) 실험</li>
+<li>routing(군집 분기 적용) 실험</li>
+</ul></li>
 </ul>
+<div class="callout compact">
+같은 <code>LightGBM</code>이라도 <code>RMSE objective</code>로 학습할지,
+<code>Poisson objective</code>로 학습할지에 따라 결과가 달라질 수 있다.
+여기서 <code>objective</code>는 학습 목표 함수, <code>subset</code>은
+축소 피처 조합을 뜻한다.
+</div>
 <h2 id="설계-원칙">설계 원칙</h2>
 <ul>
 <li><code>대표 15개</code>는 군집별 피처 탐색과 해석에 집중</li>
@@ -508,10 +720,10 @@
 <h2 id="실험-흐름">실험 흐름</h2>
 <ol type="1">
 <li>대표 15개 군집별 실험</li>
-<li>161개 단일 baseline</li>
+<li>161개 단일 baseline(기준선 모델)</li>
 <li>정적 피처 확장</li>
 <li>군집 라우팅 비교</li>
-<li>weather interaction / weighting 비교</li>
+<li>weather interaction(상호작용 피처) / weighting(가중치) 비교</li>
 </ol>
 <div class="page-break">
 
@@ -548,22 +760,126 @@
 </tr>
 </tbody>
 </table>
+<h2 id="실험명조합-용어표">실험명·조합 용어표</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>용어</th>
+<th>쉬운 설명</th>
+<th>핵심 포함 피처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rep15_static_base</code></td>
+<td>대표 15개 전체에 공통으로 적용한 정적 피처 기준선 모델</td>
+<td>시간 피처, 날씨 기본 피처, 정적 입지 피처</td>
+</tr>
+<tr>
+<td><code>rep15_static_weather_full</code></td>
+<td>대표 15개 전체에 정적 피처 + 날씨-시간대 상호작용 피처를 같이 넣은
+비교안</td>
+<td><code>rep15_static_base</code> + <code>rain_x_commute</code>,
+<code>rain_x_night</code>, <code>precipitation_x_lunch</code> 등</td>
+</tr>
+<tr>
+<td><code>subset_a_commute_transit + LightGBM_Poisson</code></td>
+<td><code>cluster01</code> 출퇴근-교통 중심 경량 조합 + Poisson 기준
+LightGBM</td>
+<td><code>is_commute_hour</code>, <code>commute_morning_flag</code>,
+<code>commute_evening_flag</code>, <code>subway_distance_m</code>,
+<code>bus_stop_count_300m</code></td>
+</tr>
+<tr>
+<td><code>subset_d_current_compact_best + LightGBM_Poisson</code></td>
+<td><code>cluster02</code>에서 가장 성능이 좋았던 경량 조합 + Poisson
+기준 LightGBM</td>
+<td><code>is_night_hour</code>, <code>is_weekend</code>,
+<code>is_holiday_eve</code>, <code>heavy_rain_flag</code>,
+<code>station_elevation_m</code>, <code>bus_stop_count_300m</code></td>
+</tr>
+<tr>
+<td><code>static enriched</code></td>
+<td>전체 161개 데이터에 정적 입지 피처를 복원해 붙인 단일 모델</td>
+<td>시간 피처, 날씨 기본 피처, 정적 입지 피처</td>
+</tr>
+<tr>
+<td><code>cluster-aware static gating</code></td>
+<td>군집별로 더 의미 있는 정적 피처만 강조해서 넣은 단일 모델</td>
+<td>정적 입지 피처 + 군집별 gated 정적 피처</td>
+</tr>
+<tr>
+<td><code>partial routing</code></td>
+<td>군집별로 일부 설정만 나눠 적용한 초기 군집 분기 적용 비교안</td>
+<td>군집별 학습 설정 일부 분기, 일부 시간/날씨 파생 피처</td>
+</tr>
+<tr>
+<td><code>exact cluster routing</code></td>
+<td>대표 15개에서 찾은 군집별 피처 조합을 161개 전체에 그대로 옮긴 군집
+분기 적용 비교안</td>
+<td>군집별 권장 피처 조합</td>
+</tr>
+<tr>
+<td><code>exact routing + weather_full</code></td>
+<td>대표 15개 군집 피처에 <code>weather_full</code>까지 함께 붙인 군집
+분기 적용 비교안</td>
+<td>군집별 권장 피처 + <code>weather_full</code> 상호작용 피처</td>
+</tr>
+<tr>
+<td><code>weather_full</code></td>
+<td>비/강수량과 출퇴근·점심·야간 시간대를 함께 묶은 전체 상호작용 피처
+조합</td>
+<td><code>rain_x_commute</code>, <code>rain_x_morning_commute</code>,
+<code>rain_x_evening_commute</code>, <code>rain_x_night</code>,
+<code>rain_x_lunch</code>, <code>precipitation_x_commute</code>,
+<code>precipitation_x_night</code>,
+<code>precipitation_x_lunch</code></td>
+</tr>
+<tr>
+<td><code>weather_time_band_core</code></td>
+<td>시간대 중심 핵심 상호작용 조합</td>
+<td><code>rain_x_night</code>, <code>rain_x_lunch</code>,
+<code>precipitation_x_night</code>, <code>precipitation_x_lunch</code>
+중심</td>
+</tr>
+<tr>
+<td><code>weather_commute_core</code></td>
+<td>출퇴근 시간대 중심 핵심 상호작용 조합</td>
+<td><code>rain_x_commute</code>, <code>rain_x_morning_commute</code>,
+<code>rain_x_evening_commute</code>,
+<code>precipitation_x_commute</code> 중심</td>
+</tr>
+<tr>
+<td><code>weather_precip_intensity_core</code></td>
+<td>강수 강도 중심 핵심 상호작용 조합</td>
+<td><code>heavy_rain_x_commute</code>, <code>heavy_rain_x_night</code>,
+<code>precipitation_x_commute</code>, <code>precipitation_x_night</code>
+중심</td>
+</tr>
+</tbody>
+</table>
 <div class="page-break">
 
 </div>
 <h1 id="대표-15개-스테이션-실험">07. 대표 15개 스테이션 실험</h1>
 <h2 id="실험-목적">실험 목적</h2>
 <ul>
-<li>군집별로 어떤 피처와 objective가 잘 맞는지 확인</li>
+<li>군집별로 어떤 피처와 어떤 <code>학습 목표 함수(objective)</code>가
+잘 맞는지 확인</li>
 <li>최종 운영 모델을 직접 결정하기보다 피처 발굴 근거를 확보</li>
 </ul>
 <h2 id="핵심-결과">핵심 결과</h2>
 <ul>
 <li><code>cluster01</code>:
-<code>subset_a_commute_transit + LightGBM_Poisson</code>,
+<code>출퇴근+교통 축소 피처 조합(subset_a_commute_transit) + LightGBM_Poisson</code>,
 <code>test RMSE 1.3108</code></li>
 <li><code>cluster02</code>:
-<code>current_compact_best + LightGBM_Poisson</code>,
+<code>현재 최적 축소 피처 조합(current_compact_best) + LightGBM_Poisson</code>,
 <code>test RMSE 0.7990</code></li>
 <li>나머지 군집은 군집별 권장 피처를 유지하되, 현재 단계에서는
 <code>해석 근거 강화</code> 수준으로 본다</li>
@@ -602,13 +918,13 @@
 <td><code>대표 15개 기본안</code></td>
 <td><code>rep15_static_base</code></td>
 <td style="text-align: right;"><code>0.9196</code></td>
-<td>전체 대표셋 baseline</td>
+<td>전체 대표셋 baseline(기준선 모델)</td>
 </tr>
 <tr>
 <td><code>대표 15개 weather_full</code></td>
 <td><code>rep15_static_weather_full</code></td>
 <td style="text-align: right;"><code>0.9198</code></td>
-<td>weather_full은 대표셋에서 이득 없음</td>
+<td>weather_full 상호작용 피처는 대표셋에서 이득 없음</td>
 </tr>
 <tr>
 <td><code>cluster01</code></td>
@@ -643,20 +959,21 @@
 </ul>
 <h2 id="비교-결과-요약">비교 결과 요약</h2>
 <ul>
-<li><code>161 original baseline</code>: <code>0.8624</code></li>
+<li><code>161 original baseline(기준선 모델)</code>:
+<code>0.8624</code></li>
 <li><code>161 static enriched</code>: <code>0.8620</code></li>
 <li><code>161 cluster-aware gating</code>: <code>0.8615</code></li>
-<li><code>161 static + weather_full interaction</code>:
+<li><code>161 static + weather_full interaction(상호작용 피처)</code>:
 <code>0.8604</code>, 현재 최선</li>
-<li><code>161 routing 계열</code>: <code>0.8673 ~ 0.8681</code>, 테스트
-기준 악화</li>
+<li><code>161 routing(군집 분기 적용) 계열</code>:
+<code>0.8673 ~ 0.8681</code>, 테스트 기준 악화</li>
 </ul>
 <h2 id="핵심-결론">핵심 결론</h2>
 <ul>
 <li>실제 운영 기준은
-<code>단일 모델 + 정적 피처 + weather_full interaction</code></li>
-<li><code>routing</code>은 검증셋 일부 개선이 있었지만 테스트셋에서
-일반화 실패</li>
+<code>단일 모델 + 정적 피처 + weather_full interaction(상호작용 피처)</code></li>
+<li><code>routing</code>(군집 분기 적용)은 검증셋 일부 개선이 있었지만
+테스트셋에서 일반화 실패</li>
 </ul>
 <h2 id="개-운영-모델-세부-비교">161개 운영 모델 세부 비교</h2>
 <table>
@@ -697,7 +1014,7 @@
 <td><code>original baseline</code></td>
 <td style="text-align: right;"><code>0.8624</code></td>
 <td style="text-align: right;"><code>2.0</code></td>
-<td>원본 기준선</td>
+<td>원본 기준선 모델</td>
 </tr>
 <tr>
 <td><code>partial routing</code></td>
@@ -709,7 +1026,7 @@
 <td><code>exact routing + weather_full</code></td>
 <td style="text-align: right;"><code>0.8673</code></td>
 <td style="text-align: right;"><code>6.9</code></td>
-<td>weather_full도 routing을 살리지 못함</td>
+<td>weather_full 상호작용 피처도 routing을 살리지 못함</td>
 </tr>
 <tr>
 <td><code>static routing</code></td>
@@ -737,7 +1054,8 @@
 </div>
 <div class="callout">
 강남구 전체 운영 기준선은
-<code>static enriched + weather_full interaction</code>으로 고정한다.
+<code>static enriched + weather_full interaction(상호작용 피처)</code>으로
+고정한다.
 </div>
 <div class="page-break">
 
@@ -753,14 +1071,15 @@
 <h2 id="주요-해석">주요 해석</h2>
 <ul>
 <li>오류는 특정 시간대와 특정 공간 역할에서 집중됨</li>
-<li>그래서 단순 날씨 피처보다 <code>날씨 x 시간대 interaction</code>이
-더 유효했음</li>
+<li>그래서 단순 날씨 피처보다
+<code>날씨 x 시간대 interaction(상호작용 피처)</code>이 더 유효했음</li>
 </ul>
 <h2 id="활용-의미">활용 의미</h2>
 <ul>
 <li>오류 분석은 운영 모델 선택뿐 아니라 후처리 규칙 설계에도 연결됨</li>
 </ul>
-<h2 id="weather-interaction-비교표">weather interaction 비교표</h2>
+<h2 id="weather-interaction상호작용-피처-비교표">weather
+interaction(상호작용 피처) 비교표</h2>
 <table>
 <colgroup>
 <col style="width: 21%" />
@@ -845,8 +1164,8 @@
 <td>시간대 interaction을 강화할 필요가 있었음</td>
 </tr>
 <tr>
-<td>weather weighting은 추가 개선이 거의 없음</td>
-<td>단순 가중치보다 interaction 피처가 더 유효</td>
+<td>weather weighting(가중치)은 추가 개선이 거의 없음</td>
+<td>단순 가중치보다 interaction(상호작용 피처)이 더 유효</td>
 </tr>
 <tr>
 <td>routing 계열은 테스트에서 일관되게 악화</td>
@@ -863,7 +1182,7 @@
 <li>모델: <code>LightGBM</code></li>
 <li>기준 데이터: <code>강남구 전체 161개</code></li>
 <li>최종 조합:
-<code>static enriched + weather_full interaction</code></li>
+<code>static enriched + weather_full interaction(상호작용 피처)</code></li>
 <li>최종 test RMSE: <code>0.8604</code></li>
 </ul>
 <h2 id="최종-모델-카드">최종 모델 카드</h2>
@@ -886,11 +1205,11 @@
 <tr>
 <td>입력 축</td>
 <td>시간 파생 피처 + 날씨 피처 + 정적 입지 피처 + weather
-interaction</td>
+interaction(상호작용 피처)</td>
 </tr>
 <tr>
 <td>배제한 대안</td>
-<td>routing 계열, weighting 계열</td>
+<td>routing(군집 분기 적용) 계열, weighting(가중치) 계열</td>
 </tr>
 <tr>
 <td>운영 해석</td>
@@ -905,7 +1224,7 @@ interaction</td>
 <li>하지만 실제 운영 기준은 <code>161개 단일 모델</code>이 더
 안정적이었다.</li>
 <li>그 단일 모델 안에서 가장 좋았던 조합이
-<code>static enriched + weather_full interaction</code>이었다.</li>
+<code>static enriched + weather_full interaction(상호작용 피처)</code>이었다.</li>
 </ol>
 <h2 id="단일-최종안-vs-라우팅-비교표">단일 최종안 vs 라우팅 비교표</h2>
 <table>
