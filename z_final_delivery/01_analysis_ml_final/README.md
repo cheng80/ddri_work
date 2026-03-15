@@ -2,6 +2,21 @@
 
 이 경로는 `works/`를 다시 설명하는 폴더가 아니라, 최종적으로 이 폴더만 분리해도 입력, 출력, 핵심 문서, 정본 노트북이 모두 유지되는 `자기완결형 분석/ML 정본 패키지`를 만드는 경로다.
 
+## 용어 정리
+
+- `subset`(축소 피처 조합)
+  - 전체 후보 피처 중 일부만 골라 만든 피처 묶음
+- `objective`(학습 목표 함수)
+  - 모델이 무엇을 더 잘 맞추도록 학습할지 정하는 기준
+- `RMSE objective`
+  - 일반 회귀형 학습 목표 함수
+- `Poisson objective`
+  - 수요량, 건수처럼 `0 이상 count 데이터`에 맞춘 학습 목표 함수
+- `interaction`(상호작용 피처)
+  - 두 조건을 곱하거나 묶어서 함께 반응을 보게 만든 피처
+- `baseline`(기준선 모델)
+  - 이후 개선 여부를 비교하기 위한 기본 모델
+
 현재 목표는 명확하다.
 
 - 정본 노트북은 `1개`
@@ -24,9 +39,9 @@
 ## 현재 확정 결론
 
 - `15개 대표 스테이션` 실험은 군집별 특성과 유효 피처를 찾는 탐색/해석 경로로 유지한다
-- `cluster01` 최우선 권장안은 `subset_a_commute_transit + LightGBM_Poisson`이다
+- `cluster01` 최우선 권장안은 `subset_a_commute_transit + LightGBM_Poisson`이며, 이는 `출퇴근+교통` 중심의 축소 피처 조합과 `Poisson objective`를 함께 쓴 경우다
 - `cluster02` 최우선 권장안은 `current_compact_best + LightGBM_Poisson`이다
-- `161개 전체 운영 기준선`은 `static enriched + weather_full interaction`이다
+- `161개 전체 운영 기준선`은 `static enriched + weather_full interaction(상호작용 피처)`이다
 - `161개`에서 군집 라우팅 계열은 반복적으로 test 기준 열세였다
 - 따라서 최종 전달 문서에서는 `운영 모델`과 `군집 해석 근거`를 분리해서 적는다
 

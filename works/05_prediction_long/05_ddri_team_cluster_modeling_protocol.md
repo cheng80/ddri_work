@@ -7,9 +7,9 @@
 
 이 문서는 아래 상황에 적용한다.
 
-- 대표 대여소 15개 `station-hour` 데이터셋을 사용한다.
+- 대표 대여소 15개 `station-hour(대여소-시간 단위)` 데이터셋을 사용한다.
 - 한 팀원이 하나의 군집을 맡아, 해당 군집의 대표 대여소 3개를 학습/검증/테스트한다.
-- 최소 목표는 `RMSE`, `MAE`, `R²` 3개 점수를 공통 형식으로 산출하는 것이다.
+- 최소 목표는 `RMSE(제곱평균제곱근오차)`, `MAE(평균절대오차)`, `R²(설명력)` 3개 점수를 공통 형식으로 산출하는 것이다.
 
 이 문서는 `works/05_prediction_long` 실험 흐름을 팀 공통 규약으로 정리한 문서다.
 
@@ -59,56 +59,56 @@
 주의:
 
 - 개인이 별도로 가공한 CSV를 새로운 정본처럼 쓰지 않는다.
-- 군집별 실험은 위 공통 CSV에서 `station_group` 또는 담당 `station_id` 기준으로 필터링해서 진행한다.
+- 군집별 실험은 위 공통 CSV에서 `station_group(담당 군집 그룹명)` 또는 담당 `station_id(숫자 대여소 ID)` 기준으로 필터링해서 진행한다.
 
 ## 4. 공통 컬럼 정의
 
 입력 데이터 기본 컬럼은 아래 15개다.
 
-- `station_id`
-- `station_name`
-- `station_group`
-- `date`
-- `hour`
-- `rental_count`
-- `cluster`
-- `mapped_dong_code`
-- `weekday`
-- `month`
-- `holiday`
-- `temperature`
-- `humidity`
-- `precipitation`
-- `wind_speed`
+- `station_id`(숫자 대여소 ID)
+- `station_name`(대여소명)
+- `station_group`(담당 군집 그룹명)
+- `date`(날짜)
+- `hour`(시간)
+- `rental_count`(대여량)
+- `cluster`(군집 라벨)
+- `mapped_dong_code`(매핑된 행정동 코드)
+- `weekday`(요일)
+- `month`(월)
+- `holiday`(공휴일 여부)
+- `temperature`(기온)
+- `humidity`(습도)
+- `precipitation`(강수량)
+- `wind_speed`(풍속)
 
 핵심 해석:
 
-- 타깃(target): `rental_count`
-- 군집 담당 구분: `station_group`
-- 현재 군집 라벨: `cluster`
+- 타깃(target, 예측 목표값): `rental_count(대여량)`
+- 군집 담당 구분: `station_group(담당 군집 그룹명)`
+- 현재 군집 라벨: `cluster(군집 라벨)`
 
 ## 5. 공통 전처리 규칙
 
 ### 5.1 데이터 필터링
 
-- 각 팀원은 본인이 맡은 `station_group` 1개만 남긴다.
+- 각 팀원은 본인이 맡은 `station_group(담당 군집 그룹명)` 1개만 남긴다.
 - 결과적으로 각 팀원 데이터셋에는 대표 대여소 `3개`만 포함된다.
 
 ### 5.2 날짜형 변환
 
-- `date`는 반드시 날짜형으로 변환한다.
-- `hour`, `weekday`, `month`, `holiday`는 숫자형으로 유지한다.
+- `date(날짜)`는 반드시 날짜형으로 변환한다.
+- `hour(시간)`, `weekday(요일)`, `month(월)`, `holiday(공휴일 여부)`는 숫자형으로 유지한다.
 
 ### 5.3 정렬 규칙
 
 - 모든 파생 피처 생성 전, 반드시 아래 기준으로 정렬한다.
-  - `station_id`
-  - `date`
-  - `hour`
+  - `station_id(숫자 대여소 ID)`
+  - `date(날짜)`
+  - `hour(시간)`
 
 ### 5.4 결측 처리
 
-- `rental_count` 결측은 없어야 한다.
+- `rental_count(대여량)` 결측은 없어야 한다.
 - 날씨 결측은 임의 보간하지 않는다.
 - 현재 기준 정정된 2024 날씨 원천 파일을 사용하면 `2024-01-01` 24시간도 포함되어 있어야 한다.
 - 결측을 채웠다면 반드시 이유와 방법을 노트북 마크다운에 적어야 한다.
@@ -127,18 +127,18 @@
 
 ### 6.1 기본 시간 피처
 
-- `hour`
-- `weekday`
-- `month`
-- `holiday`
+- `hour`(시간)
+- `weekday`(요일)
+- `month`(월)
+- `holiday`(공휴일 여부)
 
 ### 6.2 그룹/대여소 식별 피처
 
-- `station_id`
-- `cluster`
-- `mapped_dong_code`
+- `station_id`(숫자 대여소 ID)
+- `cluster`(군집 라벨)
+- `mapped_dong_code`(매핑된 행정동 코드)
 
-### 6.3 시계열 lag 피처
+### 6.3 시계열 lag(과거 시점 값) 피처
 
 - `lag_1h`: 1시간 전 대여량
 - `lag_24h`: 24시간 전 대여량
@@ -146,33 +146,33 @@
 
 설명:
 
-- `lag_168h`는 원천 데이터 컬럼이 아니다.
-- `rental_count`에서 만든 파생 피처다.
+- `lag_168h(168시간 전 대여량)`는 원천 데이터 컬럼이 아니다.
+- `rental_count(대여량)`에서 만든 파생 피처다.
 - 의미는 `1주 전 동일 요일·동일 시각 대여량`이다.
 
-### 6.4 rolling 피처
+### 6.4 rolling(이동 통계) 피처
 
-- `rolling_mean_24h`
-- `rolling_std_24h`
-- `rolling_mean_168h`
-- `rolling_std_168h`
+- `rolling_mean_24h`: 최근 24시간 대여량 이동평균
+- `rolling_std_24h`: 최근 24시간 대여량 이동표준편차
+- `rolling_mean_168h`: 최근 168시간 대여량 이동평균
+- `rolling_std_168h`: 최근 168시간 대여량 이동표준편차
 
 중요:
 
-- rolling 계산은 반드시 `station_id`별로 수행한다.
-- 미래 데이터가 섞이지 않도록 `shift(1)` 후 rolling을 계산한다.
+- rolling(이동 통계) 계산은 반드시 `station_id(숫자 대여소 ID)`별로 수행한다.
+- 미래 데이터가 섞이지 않도록 `shift(1)(직전 시점으로 한 칸 미루기)` 후 rolling(이동 통계)을 계산한다.
 
 예시 원칙:
 
-- 허용: 과거값만 사용한 lag/rolling
-- 금지: 현재값 또는 미래값이 포함된 rolling
+- 허용: 과거값만 사용한 lag(과거 시점 값)/rolling(이동 통계)
+- 금지: 현재값 또는 미래값이 포함된 rolling(이동 통계)
 
 ### 6.5 날씨 피처
 
-- `temperature`
-- `humidity`
-- `precipitation`
-- `wind_speed`
+- `temperature`(기온)
+- `humidity`(습도)
+- `precipitation`(강수량)
+- `wind_speed`(풍속)
 
 ### 6.6 사용 금지 피처
 
@@ -182,13 +182,13 @@
 - 같은 시점 순유입을 직접 계산한 값
 - 테스트 시점에는 알 수 없는 미래 집계값
 
-## 7. 공통 검증(Validation) 및 테스트(Test) 정책
+## 7. 공통 검증(Validation, 검증) 및 테스트(Test, 최종 평가) 정책
 
 이 프로젝트의 기본 분할은 아래처럼 고정한다.
 
-- 학습(`Train`): `2023-01-01 ~ 2023-12-31`
-- 검증(`Validation`): `2024-01-01 ~ 2024-12-31`
-- 테스트(`Test`): `2025-01-01 ~ 2025-12-31`
+- 학습(`Train`, 학습 구간): `2023-01-01 ~ 2023-12-31`
+- 검증(`Validation`, 검증 구간): `2024-01-01 ~ 2024-12-31`
+- 테스트(`Test`, 최종 평가 구간): `2025-01-01 ~ 2025-12-31`
 
 이 정책을 쓰는 이유:
 
@@ -214,8 +214,8 @@
 
 즉 최종 보고 점수는 아래 2세트를 남긴다.
 
-- `validation_2024`
-- `test_2025_refit`
+- `validation_2024(2024 검증 점수)`
+- `test_2025_refit(2025 재학습 후 최종 점수)`
 
 ## 8. 공통 모델 실험 순서
 
@@ -223,7 +223,7 @@
 
 ### 8.1 1차 기본 모델
 
-- `LinearRegression`
+- `LinearRegression(선형회귀 모델)`
 
 목적:
 
@@ -231,7 +231,7 @@
 
 ### 8.2 2차 핵심 모델
 
-- `LightGBM_RMSE`
+- `LightGBM_RMSE(RMSE 기준 LightGBM)`
 
 목적:
 
@@ -241,13 +241,13 @@
 
 여력이 있을 때만 아래를 추가한다.
 
-- `LightGBM_Poisson`
-- `CatBoost_RMSE`
-- `CatBoost_Poisson`
+- `LightGBM_Poisson(Poisson 기준 LightGBM)`
+- `CatBoost_RMSE(RMSE 기준 CatBoost)`
+- `CatBoost_Poisson(Poisson 기준 CatBoost)`
 
 중요:
 
-- 팀 공통 필수 비교는 최소 `LinearRegression` vs `LightGBM_RMSE`
+- 팀 공통 필수 비교는 최소 `LinearRegression(선형회귀 모델)` vs `LightGBM_RMSE(RMSE 기준 LightGBM)`
 - 선택 실험을 추가했다면, 공통 필수 결과와 분리해서 기록한다.
 
 ## 9. 공통 평가 지표
@@ -265,12 +265,12 @@
 
 즉 한 모델당 최소 아래 6개 수치를 남긴다.
 
-- validation RMSE
-- validation MAE
-- validation R²
-- test RMSE
-- test MAE
-- test R²
+- validation RMSE(검증 제곱평균제곱근오차)
+- validation MAE(검증 평균절대오차)
+- validation R²(검증 설명력)
+- test RMSE(최종 평가 제곱평균제곱근오차)
+- test MAE(최종 평가 평균절대오차)
+- test R²(최종 평가 설명력)
 
 ## 10. 공통 산출물 규칙
 
@@ -289,12 +289,12 @@
 
 필수 컬럼 예시:
 
-- `model`
-- `split`
-- `rmse`
-- `mae`
-- `r2`
-- `station_group`
+- `model`(모델명)
+- `split`(데이터 구간)
+- `rmse`(제곱평균제곱근오차)
+- `mae`(평균절대오차)
+- `r2`(설명력)
+- `station_group`(담당 군집 그룹명)
 
 ### 10.3 짧은 README 또는 결과 메모
 
@@ -302,7 +302,7 @@
 
 - 사용 데이터 범위
 - 사용 피처
-- validation/test 점수
+- validation/test(검증/최종 평가) 점수
 - 어떤 모델을 우세 모델로 판단했는지
 
 ## 11. 노트북 문서화 규칙
@@ -314,7 +314,7 @@
 3. 입력 데이터 로드
 4. 전처리 규칙 설명
 5. 피처 생성 설명
-6. Train/Validation/Test 분리 설명
+6. Train/Validation/Test(학습/검증/최종 평가) 분리 설명
 7. 모델 학습
 8. 성능 평가 표
 9. 결과 해석
@@ -330,16 +330,16 @@
 아래 순서를 그대로 따라가면 된다.
 
 1. 공통 입력 CSV 확인
-2. 본인 담당 `station_group`만 필터링
+2. 본인 담당 `station_group(담당 군집 그룹명)`만 필터링
 3. 날짜형 변환과 정렬 수행
-4. 공통 lag/rolling 피처 생성
+4. 공통 lag(과거 시점 값)/rolling(이동 통계) 피처 생성
 5. `2023 / 2024 / 2025` 시간 분할 적용
-6. `LinearRegression` 학습 및 validation 평가
-7. `LightGBM_RMSE` 학습 및 validation 평가
-8. validation 결과로 우세 모델 선택
+6. `LinearRegression(선형회귀 모델)` 학습 및 validation(검증) 평가
+7. `LightGBM_RMSE(RMSE 기준 LightGBM)` 학습 및 validation(검증) 평가
+8. validation(검증) 결과로 우세 모델 선택
 9. 우세 모델을 `2023 + 2024`로 재학습
-10. `2025` test 점수 산출
-11. `RMSE`, `MAE`, `R²` 표 작성
+10. `2025` test(최종 평가) 점수 산출
+11. `RMSE(제곱평균제곱근오차)`, `MAE(평균절대오차)`, `R²(설명력)` 표 작성
 12. 노트북 마크다운에 결과 해석 작성
 13. 결과 CSV와 README 저장
 
@@ -357,10 +357,10 @@
 각 팀원은 아래를 모두 만족해야 한다.
 
 - [ ] 담당 군집 3개 대여소만 사용했는가
-- [ ] `2023 train / 2024 validation / 2025 test`를 지켰는가
-- [ ] `LinearRegression`과 `LightGBM_RMSE`를 모두 돌렸는가
-- [ ] `RMSE`, `MAE`, `R²`를 validation/test 모두 기록했는가
-- [ ] lag/rolling을 `station_id`별로 만들었는가
+- [ ] `2023 train(학습) / 2024 validation(검증) / 2025 test(최종 평가)`를 지켰는가
+- [ ] `LinearRegression(선형회귀 모델)`과 `LightGBM_RMSE(RMSE 기준 LightGBM)`를 모두 돌렸는가
+- [ ] `RMSE(제곱평균제곱근오차)`, `MAE(평균절대오차)`, `R²(설명력)`를 validation/test 모두 기록했는가
+- [ ] lag(과거 시점 값)/rolling(이동 통계)을 `station_id(숫자 대여소 ID)`별로 만들었는가
 - [ ] 테스트셋으로 모델 선택을 하지 않았는가
 - [ ] 노트북에 전처리와 해석이 남아 있는가
 - [ ] 차트와 표기가 `한글(영문)` 형식인가
@@ -369,8 +369,8 @@
 
 점수를 해석할 때는 아래 기준을 우선 사용한다.
 
-- validation은 모델 선택 기준
-- test는 최종 일반화 성능 확인 기준
+- validation(검증)은 모델 선택 기준
+- test(최종 평가)는 최종 일반화 성능 확인 기준
 - 한 군집 안에서 어떤 대여소가 유난히 어려운지 함께 본다
 - 점수만 보지 말고, 시간대 패턴과 오류 큰 스테이션도 같이 해석한다
 

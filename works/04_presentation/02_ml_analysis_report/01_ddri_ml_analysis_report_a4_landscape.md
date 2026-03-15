@@ -84,6 +84,19 @@ pdf_options:
 - 주요 지표: `RMSE`, `MAE`, `R²`
 - 최종 선택 기준: `2025 테스트 성능`과 운영 안정성
 
+## 용어 정리
+
+| 용어 | 쉬운 설명 |
+|---|---|
+| `RMSE`, `MAE`, `R²` | 모델 성능을 읽는 평가 지표 |
+| `objective` (학습 목표 함수) | 모델이 무엇을 더 잘 맞추도록 학습할지 정하는 기준 |
+| `RMSE objective` | 일반 회귀형 목표 함수 |
+| `Poisson objective` | 수요량·건수 같은 count 데이터에 맞춘 목표 함수 |
+| `subset` (축소 피처 조합) | 전체 후보 피처 중 일부만 골라 만든 피처 묶음 |
+| `baseline` (기준선 모델) | 이후 개선 여부를 비교하기 위한 기본 모델 |
+| `routing` (군집 분기 적용) | 군집별로 다른 모델이나 다른 피처 조합을 태우는 방식 |
+| `interaction` (상호작용 피처) | 두 조건을 곱하거나 묶어서 함께 반응을 보게 만든 피처 |
+
 ## 현재 고정된 문제 해석
 
 | 구분 | 현재 해석 |
@@ -125,7 +138,7 @@ pdf_options:
 
 | 구분 | 역할 |
 |---|---|
-| `대표 15개 raw_data` | 군집별 피처 탐색, subset 실험, 오류 해석 |
+| `대표 15개 raw_data` | 군집별 피처 탐색, 축소 피처 조합 실험, 오류 해석 |
 | `161개 full_data` | 실제 운영 기준선 선택 |
 | `정적 입지 피처` | 지하철, 버스, 표고, 상권, 생활권 구조 보강 |
 | `군집 컬럼(cluster)` | 군집화 결과를 후속 예측 실험에 연결하는 공통 키 |
@@ -173,7 +186,7 @@ pdf_options:
 | 정적 입지 피처를 별도 복원 | `161개` 데이터만으로는 군집 차이를 충분히 설명하기 어려웠음 |
 | 군집 컬럼은 해석 축으로 유지 | 최종 모델이 단일 모델이어도 군집은 오류 해석과 피처 발굴의 핵심 기준 |
 
-<div class="callout compact">전체 161개 운영 모델에서는 `정적 피처 + weather_full interaction` 조합이 가장 안정적이었다.</div>
+<div class="callout compact">전체 161개 운영 모델에서는 `정적 피처 + weather_full interaction(날씨-시간대 상호작용 피처)` 조합이 가장 안정적이었다.</div>
 
 <div class="page-break"></div>
 
@@ -238,14 +251,21 @@ pdf_options:
 
 # 06. 예측 모델 설계
 
-## 비교한 모델 축
+## 비교한 학습 모델과 학습 목표 함수
 
-- `LightGBM_RMSE`
-- `LightGBM_Poisson`
-- 군집별 subset 실험
-- 정적 피처 확장 실험
-- weather interaction 실험
-- routing 실험
+- 비교 모델:
+  - `LightGBM`
+  - `CatBoost`
+- 학습 목표 함수(objective):
+  - `RMSE objective`
+  - `Poisson objective`
+- 추가 실험 축:
+  - 군집별 `축소 피처 조합(subset)` 실험
+  - 정적 피처 확장 실험
+  - weather interaction(날씨-시간대 상호작용 피처) 실험
+  - routing(군집 분기 적용) 실험
+
+<div class="callout compact">같은 `LightGBM`이라도 `RMSE objective`로 학습할지, `Poisson objective`로 학습할지에 따라 결과가 달라질 수 있다. 여기서 `objective`는 학습 목표 함수, `subset`은 축소 피처 조합을 뜻한다.</div>
 
 ## 설계 원칙
 
@@ -255,10 +275,10 @@ pdf_options:
 ## 실험 흐름
 
 1. 대표 15개 군집별 실험
-2. 161개 단일 baseline
+2. 161개 단일 baseline(기준선 모델)
 3. 정적 피처 확장
 4. 군집 라우팅 비교
-5. weather interaction / weighting 비교
+5. weather interaction(상호작용 피처) / weighting(가중치) 비교
 
 <div class="page-break"></div>
 
@@ -276,13 +296,13 @@ pdf_options:
 
 ## 실험 목적
 
-- 군집별로 어떤 피처와 objective가 잘 맞는지 확인
+- 군집별로 어떤 피처와 어떤 `학습 목표 함수(objective)`가 잘 맞는지 확인
 - 최종 운영 모델을 직접 결정하기보다 피처 발굴 근거를 확보
 
 ## 핵심 결과
 
-- `cluster01`: `subset_a_commute_transit + LightGBM_Poisson`, `test RMSE 1.3108`
-- `cluster02`: `current_compact_best + LightGBM_Poisson`, `test RMSE 0.7990`
+- `cluster01`: `출퇴근+교통 축소 피처 조합(subset_a_commute_transit) + LightGBM_Poisson`, `test RMSE 1.3108`
+- `cluster02`: `현재 최적 축소 피처 조합(current_compact_best) + LightGBM_Poisson`, `test RMSE 0.7990`
 - 나머지 군집은 군집별 권장 피처를 유지하되, 현재 단계에서는 `해석 근거 강화` 수준으로 본다
 
 ## 해석
@@ -296,8 +316,8 @@ pdf_options:
 | 구분 | 모델 | 테스트 RMSE | 해석 |
 |---|---|---:|---|
 | `cluster02` | `subset_d_current_compact_best + LightGBM_Poisson` | `0.7990` | 대표 15개 내 최선 |
-| `대표 15개 기본안` | `rep15_static_base` | `0.9196` | 전체 대표셋 baseline |
-| `대표 15개 weather_full` | `rep15_static_weather_full` | `0.9198` | weather_full은 대표셋에서 이득 없음 |
+| `대표 15개 기본안` | `rep15_static_base` | `0.9196` | 전체 대표셋 baseline(기준선 모델) |
+| `대표 15개 weather_full` | `rep15_static_weather_full` | `0.9198` | weather_full 상호작용 피처는 대표셋에서 이득 없음 |
 | `cluster01` | `subset_a_commute_transit + LightGBM_Poisson` | `1.3108` | 가장 어려운 군집이지만 개선 여지 큼 |
 
 - 아래 차트는 표의 수치를 그대로 두고, `최선 대비 차이`만 확대해 보여준다.
@@ -320,16 +340,16 @@ pdf_options:
 
 ## 비교 결과 요약
 
-- `161 original baseline`: `0.8624`
+- `161 original baseline(기준선 모델)`: `0.8624`
 - `161 static enriched`: `0.8620`
 - `161 cluster-aware gating`: `0.8615`
-- `161 static + weather_full interaction`: `0.8604`, 현재 최선
-- `161 routing 계열`: `0.8673 ~ 0.8681`, 테스트 기준 악화
+- `161 static + weather_full interaction(상호작용 피처)`: `0.8604`, 현재 최선
+- `161 routing(군집 분기 적용) 계열`: `0.8673 ~ 0.8681`, 테스트 기준 악화
 
 ## 핵심 결론
 
-- 실제 운영 기준은 `단일 모델 + 정적 피처 + weather_full interaction`
-- `routing`은 검증셋 일부 개선이 있었지만 테스트셋에서 일반화 실패
+- 실제 운영 기준은 `단일 모델 + 정적 피처 + weather_full interaction(상호작용 피처)`
+- `routing`(군집 분기 적용)은 검증셋 일부 개선이 있었지만 테스트셋에서 일반화 실패
 
 ## 161개 운영 모델 세부 비교
 
@@ -338,9 +358,9 @@ pdf_options:
 | `static enriched + weather_full interaction` | `0.8604` | `0.0` | 현재 최선 운영안 |
 | `cluster-aware static gating` | `0.8615` | `1.1` | 소폭 개선이 있었지만 최선은 아님 |
 | `static enriched single model` | `0.8620` | `1.6` | 정적 피처 복원 효과 확인 |
-| `original baseline` | `0.8624` | `2.0` | 원본 기준선 |
+| `original baseline` | `0.8624` | `2.0` | 원본 기준선 모델 |
 | `partial routing` | `0.8673` | `6.9` | routing 일반화 실패 |
-| `exact routing + weather_full` | `0.8673` | `6.9` | weather_full도 routing을 살리지 못함 |
+| `exact routing + weather_full` | `0.8673` | `6.9` | weather_full 상호작용 피처도 routing을 살리지 못함 |
 | `static routing` | `0.8681` | `7.7` | routing 계열 중 하위권 |
 | `exact cluster routing` | `0.8681` | `7.7` | 15개 군집 피처가 161개에 그대로 일반화되지 않음 |
 
@@ -352,7 +372,7 @@ pdf_options:
   <img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_full161_test_rmse.png" alt="161개 운영 모델 비교 차트">
 </div>
 
-<div class="callout">강남구 전체 운영 기준선은 `static enriched + weather_full interaction`으로 고정한다.</div>
+<div class="callout">강남구 전체 운영 기준선은 `static enriched + weather_full interaction(상호작용 피처)`으로 고정한다.</div>
 
 <div class="page-break"></div>
 
@@ -366,13 +386,13 @@ pdf_options:
 ## 주요 해석
 
 - 오류는 특정 시간대와 특정 공간 역할에서 집중됨
-- 그래서 단순 날씨 피처보다 `날씨 x 시간대 interaction`이 더 유효했음
+- 그래서 단순 날씨 피처보다 `날씨 x 시간대 interaction(상호작용 피처)`이 더 유효했음
 
 ## 활용 의미
 
 - 오류 분석은 운영 모델 선택뿐 아니라 후처리 규칙 설계에도 연결됨
 
-## weather interaction 비교표
+## weather interaction(상호작용 피처) 비교표
 
 | 비교안 | 테스트 RMSE | 최선 대비 차이 x1000 | 해석 |
 |---|---:|---:|---|
@@ -397,7 +417,7 @@ pdf_options:
 | 관찰 | 판단 |
 |---|---|
 | 상위 오류는 저녁 피크와 아침 피크에 집중 | 시간대 interaction을 강화할 필요가 있었음 |
-| weather weighting은 추가 개선이 거의 없음 | 단순 가중치보다 interaction 피처가 더 유효 |
+| weather weighting(가중치)은 추가 개선이 거의 없음 | 단순 가중치보다 interaction(상호작용 피처)이 더 유효 |
 | routing 계열은 테스트에서 일관되게 악화 | 운영 기준은 단일 모델로 고정 |
 
 <div class="page-break"></div>
@@ -408,7 +428,7 @@ pdf_options:
 
 - 모델: `LightGBM`
 - 기준 데이터: `강남구 전체 161개`
-- 최종 조합: `static enriched + weather_full interaction`
+- 최종 조합: `static enriched + weather_full interaction(상호작용 피처)`
 - 최종 test RMSE: `0.8604`
 
 ## 최종 모델 카드
@@ -416,8 +436,8 @@ pdf_options:
 | 항목 | 내용 |
 |---|---|
 | 최종 선택 이유 | 강남구 전체 161개 기준 테스트 성능이 가장 안정적 |
-| 입력 축 | 시간 파생 피처 + 날씨 피처 + 정적 입지 피처 + weather interaction |
-| 배제한 대안 | routing 계열, weighting 계열 |
+| 입력 축 | 시간 파생 피처 + 날씨 피처 + 정적 입지 피처 + weather interaction(상호작용 피처) |
+| 배제한 대안 | routing(군집 분기 적용) 계열, weighting(가중치) 계열 |
 | 운영 해석 | `15개`는 설명용, `161개`는 운영용 |
 
 ## 최종 판단 요약
@@ -425,7 +445,7 @@ pdf_options:
 1. 군집화는 유효했다.
 2. 대표 15개 실험도 유효했다.
 3. 하지만 실제 운영 기준은 `161개 단일 모델`이 더 안정적이었다.
-4. 그 단일 모델 안에서 가장 좋았던 조합이 `static enriched + weather_full interaction`이었다.
+4. 그 단일 모델 안에서 가장 좋았던 조합이 `static enriched + weather_full interaction(상호작용 피처)`이었다.
 
 ## 단일 최종안 vs 라우팅 비교표
 
