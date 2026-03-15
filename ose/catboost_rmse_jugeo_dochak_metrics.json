@@ -1,0 +1,12 @@
+{
+  "station_group":"주거 도착형",
+  "train_rows":52632,
+  "test_rows":26280,
+  "valid_rows":26352,
+  "valid_rmse":0.814905,
+  "valid_mae":0.506941,
+  "valid_r2":0.404884,
+  "test_rmse":0.796577,
+  "test_mae":0.502177,
+  "test_r2":0.513679
+}
