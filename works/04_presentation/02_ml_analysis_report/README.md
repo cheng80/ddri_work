@@ -5,6 +5,7 @@
 현재 전면에 두는 정본은 아래 문서 1개다.
 
 - [01_ddri_ml_analysis_report_a4_landscape.md](/Users/cheng80/Desktop/ddri_work/works/04_presentation/02_ml_analysis_report/01_ddri_ml_analysis_report_a4_landscape.md)
+- [02_ddri_ml_analysis_report_speaker_notes_detailed.md](/Users/cheng80/Desktop/ddri_work/works/04_presentation/02_ml_analysis_report/02_ddri_ml_analysis_report_speaker_notes_detailed.md)
 
 ## 읽기 원칙
 
