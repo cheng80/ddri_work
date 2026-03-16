@@ -1,7 +1,7 @@
 # Ddri Master Plan
 
 작성일: 2026-03-11  
-최종 점검일: 2026-03-14  
+최종 점검일: 2026-03-16  
 목적: 프로젝트 진행 상태를 실제 산출물 기준으로 점검하고, 분석/ML Report와 앱 기능 설계를 다음 단계로 연결한다.
 
 ## 0. 작업 원칙
@@ -96,30 +96,26 @@
 
 ## 3. 현재 상태 요약
 
-현재 기준으로 프로젝트는 아래까지 진행되었다.
+현재 기준으로 프로젝트는 아래처럼 재정리되었다.
 
 1. 통합 군집화 최종 결과 정리 완료
 2. 발표용 군집화 문서 및 PDF 정리 완료
-3. `station-day` 베이스라인 예측 데이터셋 생성 완료
-4. 대표 대여소 15개 기준 `station-hour` long-format 예측 데이터셋 생성 완료
-5. 전체 공통 스테이션 161개 기준 `station-hour` long-format 예측 데이터셋 생성 완료
-6. 전체 스테이션 `station-hour` 실험 관리 경로를 대표 대여소 실험과 분리
-7. 예측용 차트 일부 생성 완료
-8. station-day 베이스라인 모델 비교 완료
-9. 대표 대여소 station-hour 추천 모델 비교 및 근거 차트 보강 완료
-10. 전체 161개 스테이션 `station-hour` 기준선 모델(baseline) 및 학습 목표 함수(objective) 비교 완료
-11. ML 오류 분석과 서비스 후처리 로직 정교화는 아직 미완료
-12. 실시간 서비스 연결용 외부 API 후보 확보
-13. 팀 공통 군집별 모델링 프로토콜을 대표 대여소 실험 경로에 배치 완료
-14. 군집별 담당자용 공통 노트북 템플릿 추가 완료
-15. Open-Meteo 기준 2024 날씨 원천 파일 정정 및 대표/전체 학습 데이터 재생성 완료
-16. `cheng80` 개인 대리 실험용 군집별 폴더 5개 준비 완료
-17. `cheng80` 개인 대리 실험용 결과 취합/2차 실험 판단 문서 추가 완료
-18. `cheng80` 개인 대리 실험 5개 군집 1차 실행 및 결과 취합 완료
-19. `cheng80` 2차 실험용 통합 피처모음 train/test CSV 생성 완료
-20. `cheng80` 5개 군집 2차 실험 병렬 실행 및 1차 대비 비교표 생성 완료
-21. `cluster01` 3차 심화 실험 완료 및 1~3차 비교 요약 생성 완료
-22. 군집별 현재 권장 모델/적용 수준을 정리한 최종 권장안 문서 추가 완료
+3. 대표 대여소 `raw_data`와 전체 스테이션 `full_data` 원천 CSV는 유지
+4. 과거 `station-day`, `station-hour`, `bike_change` 예측 실험 경로는 현재 정본 기준에서 제외
+5. `03_prediction`, `02_data_collection`은 `works/archive_legacy/`로 이동
+6. 기존 `05_prediction_long`, `06_prediction_long_full`은 폐기 대상으로 판단
+7. 현재 예측 파트는 과거 점수 계승이 아니라 정본 재구축 단계로 전환
+8. ML 오류 분석과 서비스 후처리 로직 정교화는 아직 미완료
+9. 실시간 서비스 연결용 외부 API 후보 확보
+
+### 3.1 2026-03-16 정리 로그
+
+- 기존 예측 실험 검토 결과, 잘못된 타깃 또는 흔들린 정본 정의를 전제로 한 실험 데이터는 더 이상 유지 가치가 없다고 판단했다.
+- 특히 과거 `station-hour` 계열 실험 결과와 `bike_change` 파생 실험 결과는 현재 기준 정본으로 승계하지 않는다.
+- 과거 `station-day` baseline과 데이터 수집 보조 경로는 삭제 대신 `archive_legacy`로 이동했다.
+- 현재 이후 작업의 유효 입력은 아래 두 경로만 본다.
+  - `3조 공유폴더/대표대여소_예측데이터_15개/raw_data/`
+  - `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/`
 
 핵심 결과 위치:
 
@@ -127,45 +123,36 @@
   - `works/01_clustering/08_integrated/final/results/second_clustering_results/`
 - 통합 군집화 최종 피처:
   - `works/01_clustering/08_integrated/final/features/`
-- station-day 예측 데이터:
-  - `works/03_prediction/02_data/`
-- 대표 대여소 station-hour 예측 데이터:
-  - `works/05_prediction_long/`
-  - 군집별 권장안:
-    - `works/05_prediction_long/cheng80/07_ddri_cluster_final_recommendation.md`
-- 전체 스테이션 station-hour 예측 데이터:
+- 과거 station-day 예측 데이터 보관:
+  - `works/archive_legacy/03_prediction/`
+- 대표 대여소 원천 데이터:
+  - `3조 공유폴더/대표대여소_예측데이터_15개/raw_data/`
+- 전체 스테이션 원천 데이터:
   - `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/`
-- 전체 스테이션 station-hour 실험 관리:
-  - `works/06_prediction_long_full/`
 - 발표 자료:
   - `works/04_presentation/`
 - 실시간 서비스 입력 후보:
   - 서울시 실시간 도시데이터
   - 서울시 공공자전거 따릉이 실시간 대여정보
 
-## 3.1 현재 고정 판단
+## 3.2 현재 고정 판단
 
 `works/00_overview/archive_docs/02_ddri_project_report_log.md`에 누적된 결정 중, 현재 기준 문서에 직접 반영해야 하는 판단만 아래처럼 고정한다.
 
 - 실시간 재고 기준 API는 `OA-15493 bikeList(공식 실시간 자전거 보유 정보 API)`로 사용한다.
 - 서비스 대상 `161개` 스테이션은 `station_id(숫자 대여소 ID) ↔ ST-xxxx(문자 대여소 ID) ↔ 운영 상태` 매핑 테이블을 별도 lookup으로 고정한다.
-- 대표 대여소 `station-hour` 단계는 `군집별 본실험 전의 탐색/설명 단계`로 해석한다.
-- 전체 `161개` 스테이션 `station-hour` 기본 모델은 `LightGBM_RMSE_Full(전체 스테이션 RMSE 기준 LightGBM)`로 유지한다.
-- 군집별 최종 권장안은 `공통 baseline(기준선 모델) + cluster01 우선 커스텀`으로 정리한다.
-- 대표 오류 기준 다음 축소 피처 조합(subset) 실험 우선순위는 `cluster01 -> cluster02 -> cluster00 -> cluster04`로 둔다.
 - 통합 군집화 정본 구조는 `works/01_clustering/08_integrated/{final,intermediate,pipeline,source_data}` 기준으로 유지한다.
-- 대표 대여소 실험 경로는 `원본 데이터(공유폴더)`와 `Git 관리 산출물(works/05_prediction_long)`을 분리해 유지한다.
-- 전체 스테이션 실험 경로는 `works/06_prediction_long_full`에서 `output/` 중심으로 관리한다.
+- 과거 예측 실험 데이터와 점수표는 현재 기준 모델 정본으로 사용하지 않는다.
+- 잘못된 타깃 또는 흔들린 정본 정의를 전제로 한 실험 데이터는 유지하지 않는다.
 - 문서와 차트의 용어 표기는 기본적으로 `한글(영문)` 형식으로 통일한다.
 
 관련 정본:
 
 - `cheng80/02_ddri_api_operational_rules.md`
-- `works/05_prediction_long/cheng80/07_ddri_cluster_final_recommendation.md`
-- `works/05_prediction_long/cheng80/rep15_error_analysis/12_ddri_rep15_top5_feature_linkage_summary.md`
-- `works/06_prediction_long_full/README.md`
+- `3조 공유폴더/대표대여소_예측데이터_15개/raw_data/`
+- `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/`
 
-## 3.2 서비스 후처리 최소 고정안
+## 3.3 서비스 후처리 최소 고정안
 
 서비스 출력 로직은 상세 초안 문서를 따로 길게 유지하기보다, 현재 기준 아래 수준으로만 고정한다.
 

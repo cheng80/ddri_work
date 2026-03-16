@@ -3,6 +3,14 @@
 작성일: 2026-03-14  
 목적: 현재까지 진행한 예측 모델 실험의 점수와 해석을 한눈에 볼 수 있도록 표로 정리한다.
 
+## 현재 상태
+
+이 문서는 과거 실험 점수 로그 보관용이다.
+
+- `station-day`, `station-hour`, `bike_change` 구 실험 경로 다수는 현재 정본 기준에서 제외되었다.
+- 따라서 아래 점수표는 "현재 채택 모델" 기록이 아니라 "과거 실험 이력"으로만 본다.
+- 잘못된 타깃 또는 흔들린 정본 정의를 전제로 한 실험 데이터는 현재 실무 경로에서 더 이상 사용하지 않는다.
+
 ## 0. 용어 정리
 
 - `baseline`(기준선 모델)
@@ -14,7 +22,7 @@
 - `Poisson objective`
   - 수요량, 건수처럼 `0 이상 count 데이터`에 맞춘 학습 목표 함수
 
-## 1. 요약
+## 1. 과거 요약
 
 현재 예측 파트는 아래 3개 트랙으로 나뉜다.
 
@@ -22,7 +30,7 @@
 - 대표 15개 대여소 시간 단위(`station-hour`) 핵심 검증 트랙
 - 전체 161개 스테이션 시간 단위(`station-hour`) 재배치 확장 트랙
 
-현재 결론은 세 트랙 모두 `LightGBM` 계열이 가장 우세하다는 것이다.
+과거 실험 결론만 보면 세 트랙 모두 `LightGBM` 계열이 우세했다.
 
 ## 2. 모델 점수 표(Model Score Table)
 
@@ -39,7 +47,7 @@
 | 전체 161개 시간 단위(`station-hour`) | `LightGBM_Poisson_Full` | 0.9827                             | 0.6260                           | 0.4359                         | 0.8704                        | 0.5613                      | 0.4262                    | full-data에서도 `RMSE objective`보다 약함                  |
 
 
-## 3. 현재 우세 모델(Current Best Model)
+## 3. 과거 우세 모델(Current Best Model)
 
 
 | 트랙(Track)                     | 현재 우세 모델(Current Best Model) | 해석(Interpretation)   |
@@ -69,6 +77,5 @@
 
 ## 5. 관련 파일(Related Files)
 
-- `works/03_prediction/02_data/ddri_station_day_baseline_model_metrics.csv`
-- `works/05_prediction_long/output/data/ddri_station_hour_model_metrics.csv`
-- `works/06_prediction_long_full/output/data/ddri_station_hour_full_model_comparison_metrics.csv`
+- `works/archive_legacy/03_prediction/02_data/ddri_station_day_baseline_model_metrics.csv`
+- 과거 `station-hour` 실험 경로 파일은 현재 폐기 대상으로 정리되었거나 더 이상 기준 경로로 사용하지 않는다.
