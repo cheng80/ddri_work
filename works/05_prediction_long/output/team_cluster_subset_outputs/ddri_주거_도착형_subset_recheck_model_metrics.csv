@@ -1,0 +1,8 @@
+station_group,subset_name,feature_count,model,split,rmse,mae,r2
+주거 도착형,subset_d_current_compact_best,26,LightGBM_Poisson,validation_2024,0.8108644962384767,0.5016795311134804,0.4107710160687743
+주거 도착형,subset_c_living_pattern_location,25,LightGBM_RMSE,validation_2024,0.8207847251882162,0.510339324033019,0.39626540514369224
+주거 도착형,subset_b_living_pattern_rain,24,LightGBM_RMSE,validation_2024,0.8211780799854665,0.5114587079202773,0.3956865961148339
+주거 도착형,subset_a_living_pattern_core,23,LightGBM_RMSE,validation_2024,0.8252065262273307,0.5117432405791196,0.38974290269214895
+주거 도착형,baseline_full,26,LightGBM_RMSE,validation_2024,0.8260748590310593,0.512986666590326,0.3884579272603158
+주거 도착형,subset_d_current_compact_best,26,LightGBM_RMSE,validation_2024,0.8260748590310593,0.512986666590326,0.3884579272603158
+주거 도착형,subset_d_current_compact_best,26,LightGBM_Poisson,test_2025_refit,0.7989593168407733,0.4997013064632727,0.510765514739544

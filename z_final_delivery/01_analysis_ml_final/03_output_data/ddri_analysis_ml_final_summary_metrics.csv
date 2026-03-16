@@ -1,0 +1,13 @@
+﻿구분(track),표시명(label),모델(model),테스트 RMSE(test_rmse),비고(note),최선 대비 차이(delta_vs_best),최선 대비 차이 x1000(delta_x1000),그룹(group)
+rep15_cluster02,대표 15개 cluster02 / Representative 15 cluster02,subset_d_current_compact_best + LightGBM_Poisson,0.799,cluster02 final recommendation,0.0,0.0,rep15
+rep15_all_static_base,대표 15개 기본안 / Representative 15 static base,rep15_static_base,0.9196,rep15 full baseline for weather comparison,0.1206,120.6,rep15
+rep15_all_static_weather_full,대표 15개 weather_full / Representative 15 weather_full,rep15_static_weather_full,0.9198,weather_full did not improve rep15,0.1208,120.8,rep15
+rep15_cluster01,대표 15개 cluster01 / Representative 15 cluster01,subset_a_commute_transit + LightGBM_Poisson,1.3108,cluster01 final recommendation,0.5118,511.8,rep15
+full161_static_weather_full,161개 운영 최종안 / 161 final operating baseline,static enriched + weather_full interaction,0.8604,current best operating baseline,0.0,0.0,full161
+full161_cluster_aware_gating,161개 cluster-aware gating / 161 cluster-aware gating,single model + cluster-aware static gating,0.8615,slight gain over static enriched,0.0011,1.1,full161
+full161_static_enriched,161개 static enriched / 161 static enriched,static enriched single model,0.862,static features restored,0.0016,1.6,full161
+full161_original,161개 원본 baseline / 161 original baseline,LightGBM_RMSE_Full_Original,0.8624,original 161 baseline,0.002,2.0,full161
+full161_partial_routing,161개 partial routing / 161 partial routing,partial routing,0.8673,"validation improved, test worsened",0.0069,6.9,full161
+full161_exact_cluster_routing_weather_full,161개 군집피처+weather_full / 161 exact routing + weather_full,exact cluster feature routing + weather_full,0.8673,weather_full did not rescue routing,0.0069,6.9,full161
+full161_static_routing,161개 static routing / 161 static routing,static enriched routing,0.8681,routing still worse,0.0077,7.7,full161
+full161_exact_cluster_routing,161개 군집피처 routing / 161 exact cluster routing,exact cluster feature routing,0.8681,exact 15-cluster features did not generalize,0.0077,7.7,full161

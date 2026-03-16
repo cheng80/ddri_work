@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Ddri 강남구 따릉이 머신러닝 분석 보고서</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Ddri 강남구 따릉이 머신러닝 분석 보고서</h1>
+</header>
+<!-- markdownlint-disable MD013 -->
+<p><link rel="stylesheet" href="../ddri_presentation_a4_landscape.css"></p>
+<h1 id="강남구-따릉이-머신러닝-분석-보고서">강남구 따릉이 머신러닝 분석
+보고서</h1>
+<h2 id="보고서-목적">보고서 목적</h2>
+<ul>
+<li>강남구 따릉이 스테이션별 자전거 수요 예측 실험 결과를 한 문서로
+정리</li>
+<li><code>대표 15개 스테이션</code> 실험과
+<code>강남구 전체 161개 스테이션</code> 운영 기준선을 함께 설명</li>
+<li>이후 웹/앱 연결 전 단계의 분석 정본으로 사용</li>
+</ul>
+<h2 id="현재-작성-상태">현재 작성 상태</h2>
+<table>
+<thead>
+<tr>
+<th>장</th>
+<th>상태</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 프로젝트 개요</td>
+<td>작성</td>
+<td></td>
+</tr>
+<tr>
+<td>2. 문제 정의</td>
+<td>작성</td>
+<td></td>
+</tr>
+<tr>
+<td>3. 데이터 설명</td>
+<td>작성</td>
+<td></td>
+</tr>
+<tr>
+<td>4. 전처리 및 피처 엔지니어링</td>
+<td>작성</td>
+<td></td>
+</tr>
+<tr>
+<td>5. 군집화 분석</td>
+<td>작성</td>
+<td></td>
+</tr>
+<tr>
+<td>6. 예측 모델 설계</td>
+<td>작성</td>
+<td></td>
+</tr>
+<tr>
+<td>7. 대표 15개 스테이션 실험</td>
+<td>작성</td>
+<td></td>
+</tr>
+<tr>
+<td>8. 강남구 전체 161개 스테이션 실험</td>
+<td>작성</td>
+<td></td>
+</tr>
+<tr>
+<td>9. 오류 분석</td>
+<td>작성</td>
+<td></td>
+</tr>
+<tr>
+<td>10. 최종 모델 및 성능 요약</td>
+<td>부분 작성</td>
+<td>최종 요약 문장 보강 필요</td>
+</tr>
+<tr>
+<td>11. 서비스 적용 방안</td>
+<td>준비 중</td>
+<td></td>
+</tr>
+<tr>
+<td>12. 결론 및 향후 과제</td>
+<td>준비 중</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="callout">
+현재 기준: 1~9장은 실험 결과 반영 가능, 10장은 요약 보강 단계, 11~12장은
+준비 중
+</div>
+<div class="page-break">
+
+</div>
+<h1 id="프로젝트-개요">01. 프로젝트 개요</h1>
+<h2 id="주제">주제</h2>
+<ul>
+<li>서울시 강남구 공통 운영 따릉이 스테이션의 시간대별 수요를
+예측한다.</li>
+</ul>
+<h2 id="분석-범위">분석 범위</h2>
+<ul>
+<li>공간 범위: <code>강남구</code></li>
+<li>탐색용 대표셋: <code>군집별 대표 스테이션 15개</code></li>
+<li>운영 기준셋: <code>강남구 전체 공통 스테이션 161개</code></li>
+<li>기간 기준: <code>2023~2024 학습</code>,
+<code>2025 테스트</code></li>
+</ul>
+<h2 id="기대-활용">기대 활용</h2>
+<ul>
+<li>사용자용 잔여 자전거 예측</li>
+<li>재배치 관리자용 부족/과잉 대응 판단</li>
+<li>API 출력 및 운영 후처리 규칙 설계의 근거</li>
+</ul>
+<h2 id="프로젝트-진행-배경">프로젝트 진행 배경</h2>
+<ul>
+<li>중간 단계에서는 강남구 대여소를 군집화해 <code>공간 역할</code>을
+먼저 정리했다.</li>
+<li>이후 군집별 대표 스테이션 <code>15개</code>를 뽑아 군집별 피처
+탐색과 모델 반응을 확인했다.</li>
+<li>마지막으로 실제 운영 관점에서는 강남구 전체 공통 스테이션
+<code>161개</code>를 기준으로 최종 모델을 선택했다.</li>
+</ul>
+<div class="callout compact">
+이 보고서는
+<code>군집화 -&gt; 대표 15개 탐색 -&gt; 161개 운영 기준선 선택</code>의
+흐름을 하나로 묶는 정리본이다.
+</div>
+<div class="page-break">
+
+</div>
+<h1 id="문제-정의">02. 문제 정의</h1>
+<h2 id="예측-목표">예측 목표</h2>
+<ul>
+<li>예측 단위: <code>station-hour</code></li>
+<li>의미: 특정 대여소의 특정 시각 수요 또는 대여량을 예측해 운영
+의사결정에 활용</li>
+</ul>
+<h2 id="왜-중요한가">왜 중요한가</h2>
+<ul>
+<li>강남구는 업무지구, 주거지구, 생활권, 외곽 생활권이 혼재해 시간대별
+편차가 큼</li>
+<li>동일 모델 하나로 모든 스테이션을 설명하기 어려워 군집 해석과 운영
+기준선이 함께 필요함</li>
+</ul>
+<h2 id="평가-기준">평가 기준</h2>
+<ul>
+<li>주요 지표: <code>RMSE</code>, <code>MAE</code>, <code>R²</code></li>
+<li>최종 선택 기준: <code>2025 테스트 성능</code>과 운영 안정성</li>
+</ul>
+<h2 id="용어-정리">용어 정리</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>용어</th>
+<th>쉬운 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RMSE</code>, <code>MAE</code>, <code>R²</code></td>
+<td>모델 성능을 읽는 평가 지표</td>
+</tr>
+<tr>
+<td><code>objective</code> (학습 목표 함수)</td>
+<td>모델이 무엇을 더 잘 맞추도록 학습할지 정하는 기준</td>
+</tr>
+<tr>
+<td><code>RMSE objective</code></td>
+<td>일반 회귀형 목표 함수</td>
+</tr>
+<tr>
+<td><code>Poisson objective</code></td>
+<td>수요량·건수 같은 count 데이터에 맞춘 목표 함수</td>
+</tr>
+<tr>
+<td><code>subset</code> (축소 피처 조합)</td>
+<td>전체 후보 피처 중 일부만 골라 만든 피처 묶음</td>
+</tr>
+<tr>
+<td><code>baseline</code> (기준선 모델)</td>
+<td>이후 개선 여부를 비교하기 위한 기본 모델</td>
+</tr>
+<tr>
+<td><code>routing</code> (군집 분기 적용)</td>
+<td>군집별로 다른 모델이나 다른 피처 조합을 태우는 방식</td>
+</tr>
+<tr>
+<td><code>interaction</code> (상호작용 피처)</td>
+<td>두 조건을 곱하거나 묶어서 함께 반응을 보게 만든 피처</td>
+</tr>
+</tbody>
+</table>
+<h2 id="현재-고정된-문제-해석">현재 고정된 문제 해석</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>구분</th>
+<th>현재 해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>분석/ML 1차 목표</td>
+<td>대여소별 시간대 수요(<code>station-hour rental_count</code>)
+예측</td>
+</tr>
+<tr>
+<td>탐색용 데이터셋</td>
+<td>군집별 대표 스테이션 <code>15개</code></td>
+</tr>
+<tr>
+<td>운영용 데이터셋</td>
+<td>강남구 전체 공통 스테이션 <code>161개</code></td>
+</tr>
+<tr>
+<td>서비스 연결 방향</td>
+<td>예측 대여량을 <code>잔여 자전거</code>, <code>부족 위험</code>,
+<code>재배치 우선순위</code>로 후처리</td>
+</tr>
+</tbody>
+</table>
+<div class="callout compact">
+따라서 <code>15개</code>는 설명과 피처 탐색용, <code>161개</code>는 실제
+운영 모델 선택용으로 역할을 나눠 해석한다.
+</div>
+<div class="page-break">
+
+</div>
+<h1 id="데이터-설명">03. 데이터 설명</h1>
+<h2 id="주요-데이터">주요 데이터</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>구분</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>대여 이력</td>
+<td>서울시 따릉이 대여/반납 이력</td>
+</tr>
+<tr>
+<td>대여소 정보</td>
+<td>대여소 위치, 운영 여부</td>
+</tr>
+<tr>
+<td>날씨 데이터</td>
+<td>기온, 습도, 강수량, 풍속 등</td>
+</tr>
+<tr>
+<td>정적 입지 피처</td>
+<td>지하철 거리, 버스정류장 수, 표고, 상권/생활권 주변 정보</td>
+</tr>
+<tr>
+<td>군집 컬럼</td>
+<td>별도 군집화 분석으로 생성된 <code>cluster</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="데이터셋-구분">데이터셋 구분</h2>
+<ul>
+<li><code>대표 15개</code>: 군집별 대표 스테이션 중심 탐색용 데이터</li>
+<li><code>전체 161개</code>: 실제 운영 기준선 선택용 데이터</li>
+</ul>
+<h2 id="분할-기준">분할 기준</h2>
+<ul>
+<li>학습: <code>2023~2024</code></li>
+<li>테스트: <code>2025</code></li>
+</ul>
+<div class="page-break">
+
+</div>
+<h2 id="데이터-운영-구조">데이터 운영 구조</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>구분</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>대표 15개 raw_data</code></td>
+<td>군집별 피처 탐색, 축소 피처 조합 실험, 오류 해석</td>
+</tr>
+<tr>
+<td><code>161개 full_data</code></td>
+<td>실제 운영 기준선 선택</td>
+</tr>
+<tr>
+<td><code>정적 입지 피처</code></td>
+<td>지하철, 버스, 표고, 상권, 생활권 구조 보강</td>
+</tr>
+<tr>
+<td><code>군집 컬럼(cluster)</code></td>
+<td>군집화 결과를 후속 예측 실험에 연결하는 공통 키</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+
+</div>
+<h1 id="전처리-및-피처-엔지니어링">04. 전처리 및 피처 엔지니어링</h1>
+<h2 id="시간-파생-피처">시간 파생 피처</h2>
+<ul>
+<li><code>is_commute_hour</code> (출퇴근 시간 여부)</li>
+<li><code>is_night_hour</code> (야간 시간 여부)</li>
+<li><code>is_weekend</code> (주말 여부)</li>
+<li><code>is_holiday_eve</code> (공휴일 전날 여부)</li>
+</ul>
+<h2 id="날씨-피처">날씨 피처</h2>
+<ul>
+<li><code>precipitation</code> (강수량)</li>
+<li><code>heavy_rain_flag</code> (강한 비 여부)</li>
+<li><code>temperature</code> (기온)</li>
+<li><code>humidity</code> (습도)</li>
+</ul>
+<h2 id="정적-입지-피처">정적 입지 피처</h2>
+<ul>
+<li><code>subway_distance_m</code> (최근접 지하철 거리)</li>
+<li><code>bus_stop_count_300m</code> (300m 내 버스정류장 수)</li>
+<li><code>station_elevation_m</code> (대여소 표고)</li>
+<li><code>restaurant_count_300m</code> (300m 내 음식점 수)</li>
+<li><code>cafe_count_300m</code> (300m 내 카페 수)</li>
+</ul>
+<div class="page-break">
+
+</div>
+<h2 id="상호작용-피처">상호작용 피처</h2>
+<ul>
+<li><code>rain_x_commute</code> (비 오는 출퇴근 시간대)</li>
+<li><code>rain_x_night</code> (비 오는 야간 시간대)</li>
+<li><code>precipitation_x_commute</code> (강수량이 있는 출퇴근
+시간대)</li>
+<li><code>precipitation_x_night</code> (강수량이 있는 야간 시간대)</li>
+</ul>
+<h2 id="전처리와-피처-설계의-핵심-판단">전처리와 피처 설계의 핵심
+판단</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>판단</th>
+<th>이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>날씨만 단독으로 넣지 않음</td>
+<td>비 자체보다 <code>비 오는 출퇴근/야간 시간대</code> 반응이 더
+중요했음</td>
+</tr>
+<tr>
+<td>정적 입지 피처를 별도 복원</td>
+<td><code>161개</code> 데이터만으로는 군집 차이를 충분히 설명하기
+어려웠음</td>
+</tr>
+<tr>
+<td>군집 컬럼은 해석 축으로 유지</td>
+<td>최종 모델이 단일 모델이어도 군집은 오류 해석과 피처 발굴의 핵심
+기준</td>
+</tr>
+</tbody>
+</table>
+<div class="callout compact">
+전체 161개 운영 모델에서는
+<code>정적 피처 + weather_full interaction(날씨-시간대 상호작용 피처)</code>
+조합이 가장 안정적이었다.
+</div>
+<div class="page-break">
+
+</div>
+<h1 id="군집화-분석">05. 군집화 분석</h1>
+<h2 id="군집화-목적">군집화 목적</h2>
+<ul>
+<li>대여소를 단순 수요 규모가 아니라 <code>공간 역할</code> 기준으로
+분류</li>
+<li>이후 예측 실험에서 군집별 피처 후보를 발굴하기 위한 기준 생성</li>
+</ul>
+<h2 id="군집-수와-해석">군집 수와 해석</h2>
+<ul>
+<li>최종 군집 수: <code>5개</code></li>
+<li>해석 축:
+<ul>
+<li><code>업무/상업 혼합형</code></li>
+<li><code>아침 도착 업무 집중형</code></li>
+<li><code>주거 도착형</code></li>
+<li><code>생활·상권 혼합형</code></li>
+<li><code>외곽 주거형</code></li>
+</ul></li>
+</ul>
+<h2 id="대표-15개-선정">대표 15개 선정</h2>
+<ul>
+<li>5개 군집별로 대표 스테이션 <code>Top 3</code>를 선정</li>
+<li>총 <code>15개</code>를 실험용 대표셋으로 사용</li>
+</ul>
+<h2 id="참고-근거">참고 근거</h2>
+<ul>
+<li>군집 요약: <code>z_final_delivery</code> 기준 별도 근거 문서에서
+확인 가능</li>
+<li>이 보고서에서는 군집이 예측 실험의 출발점이라는 점만 요약해
+반영</li>
+</ul>
+<div class="page-break">
+
+</div>
+<h2 id="군집-요약표">군집 요약표</h2>
+<div style="font-size: 15px;">
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr>
+<th>군집</th>
+<th style="text-align: right;">station 수</th>
+<th style="text-align: right;">07~10 반납 비율</th>
+<th style="text-align: right;">11~14 반납 비율</th>
+<th style="text-align: right;">17~20 반납 비율</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cluster00</code></td>
+<td style="text-align: right;"><code>49</code></td>
+<td style="text-align: right;"><code>0.2832</code></td>
+<td style="text-align: right;"><code>0.1874</code></td>
+<td style="text-align: right;"><code>0.2326</code></td>
+<td>업무/상업 혼합형</td>
+</tr>
+<tr>
+<td><code>cluster01</code></td>
+<td style="text-align: right;"><code>3</code></td>
+<td style="text-align: right;"><code>0.4863</code></td>
+<td style="text-align: right;"><code>0.1599</code></td>
+<td style="text-align: right;"><code>0.1614</code></td>
+<td>아침 도착 업무 집중형</td>
+</tr>
+<tr>
+<td><code>cluster02</code></td>
+<td style="text-align: right;"><code>32</code></td>
+<td style="text-align: right;"><code>0.1134</code></td>
+<td style="text-align: right;"><code>0.1497</code></td>
+<td style="text-align: right;"><code>0.3831</code></td>
+<td>주거 도착형</td>
+</tr>
+<tr>
+<td><code>cluster03</code></td>
+<td style="text-align: right;"><code>61</code></td>
+<td style="text-align: right;"><code>0.1532</code></td>
+<td style="text-align: right;"><code>0.1975</code></td>
+<td style="text-align: right;"><code>0.3066</code></td>
+<td>생활·상권 혼합형</td>
+</tr>
+<tr>
+<td><code>cluster04</code></td>
+<td style="text-align: right;"><code>19</code></td>
+<td style="text-align: right;"><code>0.1569</code></td>
+<td style="text-align: right;"><code>0.1589</code></td>
+<td style="text-align: right;"><code>0.3123</code></td>
+<td>외곽 주거형</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="chart-block">
+<p><img class="chart-image" src="../../01_clustering/08_integrated/final/results/second_clustering_results/images/ddri_second_kmeans_elbow_silhouette.png" alt="군집 수 선택 차트"></p>
+</div>
+<div class="chart-block">
+<p><img class="chart-image" src="../../01_clustering/08_integrated/final/results/second_clustering_results/images/ddri_second_cluster_profile_heatmap.png" alt="군집 프로파일 히트맵"></p>
+</div>
+<div class="chart-block">
+<p><img class="chart-image" src="../../01_clustering/08_integrated/final/results/second_clustering_results/images/ddri_second_kmeans_pca_scatter.png" alt="군집 PCA 산점도"></p>
+</div>
+<div class="chart-block">
+<p><img class="appendix-map-image" src="../../01_clustering/08_integrated/final/results/second_clustering_results/images/ddri_second_cluster_static_map.png" alt="강남구 군집 정적 지도"></p>
+</div>
+<div class="callout compact">
+군집화는 최종 모델 자체를 고르는 단계가 아니라,
+<code>대여소의 공간 역할</code>을 해석하고 후속 예측 피처를 고르는 상위
+기준을 만드는 단계였다.
+</div>
+<div class="page-break">
+
+</div>
+<h1 id="예측-모델-설계">06. 예측 모델 설계</h1>
+<h2 id="비교한-학습-모델과-학습-목표-함수">비교한 학습 모델과 학습 목표
+함수</h2>
+<ul>
+<li>비교 모델:
+<ul>
+<li><code>LightGBM</code></li>
+<li><code>CatBoost</code></li>
+</ul></li>
+<li>학습 목표 함수(objective):
+<ul>
+<li><code>RMSE objective</code></li>
+<li><code>Poisson objective</code></li>
+</ul></li>
+<li>추가 실험 축:
+<ul>
+<li>군집별 <code>축소 피처 조합(subset)</code> 실험</li>
+<li>정적 피처 확장 실험</li>
+<li>weather interaction(날씨-시간대 상호작용 피처) 실험</li>
+<li>routing(군집 분기 적용) 실험</li>
+</ul></li>
+</ul>
+<div class="callout compact">
+같은 <code>LightGBM</code>이라도 <code>RMSE objective</code>로 학습할지,
+<code>Poisson objective</code>로 학습할지에 따라 결과가 달라질 수 있다.
+여기서 <code>objective</code>는 학습 목표 함수, <code>subset</code>은
+축소 피처 조합을 뜻한다.
+</div>
+<h2 id="설계-원칙">설계 원칙</h2>
+<ul>
+<li><code>대표 15개</code>는 군집별 피처 탐색과 해석에 집중</li>
+<li><code>전체 161개</code>는 실제 운영 기준선 선택에 집중</li>
+</ul>
+<h2 id="실험-흐름">실험 흐름</h2>
+<ol type="1">
+<li>대표 15개 군집별 실험</li>
+<li>161개 단일 baseline(기준선 모델)</li>
+<li>정적 피처 확장</li>
+<li>군집 라우팅 비교</li>
+<li>weather interaction(상호작용 피처) / weighting(가중치) 비교</li>
+</ol>
+<div class="page-break">
+
+</div>
+<h2 id="실험-프레임">실험 프레임</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>축</th>
+<th>대표 15개</th>
+<th>전체 161개</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>목적</td>
+<td>군집별 피처 탐색</td>
+<td>실제 운영 기준선 선택</td>
+</tr>
+<tr>
+<td>질문</td>
+<td>어떤 군집이 어떤 피처에 반응하는가</td>
+<td>전체 강남구에서 어떤 조합이 가장 안정적인가</td>
+</tr>
+<tr>
+<td>결과 해석</td>
+<td>군집별 권장안과 설명 근거</td>
+<td>운영 모델 최종 선택</td>
+</tr>
+</tbody>
+</table>
+<h2 id="실험명조합-용어표">실험명·조합 용어표</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>용어</th>
+<th>쉬운 설명</th>
+<th>핵심 포함 피처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rep15_static_base</code></td>
+<td>대표 15개 전체에 공통으로 적용한 정적 피처 기준선 모델</td>
+<td>시간 피처, 날씨 기본 피처, 정적 입지 피처</td>
+</tr>
+<tr>
+<td><code>rep15_static_weather_full</code></td>
+<td>대표 15개 전체에 정적 피처 + 날씨-시간대 상호작용 피처를 같이 넣은
+비교안</td>
+<td><code>rep15_static_base</code> + <code>rain_x_commute</code>,
+<code>rain_x_night</code>, <code>precipitation_x_lunch</code> 등</td>
+</tr>
+<tr>
+<td><code>subset_a_commute_transit + LightGBM_Poisson</code></td>
+<td><code>cluster01</code> 출퇴근-교통 중심 경량 조합 + Poisson 기준
+LightGBM</td>
+<td><code>is_commute_hour</code>, <code>commute_morning_flag</code>,
+<code>commute_evening_flag</code>, <code>subway_distance_m</code>,
+<code>bus_stop_count_300m</code></td>
+</tr>
+<tr>
+<td><code>subset_d_current_compact_best + LightGBM_Poisson</code></td>
+<td><code>cluster02</code>에서 가장 성능이 좋았던 경량 조합 + Poisson
+기준 LightGBM</td>
+<td><code>is_night_hour</code>, <code>is_weekend</code>,
+<code>is_holiday_eve</code>, <code>heavy_rain_flag</code>,
+<code>station_elevation_m</code>, <code>bus_stop_count_300m</code></td>
+</tr>
+<tr>
+<td><code>static enriched</code></td>
+<td>전체 161개 데이터에 정적 입지 피처를 복원해 붙인 단일 모델</td>
+<td>시간 피처, 날씨 기본 피처, 정적 입지 피처</td>
+</tr>
+<tr>
+<td><code>cluster-aware static gating</code></td>
+<td>군집별로 더 의미 있는 정적 피처만 강조해서 넣은 단일 모델</td>
+<td>정적 입지 피처 + 군집별 gated 정적 피처</td>
+</tr>
+<tr>
+<td><code>partial routing</code></td>
+<td>군집별로 일부 설정만 나눠 적용한 초기 군집 분기 적용 비교안</td>
+<td>군집별 학습 설정 일부 분기, 일부 시간/날씨 파생 피처</td>
+</tr>
+<tr>
+<td><code>exact cluster routing</code></td>
+<td>대표 15개에서 찾은 군집별 피처 조합을 161개 전체에 그대로 옮긴 군집
+분기 적용 비교안</td>
+<td>군집별 권장 피처 조합</td>
+</tr>
+<tr>
+<td><code>exact routing + weather_full</code></td>
+<td>대표 15개 군집 피처에 <code>weather_full</code>까지 함께 붙인 군집
+분기 적용 비교안</td>
+<td>군집별 권장 피처 + <code>weather_full</code> 상호작용 피처</td>
+</tr>
+<tr>
+<td><code>weather_full</code></td>
+<td>비/강수량과 출퇴근·점심·야간 시간대를 함께 묶은 전체 상호작용 피처
+조합</td>
+<td><code>rain_x_commute</code>, <code>rain_x_morning_commute</code>,
+<code>rain_x_evening_commute</code>, <code>rain_x_night</code>,
+<code>rain_x_lunch</code>, <code>precipitation_x_commute</code>,
+<code>precipitation_x_night</code>,
+<code>precipitation_x_lunch</code></td>
+</tr>
+<tr>
+<td><code>weather_time_band_core</code></td>
+<td>시간대 중심 핵심 상호작용 조합</td>
+<td><code>rain_x_night</code>, <code>rain_x_lunch</code>,
+<code>precipitation_x_night</code>, <code>precipitation_x_lunch</code>
+중심</td>
+</tr>
+<tr>
+<td><code>weather_commute_core</code></td>
+<td>출퇴근 시간대 중심 핵심 상호작용 조합</td>
+<td><code>rain_x_commute</code>, <code>rain_x_morning_commute</code>,
+<code>rain_x_evening_commute</code>,
+<code>precipitation_x_commute</code> 중심</td>
+</tr>
+<tr>
+<td><code>weather_precip_intensity_core</code></td>
+<td>강수 강도 중심 핵심 상호작용 조합</td>
+<td><code>heavy_rain_x_commute</code>, <code>heavy_rain_x_night</code>,
+<code>precipitation_x_commute</code>, <code>precipitation_x_night</code>
+중심</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+
+</div>
+<h1 id="대표-15개-스테이션-실험">07. 대표 15개 스테이션 실험</h1>
+<h2 id="실험-목적">실험 목적</h2>
+<ul>
+<li>군집별로 어떤 피처와 어떤 <code>학습 목표 함수(objective)</code>가
+잘 맞는지 확인</li>
+<li>최종 운영 모델을 직접 결정하기보다 피처 발굴 근거를 확보</li>
+</ul>
+<h2 id="핵심-결과">핵심 결과</h2>
+<ul>
+<li><code>cluster01</code>:
+<code>출퇴근+교통 축소 피처 조합(subset_a_commute_transit) + LightGBM_Poisson</code>,
+<code>test RMSE 1.3108</code></li>
+<li><code>cluster02</code>:
+<code>현재 최적 축소 피처 조합(current_compact_best) + LightGBM_Poisson</code>,
+<code>test RMSE 0.7990</code></li>
+<li>나머지 군집은 군집별 권장 피처를 유지하되, 현재 단계에서는
+<code>해석 근거 강화</code> 수준으로 본다</li>
+</ul>
+<h2 id="해석">해석</h2>
+<ul>
+<li><code>cluster01</code>은 출근 피크와 교통 접근성이 핵심</li>
+<li><code>cluster02</code>는 야간/주말/공휴일전날과 주거형 특성이
+핵심</li>
+<li>대표 15개 실험은 군집별 피처 의미를 설명하는 데 유효</li>
+</ul>
+<h2 id="대표-15개-주요-비교-결과">대표 15개 주요 비교 결과</h2>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 30%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th>구분</th>
+<th>모델</th>
+<th style="text-align: right;">테스트 RMSE</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cluster02</code></td>
+<td><code>subset_d_current_compact_best + LightGBM_Poisson</code></td>
+<td style="text-align: right;"><code>0.7990</code></td>
+<td>대표 15개 내 최선</td>
+</tr>
+<tr>
+<td><code>대표 15개 기본안</code></td>
+<td><code>rep15_static_base</code></td>
+<td style="text-align: right;"><code>0.9196</code></td>
+<td>전체 대표셋 baseline(기준선 모델)</td>
+</tr>
+<tr>
+<td><code>대표 15개 weather_full</code></td>
+<td><code>rep15_static_weather_full</code></td>
+<td style="text-align: right;"><code>0.9198</code></td>
+<td>weather_full 상호작용 피처는 대표셋에서 이득 없음</td>
+</tr>
+<tr>
+<td><code>cluster01</code></td>
+<td><code>subset_a_commute_transit + LightGBM_Poisson</code></td>
+<td style="text-align: right;"><code>1.3108</code></td>
+<td>가장 어려운 군집이지만 개선 여지 큼</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>아래 차트는 표의 수치를 그대로 두고, <code>최선 대비 차이</code>만
+확대해 보여준다.</li>
+</ul>
+<div class="page-break">
+
+</div>
+<div class="chart-block">
+<p><img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_rep15_test_rmse.png" alt="대표 15개 비교 차트"></p>
+</div>
+<div class="callout compact">
+대표 15개 실험의 핵심 성과는 <code>군집별 최종 운영 모델 확정</code>이
+아니라, <code>군집별로 유효한 피처 축을 발굴했다</code>는 데 있다.
+</div>
+<div class="page-break">
+
+</div>
+<h1 id="강남구-전체-161개-스테이션-실험">08. 강남구 전체 161개 스테이션
+실험</h1>
+<h2 id="실험-목적-1">실험 목적</h2>
+<ul>
+<li>강남구 전체 운영 모델 기준선을 선택</li>
+</ul>
+<h2 id="비교-결과-요약">비교 결과 요약</h2>
+<ul>
+<li><code>161 original baseline(기준선 모델)</code>:
+<code>0.8624</code></li>
+<li><code>161 static enriched</code>: <code>0.8620</code></li>
+<li><code>161 cluster-aware gating</code>: <code>0.8615</code></li>
+<li><code>161 static + weather_full interaction(상호작용 피처)</code>:
+<code>0.8604</code>, 현재 최선</li>
+<li><code>161 routing(군집 분기 적용) 계열</code>:
+<code>0.8673 ~ 0.8681</code>, 테스트 기준 악화</li>
+</ul>
+<h2 id="핵심-결론">핵심 결론</h2>
+<ul>
+<li>실제 운영 기준은
+<code>단일 모델 + 정적 피처 + weather_full interaction(상호작용 피처)</code></li>
+<li><code>routing</code>(군집 분기 적용)은 검증셋 일부 개선이 있었지만
+테스트셋에서 일반화 실패</li>
+</ul>
+<h2 id="개-운영-모델-세부-비교">161개 운영 모델 세부 비교</h2>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 28%" />
+<col style="width: 28%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>비교안</th>
+<th style="text-align: right;">테스트 RMSE</th>
+<th style="text-align: right;">최선 대비 차이 x1000</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>static enriched + weather_full interaction</code></td>
+<td style="text-align: right;"><code>0.8604</code></td>
+<td style="text-align: right;"><code>0.0</code></td>
+<td>현재 최선 운영안</td>
+</tr>
+<tr>
+<td><code>cluster-aware static gating</code></td>
+<td style="text-align: right;"><code>0.8615</code></td>
+<td style="text-align: right;"><code>1.1</code></td>
+<td>소폭 개선이 있었지만 최선은 아님</td>
+</tr>
+<tr>
+<td><code>static enriched single model</code></td>
+<td style="text-align: right;"><code>0.8620</code></td>
+<td style="text-align: right;"><code>1.6</code></td>
+<td>정적 피처 복원 효과 확인</td>
+</tr>
+<tr>
+<td><code>original baseline</code></td>
+<td style="text-align: right;"><code>0.8624</code></td>
+<td style="text-align: right;"><code>2.0</code></td>
+<td>원본 기준선 모델</td>
+</tr>
+<tr>
+<td><code>partial routing</code></td>
+<td style="text-align: right;"><code>0.8673</code></td>
+<td style="text-align: right;"><code>6.9</code></td>
+<td>routing 일반화 실패</td>
+</tr>
+<tr>
+<td><code>exact routing + weather_full</code></td>
+<td style="text-align: right;"><code>0.8673</code></td>
+<td style="text-align: right;"><code>6.9</code></td>
+<td>weather_full 상호작용 피처도 routing을 살리지 못함</td>
+</tr>
+<tr>
+<td><code>static routing</code></td>
+<td style="text-align: right;"><code>0.8681</code></td>
+<td style="text-align: right;"><code>7.7</code></td>
+<td>routing 계열 중 하위권</td>
+</tr>
+<tr>
+<td><code>exact cluster routing</code></td>
+<td style="text-align: right;"><code>0.8681</code></td>
+<td style="text-align: right;"><code>7.7</code></td>
+<td>15개 군집 피처가 161개에 그대로 일반화되지 않음</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>아래 차트는 표의 수치 중 <code>최선 대비 차이</code>만 확대해서
+보여준다.</li>
+</ul>
+<div class="page-break">
+
+</div>
+<div class="chart-block">
+<p><img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_full161_test_rmse.png" alt="161개 운영 모델 비교 차트"></p>
+</div>
+<div class="callout">
+강남구 전체 운영 기준선은
+<code>static enriched + weather_full interaction(상호작용 피처)</code>으로
+고정한다.
+</div>
+<div class="page-break">
+
+</div>
+<h1 id="오류-분석">09. 오류 분석</h1>
+<h2 id="상위-오류-패턴">상위 오류 패턴</h2>
+<ul>
+<li>일부 상위 오류 스테이션은 <code>저녁 피크</code>에서 과대/과소
+예측이 크게 발생</li>
+<li><code>아침 피크</code> 또는 <code>출근/귀가 전환 시간대</code>에서
+오차 집중 현상 확인</li>
+</ul>
+<h2 id="주요-해석">주요 해석</h2>
+<ul>
+<li>오류는 특정 시간대와 특정 공간 역할에서 집중됨</li>
+<li>그래서 단순 날씨 피처보다
+<code>날씨 x 시간대 interaction(상호작용 피처)</code>이 더 유효했음</li>
+</ul>
+<h2 id="활용-의미">활용 의미</h2>
+<ul>
+<li>오류 분석은 운영 모델 선택뿐 아니라 후처리 규칙 설계에도 연결됨</li>
+</ul>
+<h2 id="weather-interaction상호작용-피처-비교표">weather
+interaction(상호작용 피처) 비교표</h2>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 28%" />
+<col style="width: 28%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>비교안</th>
+<th style="text-align: right;">테스트 RMSE</th>
+<th style="text-align: right;">최선 대비 차이 x1000</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>weather_full</code></td>
+<td style="text-align: right;"><code>0.8604</code></td>
+<td style="text-align: right;"><code>0.0</code></td>
+<td>현재 최선</td>
+</tr>
+<tr>
+<td><code>weather_time_band_core</code></td>
+<td style="text-align: right;"><code>0.8616</code></td>
+<td style="text-align: right;"><code>1.2</code></td>
+<td>시간대 축소안</td>
+</tr>
+<tr>
+<td><code>weather_commute_core</code></td>
+<td style="text-align: right;"><code>0.8617</code></td>
+<td style="text-align: right;"><code>1.3</code></td>
+<td>출퇴근 축소안</td>
+</tr>
+<tr>
+<td><code>weather_precip_intensity_core</code></td>
+<td style="text-align: right;"><code>0.8620</code></td>
+<td style="text-align: right;"><code>1.6</code></td>
+<td>강수 강도 축소안</td>
+</tr>
+<tr>
+<td><code>static_enriched_base</code></td>
+<td style="text-align: right;"><code>0.8620</code></td>
+<td style="text-align: right;"><code>1.6</code></td>
+<td>정적 피처 기준선</td>
+</tr>
+<tr>
+<td><code>weather_full_weight_simple</code></td>
+<td style="text-align: right;"><code>0.8609</code></td>
+<td style="text-align: right;"><code>0.5</code></td>
+<td>단순 가중치</td>
+</tr>
+<tr>
+<td><code>weather_full_weight_monthly</code></td>
+<td style="text-align: right;"><code>0.8605</code></td>
+<td style="text-align: right;"><code>0.1</code></td>
+<td>월별 가중치</td>
+</tr>
+</tbody>
+</table>
+<div class="chart-block">
+<p><img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_weather_interaction_test_rmse.png" alt="weather interaction 비교 차트"></p>
+</div>
+<div class="chart-block">
+<p><img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_top5_peak_error_hours.png" alt="상위 오류 시간대 차트"></p>
+</div>
+<h2 id="오류-분석이-남긴-판단">오류 분석이 남긴 판단</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>관찰</th>
+<th>판단</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>상위 오류는 저녁 피크와 아침 피크에 집중</td>
+<td>시간대 interaction을 강화할 필요가 있었음</td>
+</tr>
+<tr>
+<td>weather weighting(가중치)은 추가 개선이 거의 없음</td>
+<td>단순 가중치보다 interaction(상호작용 피처)이 더 유효</td>
+</tr>
+<tr>
+<td>routing 계열은 테스트에서 일관되게 악화</td>
+<td>운영 기준은 단일 모델로 고정</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+
+</div>
+<h1 id="최종-모델-및-성능-요약">10. 최종 모델 및 성능 요약</h1>
+<h2 id="현재-최종-채택안">현재 최종 채택안</h2>
+<ul>
+<li>모델: <code>LightGBM</code></li>
+<li>기준 데이터: <code>강남구 전체 161개</code></li>
+<li>최종 조합:
+<code>static enriched + weather_full interaction(상호작용 피처)</code></li>
+<li>최종 test RMSE: <code>0.8604</code></li>
+</ul>
+<h2 id="최종-모델-카드">최종 모델 카드</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>최종 선택 이유</td>
+<td>강남구 전체 161개 기준 테스트 성능이 가장 안정적</td>
+</tr>
+<tr>
+<td>입력 축</td>
+<td>시간 파생 피처 + 날씨 피처 + 정적 입지 피처 + weather
+interaction(상호작용 피처)</td>
+</tr>
+<tr>
+<td>배제한 대안</td>
+<td>routing(군집 분기 적용) 계열, weighting(가중치) 계열</td>
+</tr>
+<tr>
+<td>운영 해석</td>
+<td><code>15개</code>는 설명용, <code>161개</code>는 운영용</td>
+</tr>
+</tbody>
+</table>
+<h2 id="최종-판단-요약">최종 판단 요약</h2>
+<ol type="1">
+<li>군집화는 유효했다.</li>
+<li>대표 15개 실험도 유효했다.</li>
+<li>하지만 실제 운영 기준은 <code>161개 단일 모델</code>이 더
+안정적이었다.</li>
+<li>그 단일 모델 안에서 가장 좋았던 조합이
+<code>static enriched + weather_full interaction(상호작용 피처)</code>이었다.</li>
+</ol>
+<h2 id="단일-최종안-vs-라우팅-비교표">단일 최종안 vs 라우팅 비교표</h2>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 28%" />
+<col style="width: 28%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>비교안</th>
+<th style="text-align: right;">테스트 RMSE</th>
+<th style="text-align: right;">최선 대비 차이 x1000</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>161 final operating baseline</code></td>
+<td style="text-align: right;"><code>0.8604</code></td>
+<td style="text-align: right;"><code>0.0</code></td>
+<td>최종 운영안</td>
+</tr>
+<tr>
+<td><code>161 partial routing</code></td>
+<td style="text-align: right;"><code>0.8673</code></td>
+<td style="text-align: right;"><code>6.9</code></td>
+<td>validation 개선, test 악화</td>
+</tr>
+<tr>
+<td><code>161 exact routing + weather_full</code></td>
+<td style="text-align: right;"><code>0.8673</code></td>
+<td style="text-align: right;"><code>6.9</code></td>
+<td>weather_full을 붙여도 회복 실패</td>
+</tr>
+<tr>
+<td><code>161 static routing</code></td>
+<td style="text-align: right;"><code>0.8681</code></td>
+<td style="text-align: right;"><code>7.7</code></td>
+<td>static enriched routing도 열세</td>
+</tr>
+<tr>
+<td><code>161 exact cluster routing</code></td>
+<td style="text-align: right;"><code>0.8681</code></td>
+<td style="text-align: right;"><code>7.7</code></td>
+<td>15개 군집 피처 일반화 실패</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+
+</div>
+<div class="chart-block">
+<p><img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_routing_vs_single_test_rmse.png" alt="라우팅 대 단일모델 비교 차트"></p>
+</div>
+<div class="page-break">
+
+</div>
+<div class="chart-block">
+<p><img class="chart-image" src="../../../z_final_delivery/01_analysis_ml_final/03_output_data/ddri_analysis_ml_final_role_structure.png" alt="15개와 161개 역할 구조 차트"></p>
+</div>
+<div class="callout compact">
+이 장은 현재 기준으로 실험 결론까지는 반영했다. 이후
+<code>서비스 출력 컬럼</code>과 <code>후처리 규칙</code>이 확정되면 운영
+카드 형식으로 한 번 더 압축한다.
+</div>
+<div class="page-break">
+
+</div>
+<h1 id="서비스-적용-방안">11. 서비스 적용 방안</h1>
+<h2 id="준비-중">준비 중</h2>
+<ul>
+<li>현재 이 장은 준비 중이다.</li>
+<li>이후 아래 내용을 채울 예정이다.
+<ul>
+<li>예측 결과의 서비스 활용 방식</li>
+<li><code>predicted_remaining_bikes</code>, <code>stock_gap</code>,
+<code>risk_score</code> 정의</li>
+<li>사용자용/관리자용 분기 기준</li>
+<li>API 출력 필드와 연결 방식</li>
+</ul></li>
+</ul>
+<div class="page-break">
+
+</div>
+<h1 id="결론-및-향후-과제">12. 결론 및 향후 과제</h1>
+<h2 id="준비-중-1">준비 중</h2>
+<ul>
+<li>현재 이 장은 준비 중이다.</li>
+<li>이후 아래 내용을 채울 예정이다.
+<ul>
+<li>핵심 결론 3줄 요약</li>
+<li>군집 실험과 운영 모델의 역할 분리</li>
+<li>향후 개선 과제</li>
+<li>웹/앱 반영 후 추가 검증 방향</li>
+</ul></li>
+</ul>
+</body>
+</html>

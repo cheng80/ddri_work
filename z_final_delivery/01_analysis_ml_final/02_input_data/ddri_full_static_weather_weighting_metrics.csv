@@ -1,0 +1,7 @@
+﻿model,split,rmse,mae,r2
+weather_full_no_weight,validation_2024,0.9701,0.6207,0.4503
+weather_full_no_weight,test_2025_refit,0.8604,0.5561,0.4394
+weather_full_weight_simple,validation_2024,0.9705,0.6208,0.4498
+weather_full_weight_simple,test_2025_refit,0.8609,0.5566,0.4387
+weather_full_weight_monthly,validation_2024,0.9703,0.621,0.45
+weather_full_weight_monthly,test_2025_refit,0.8605,0.556,0.4393

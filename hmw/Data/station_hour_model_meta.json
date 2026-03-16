@@ -1,0 +1,10 @@
+{
+  "chosen_feature_set": {
+    "bike_change": "enhanced",
+    "bike_count_index": "basic"
+  },
+  "best_ml_model": {
+    "bike_change": "hist_gbm_tuned",
+    "bike_count_index": "ridge"
+  }
+}

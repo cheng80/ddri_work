@@ -1,24 +1,41 @@
 # 01 Clustering
 
-현재 군집화 파트는 `2차 통합 군집화` 기준으로 정리되어 있다.
+이 폴더는 군집화 정본과 재생성 경로를 관리하는 루트다.
 
-구성:
+현재 전면 정본은 `08_integrated/final` 기준으로 읽고, 과거 1차 군집화는 `archive_1st`로 분리해서 본다.
 
-- `08_integrated`
-  - 현재 최종 통합 군집화 산출물과 생성 파이프라인
-- `archive_1st`
-  - 기존 1차 군집화 결과와 구 발표 문서 보관본
+## 먼저 볼 정본
 
-대표 열람 파일:
+1. [08_integrated/final/results/second_clustering_results/ddri_integrated_second_clustering_report.md](/Users/cheng80/Desktop/ddri_work/works/01_clustering/08_integrated/final/results/second_clustering_results/ddri_integrated_second_clustering_report.md)
+2. [08_integrated/final/features/ddri_final_district_clustering_features_train_2023_2024.csv](/Users/cheng80/Desktop/ddri_work/works/01_clustering/08_integrated/final/features/ddri_final_district_clustering_features_train_2023_2024.csv)
+3. [08_integrated/README.md](/Users/cheng80/Desktop/ddri_work/works/01_clustering/08_integrated/README.md)
+4. [01_ddri_clustering_presentation_a4_landscape.md](/Users/cheng80/Desktop/ddri_work/works/04_presentation/01_clustering/01_ddri_clustering_presentation_a4_landscape.md)
 
-- 통합 군집화 생성 노트북: [12_ddri_integrated_clustering_report_builder.ipynb](/Users/cheng80/Desktop/ddri_work/works/01_clustering/08_integrated/pipeline/12_ddri_integrated_clustering_report_builder.ipynb)
-- 통합 군집화 최종 피처: [ddri_final_district_clustering_features_train_2023_2024.csv](/Users/cheng80/Desktop/ddri_work/works/01_clustering/08_integrated/final/features/ddri_final_district_clustering_features_train_2023_2024.csv)
-- 통합 군집화 결과 요약: [integrated_second_clustering_report.md](/Users/cheng80/Desktop/ddri_work/works/01_clustering/08_integrated/final/results/second_clustering_results/integrated_second_clustering_report.md)
-- 군집화 발표 자료: [01_ddri_clustering_presentation_a4_landscape.md](/Users/cheng80/Desktop/ddri_work/works/04_presentation/01_clustering/01_ddri_clustering_presentation_a4_landscape.md)
-- 군집화 상세 노트: [02_ddri_clustering_speaker_notes_detailed.md](/Users/cheng80/Desktop/ddri_work/works/04_presentation/01_clustering/02_ddri_clustering_speaker_notes_detailed.md)
+## 폴더 역할
 
-권장 열람 순서:
+### `08_integrated/final`
 
-1. `08_integrated`
-2. `works/04_presentation/01_clustering`
-3. `archive_1st`
+- 현재 군집화 정본 결과
+- 최종 피처 CSV, 최종 리포트, 최종 지도 HTML 유지
+
+### `08_integrated/pipeline`
+
+- 정본 재생성 스크립트와 노트북
+- 현재 실행이 직접 바라보는 생성 경로
+
+### `08_integrated/intermediate`
+
+- 환경 보강, POI 보강, 반납 시간대 지구 판단 등 중간 산출물
+- 비교 실험과 재생성 추적용 경로
+
+### `archive_1st`
+
+- 1차 군집화 결과와 과거 발표 자료 보관 경로
+- 현재 핵심 읽기 경로의 정본은 아님
+
+## 현재 읽기 원칙
+
+- 최신 군집화 결과는 `08_integrated/final` 기준으로 읽는다
+- 다시 만들 때만 `pipeline`을 연다
+- 중간 실험 검토가 필요할 때만 `intermediate`를 연다
+- 과거 군집화는 `archive_1st`로 본다

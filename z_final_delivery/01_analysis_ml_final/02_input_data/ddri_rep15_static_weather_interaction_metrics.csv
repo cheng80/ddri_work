@@ -1,0 +1,5 @@
+﻿model,split,rmse,mae,r2
+rep15_static_base,validation_2024,1.0173,0.619,0.5612
+rep15_static_base,test_2025_refit,0.9196,0.5689,0.5339
+rep15_static_weather_full,validation_2024,1.0188,0.6194,0.5599
+rep15_static_weather_full,test_2025_refit,0.9198,0.5693,0.5336

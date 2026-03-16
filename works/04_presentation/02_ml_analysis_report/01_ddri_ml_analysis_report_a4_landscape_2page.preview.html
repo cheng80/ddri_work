@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_ddri_ml_analysis_report_a4_landscape_2page</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<!-- markdownlint-disable MD013 -->
+<p><link rel="stylesheet" href="../ddri_presentation_a4_landscape.css">
+<link rel="stylesheet" href="../ddri_presentation_a4_landscape_compact.css"></p>
+<h1 id="강남구-따릉이-머신러닝-분석-보고서">강남구 따릉이 머신러닝 분석
+보고서</h1>
+<h2 id="목차">목차</h2>
+<ol type="1">
+<li>개요·문제·데이터·피처·군집·모델·실험 결과</li>
+<li>161개 실험·오류·최종·결론</li>
+</ol>
+<h1 id="장-개요문제데이터피처군집모델실험-결과">1장:
+개요·문제·데이터·피처·군집·모델·실험 결과</h1>
+<div class="two-col-page">
+<div class="main-col">
+<h3 id="목적범위">목적·범위</h3>
+<p>강남구 따릉이 대여소별 <strong>시간대 수요 예측</strong> 실험 정리.
+<strong>군집화 → 대표 15개 탐색 → 161개 운영 기준선</strong> 흐름.</p>
+<ul>
+<li><strong>예측 단위</strong>: 대여소·시간 (특정 대여소, 특정 시각의
+대여량)</li>
+<li><strong>활용</strong>: 잔여 자전거 예측, 재배치 우선순위</li>
+<li><strong>평가</strong>: 오차(RMSE), 평균오차(MAE), 설명력(R²)</li>
+</ul>
+<h3 id="데이터">데이터</h3>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>대표 15개</th>
+<th>전체 161개</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>역할</td>
+<td>군집별 피처 탐색</td>
+<td>운영 기준선 선택</td>
+</tr>
+<tr>
+<td>학습/테스트</td>
+<td>2023~2024 / 2025</td>
+<td>2023~2024 / 2025</td>
+</tr>
+</tbody>
+</table>
+<p>입력: 대여 이력, 대여소 정보, 날씨(기온·습도·강수·풍속), 정적
+입지(지하철·버스·표고·상권), 군집</p>
+<h3 id="피처군집">피처·군집</h3>
+<ul>
+<li><strong>시간</strong>: 출퇴근·야간·주말·공휴일전날</li>
+<li><strong>날씨</strong>: 기온, 습도, 강수, 강한 비 여부</li>
+<li><strong>입지</strong>: 지하철 거리, 300m 버스정류장 수, 표고,
+음식점·카페 수</li>
+<li><strong>상호작용</strong>: 비×출퇴근, 비×야간, 강수×출퇴근,
+강수×야간 (날씨 단독보다 유효)</li>
+<li><strong>군집 5개</strong>: 업무/상업 혼합(49), 아침 도착 업무(3),
+주거 도착(32), 생활·상권 혼합(61), 외곽 주거(19)</li>
+</ul>
+<h3 id="모델실험">모델·실험</h3>
+<ul>
+<li><strong>모델</strong>: LightGBM, CatBoost / <strong>학습
+목표</strong>: 오차 최소화(RMSE), 건수형(Poisson)</li>
+<li><strong>실험 축</strong>: 군집별 축소 피처, 정적 피처 확장,
+날씨×시간대 상호작용, 군집별 분기(routing)</li>
+</ul>
+<h3 id="대표-15개-핵심-결과">대표 15개 핵심 결과</h3>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>테스트 오차</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>주거 도착형 최선</td>
+<td>0.799</td>
+<td>출퇴근·교통 축소 피처 + Poisson</td>
+</tr>
+<tr>
+<td>15개 기준선</td>
+<td>0.920</td>
+<td>정적 피처 기준</td>
+</tr>
+<tr>
+<td>아침 도착 업무</td>
+<td>1.311</td>
+<td>가장 어려운 군집</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="side-col">
+<p><img class="summary-figure" src="./support_assets/ddri_ml_report_2page_rep15_summary.png" alt="2페이지 요약용 대표 15개 핵심 결과 카드"></p>
+</div>
+</div>
+<div class="page-break">
+
+</div>
+<h1 id="장-161개-실험오류최종결론">2장: 161개 실험·오류·최종·결론</h1>
+<div class="two-col-page">
+<div class="main-col">
+<h2 id="강남구-전체-161개-운영-모델">강남구 전체 161개 운영 모델</h2>
+<table>
+<thead>
+<tr>
+<th>비교안</th>
+<th>테스트 오차</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>정적+날씨×시간대 상호작용</strong></td>
+<td><strong>0.8604</strong></td>
+<td><strong>최종 채택</strong></td>
+</tr>
+<tr>
+<td>군집별 정적 강조</td>
+<td>0.8615</td>
+<td>소폭 개선</td>
+</tr>
+<tr>
+<td>정적 피처만</td>
+<td>0.8620</td>
+<td>정적 복원 효과</td>
+</tr>
+<tr>
+<td>원본 기준선</td>
+<td>0.8624</td>
+<td></td>
+</tr>
+<tr>
+<td>군집별 분기</td>
+<td>0.867~0.868</td>
+<td>일반화 실패, 미채택</td>
+</tr>
+</tbody>
+</table>
+<h2 id="오류날씨-상호작용">오류·날씨 상호작용</h2>
+<ul>
+<li><strong>오류</strong>: 저녁·아침 피크에 집중 → 날씨×시간대
+상호작용이 유효</li>
+<li><strong>가중치</strong>: 단순·월별 가중치는 개선 미미, 상호작용이 더
+유효</li>
+<li><strong>군집별 분기</strong>: 검증 개선 있었으나 테스트에서 악화 →
+단일 모델 채택</li>
+</ul>
+<h2 id="최종-채택안">최종 채택안</h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>모델</td>
+<td>LightGBM</td>
+</tr>
+<tr>
+<td>데이터</td>
+<td>강남구 전체 161개</td>
+</tr>
+<tr>
+<td>피처</td>
+<td>시간 + 날씨 + 정적 입지 + <strong>날씨×시간대 상호작용</strong></td>
+</tr>
+<tr>
+<td>테스트 오차</td>
+<td>0.8604</td>
+</tr>
+<tr>
+<td>미채택</td>
+<td>군집별 분기, 단순 가중치</td>
+</tr>
+</tbody>
+</table>
+<h2 id="결론">결론</h2>
+<ol type="1">
+<li>군집화·대표 15개 실험은 대여소 공간 역할 해석과 피처 발굴에
+유효했다.</li>
+<li>운영 기준은 <strong>161개 단일 모델</strong>이 군집별 분기보다
+안정적이었다.</li>
+<li>최선 조합: 정적 피처 + <strong>날씨×시간대 상호작용</strong>
+(비·강수×출퇴근·야간).</li>
+<li>다음: 예측값 → 잔여 자전거·부족 위험 후처리 규칙 설계</li>
+</ol>
+</div>
+<div class="side-col">
+<p><img class="summary-figure" src="./support_assets/ddri_ml_report_2page_final_model_summary.png" alt="2페이지 요약용 최종 모델 비교 카드"></p>
+</div>
+</div>
+</body>
+</html>
