@@ -148,8 +148,13 @@ analysis_benchmark.json
 **/.pytest_cache/
 **/.mypy_cache/
 **/.ruff_cache/
+**/.ipynb_checkpoints/
 **/.coverage
 **/htmlcov/
+
+# ML training temporary artifacts
+**/catboost_info/
+catboost_info/
 
 # Environment files
 **/.env

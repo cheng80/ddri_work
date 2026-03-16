@@ -1,9 +1,0 @@
-﻿model,split,rmse,mae,r2
-LightGBM_RMSE,validation_2024,1.0066,0.6121,0.5703
-LightGBM_RMSE,test_2025_refit,0.8926,0.5455,0.5608
-LightGBM_Poisson,validation_2024,1.0003,0.6074,0.5757
-LightGBM_Poisson,test_2025_refit,0.8966,0.5401,0.5569
-CatBoost_RMSE,validation_2024,1.0088,0.6139,0.5685
-CatBoost_RMSE,test_2025_refit,0.9005,0.548,0.553
-CatBoost_Poisson,validation_2024,1.0081,0.6096,0.5691
-CatBoost_Poisson,test_2025_refit,0.8971,0.5456,0.5564
