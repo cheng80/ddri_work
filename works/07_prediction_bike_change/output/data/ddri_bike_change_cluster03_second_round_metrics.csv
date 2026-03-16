@@ -1,0 +1,21 @@
+﻿model,split,rmse,mae,r2,sign_accuracy,cluster,station_group,feature_count
+full_36,train_2023,0.6601,0.4648,0.6659,0.9026,3,생활권 혼합형,35
+full_36,validation_2024,0.7977,0.5533,0.4601,0.8878,3,생활권 혼합형,35
+full_36,train_full_refit,0.7015,0.4888,0.6034,0.895,3,생활권 혼합형,35
+full_36,test_2025_refit,0.6542,0.4554,0.4671,0.9156,3,생활권 혼합형,35
+subset_a_mixed_lifestyle_core,train_2023,0.6975,0.4928,0.627,0.9053,3,생활권 혼합형,19
+subset_a_mixed_lifestyle_core,validation_2024,0.8082,0.5583,0.4458,0.8931,3,생활권 혼합형,19
+subset_a_mixed_lifestyle_core,train_full_refit,0.7302,0.509,0.5703,0.8985,3,생활권 혼합형,19
+subset_a_mixed_lifestyle_core,test_2025_refit,0.6745,0.4792,0.4335,0.925,3,생활권 혼합형,19
+subset_b_mixed_lifestyle_weather,train_2023,0.6763,0.4748,0.6493,0.9009,3,생활권 혼합형,20
+subset_b_mixed_lifestyle_weather,validation_2024,0.804,0.5594,0.4515,0.8899,3,생활권 혼합형,20
+subset_b_mixed_lifestyle_weather,train_full_refit,0.713,0.496,0.5903,0.8966,3,생활권 혼합형,20
+subset_b_mixed_lifestyle_weather,test_2025_refit,0.6733,0.4789,0.4356,0.9161,3,생활권 혼합형,20
+subset_c_mixed_lifestyle_location,train_2023,0.7123,0.5005,0.611,0.9015,3,생활권 혼합형,19
+subset_c_mixed_lifestyle_location,validation_2024,0.8109,0.5594,0.442,0.8898,3,생활권 혼합형,19
+subset_c_mixed_lifestyle_location,train_full_refit,0.7376,0.5133,0.5616,0.8985,3,생활권 혼합형,19
+subset_c_mixed_lifestyle_location,test_2025_refit,0.6733,0.4764,0.4355,0.9206,3,생활권 혼합형,19
+subset_d_current_compact,train_2023,0.6854,0.48,0.6399,0.8996,3,생활권 혼합형,23
+subset_d_current_compact,validation_2024,0.8052,0.5595,0.4499,0.8928,3,생활권 혼합형,23
+subset_d_current_compact,train_full_refit,0.7185,0.4984,0.584,0.8984,3,생활권 혼합형,23
+subset_d_current_compact,test_2025_refit,0.6717,0.4786,0.4382,0.9208,3,생활권 혼합형,23
