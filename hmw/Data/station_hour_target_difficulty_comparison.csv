@@ -1,3 +1,3 @@
-﻿target,best_model,feature_set,metric_scope,rmse,mae,r2,nrmse_std,nmae_std
-bike_count_index,ridge,basic,all_hours,1.6538975238800049,1.0867326259613037,0.9999997019767761,0.0005274764570693366,0.00034659092661252106
-bike_change,hist_gbm_tuned,enhanced,all_hours,1.0542862354346993,0.5870358615183356,0.20566570366949954,0.891254338744278,0.4962582655373269
+﻿target,best_model,feature_set,evaluation_stage,fit_period,data_split,metric_scope,rmse,mae,r2,nrmse_std,nmae_std
+bike_count_index,gbm,basic,final,train_valid_2023_2024,test,all_hours,335.4758828655067,43.3364810852168,0.988552475651385,0.10699310421057497,0.013821275607847737
+bike_change,lightgbm_leafy,enhanced,final,train_valid_2023_2024,test,all_hours,1.043379077378734,0.5828034216939321,0.22201631685905143,0.8820338333312099,0.49268031845788085

@@ -568,30 +568,38 @@ def train_final_models(df: pd.DataFrame, chosen_feature_set: dict[str, str], bes
         X_fit, y_fit = sample_train(X_train, y_train, spec.train_sample)
         model = spec.builder()
         model.fit(X_fit, y_fit)
+
+        for split_name, X_eval, y_eval in [
+            ("train", X_train, y_train),
+            ("test", X_test, y_test),
+        ]:
+            pred = model.predict(X_eval)
+            overall = evaluate_predictions(y_eval, pred)
+            active_mask = y_eval.ne(0) if target == "bike_change" else pd.Series(True, index=y_eval.index)
+            active = evaluate_predictions(y_eval.loc[active_mask], pred[active_mask.to_numpy()])
+
+            metrics_records.append(
+                {
+                    "target": target,
+                    "best_model": model_name,
+                    "feature_set": chosen_feature_set[target],
+                    "data_split": split_name,
+                    "metric_scope": "all_hours",
+                    **overall,
+                }
+            )
+            metrics_records.append(
+                {
+                    "target": target,
+                    "best_model": model_name,
+                    "feature_set": chosen_feature_set[target],
+                    "data_split": split_name,
+                    "metric_scope": "active_hours" if target == "bike_change" else "all_hours_duplicate",
+                    **active,
+                }
+            )
+
         pred = model.predict(X_test)
-
-        overall = evaluate_predictions(y_test, pred)
-        active_mask = y_test.ne(0) if target == "bike_change" else pd.Series(True, index=y_test.index)
-        active = evaluate_predictions(y_test.loc[active_mask], pred[active_mask.to_numpy()])
-
-        metrics_records.append(
-            {
-                "target": target,
-                "best_model": model_name,
-                "feature_set": chosen_feature_set[target],
-                "metric_scope": "all_hours",
-                **overall,
-            }
-        )
-        metrics_records.append(
-            {
-                "target": target,
-                "best_model": model_name,
-                "feature_set": chosen_feature_set[target],
-                "metric_scope": "active_hours" if target == "bike_change" else "all_hours_duplicate",
-                **active,
-            }
-        )
 
         test_slice = df.loc[test_mask, ["station_id", "time", target]].copy()
         test_slice["prediction"] = pred
@@ -710,6 +718,319 @@ def write_report(validation_df, benchmark_df, final_metrics, importances):
 
     report_path.write_text("\n".join(lines), encoding="utf-8")
 
+def write_report(validation_df, benchmark_df, final_metrics, importances):
+    report_path = OUTPUT_DIR / "station_hour_model_report.md"
+
+    final_best = (
+        final_metrics[
+            (final_metrics["metric_scope"] == "all_hours")
+            & (final_metrics["data_split"] == "test")
+        ]
+        .sort_values(["target", "rmse"])
+        .drop_duplicates("target")
+        .set_index("target")
+    )
+    split_compare = (
+        final_metrics[final_metrics["metric_scope"] == "all_hours"]
+        .pivot(index="target", columns="data_split", values=["rmse", "mae", "r2"])
+        .sort_index()
+    )
+    easier_target = final_best["nrmse_std"].idxmin()
+
+    lines = [
+        "# Station-Hour Regression Report",
+        "",
+        "## 1. Analysis Overview",
+        "",
+        "- Train period: 2023-01-01 to 2024-12-31",
+        "- Test period: 2025-01-01 to 2025-12-31",
+        "- Targets: `bike_change`, `bike_count_index`",
+        "- Final comparison includes train and test scores from the same selected model.",
+        "",
+        "## 2. Final Summary",
+        "",
+        f"- Best model for `bike_change`: `{final_best.loc['bike_change', 'best_model']}`",
+        f"- Best model for `bike_count_index`: `{final_best.loc['bike_count_index', 'best_model']}`",
+        f"- Easier target by test nRMSE: `{easier_target}`",
+        "",
+        "## 3. Final Performance",
+        "",
+    ]
+
+    for target, row in final_best.iterrows():
+        train_rmse = split_compare.loc[target, ("rmse", "train")]
+        test_rmse = split_compare.loc[target, ("rmse", "test")]
+        train_mae = split_compare.loc[target, ("mae", "train")]
+        test_mae = split_compare.loc[target, ("mae", "test")]
+        train_r2 = split_compare.loc[target, ("r2", "train")]
+        test_r2 = split_compare.loc[target, ("r2", "test")]
+        lines.extend(
+            [
+                f"### {target}",
+                "",
+                f"- Model: `{row['best_model']}`",
+                f"- Feature set: `{row['feature_set']}`",
+                f"- Train RMSE: `{train_rmse:.4f}`",
+                f"- Test RMSE: `{test_rmse:.4f}`",
+                f"- Train MAE: `{train_mae:.4f}`",
+                f"- Test MAE: `{test_mae:.4f}`",
+                f"- Train R2: `{train_r2:.4f}`",
+                f"- Test R2: `{test_r2:.4f}`",
+                f"- RMSE gap (test - train): `{test_rmse - train_rmse:.4f}`",
+                f"- normalized test RMSE: `{row['nrmse_std']:.4f}`",
+                f"- normalized test MAE: `{row['nmae_std']:.4f}`",
+                "",
+            ]
+        )
+
+    lines.extend(
+        [
+            "## 4. Top Feature Importances",
+            "",
+        ]
+    )
+
+    for target in ["bike_change", "bike_count_index"]:
+        top = importances[importances["target"] == target].head(10)
+        lines.append(f"### {target}")
+        lines.append("")
+        for _, row in top.iterrows():
+            lines.append(f"- `{row['feature']}`: {row['importance_mean']:.6f}")
+        lines.append("")
+
+    report_path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def model_specs() -> list[ModelSpec]:
+    from lightgbm import LGBMRegressor
+    from sklearn.ensemble import GradientBoostingRegressor
+    from xgboost import XGBRegressor
+
+    return [
+        ModelSpec(
+            name="gbm",
+            kind="sklearn",
+            builder=lambda: GradientBoostingRegressor(
+                learning_rate=0.05,
+                max_depth=5,
+                max_features=None,
+                min_samples_leaf=50,
+                n_estimators=220,
+                random_state=RANDOM_STATE,
+                subsample=0.9,
+            ),
+            train_sample=180_000,
+            notes="classic gradient boosting",
+        ),
+        ModelSpec(
+            name="hist_gbm",
+            kind="sklearn",
+            builder=lambda: HistGradientBoostingRegressor(
+                learning_rate=0.04,
+                max_depth=12,
+                max_iter=220,
+                min_samples_leaf=60,
+                l2_regularization=0.05,
+                random_state=RANDOM_STATE,
+            ),
+            train_sample=600_000,
+            notes="histogram gradient boosting",
+        ),
+        ModelSpec(
+            name="xgboost",
+            kind="xgboost",
+            builder=lambda: XGBRegressor(
+                colsample_bytree=0.85,
+                learning_rate=0.05,
+                max_depth=8,
+                min_child_weight=12,
+                n_estimators=260,
+                n_jobs=1,
+                objective="reg:squarederror",
+                random_state=RANDOM_STATE,
+                reg_alpha=0.0,
+                reg_lambda=1.0,
+                subsample=0.85,
+                tree_method="hist",
+                verbosity=0,
+            ),
+            train_sample=600_000,
+            notes="xgboost histogram booster",
+        ),
+        ModelSpec(
+            name="lightgbm",
+            kind="lightgbm",
+            builder=lambda: LGBMRegressor(
+                colsample_bytree=0.85,
+                learning_rate=0.05,
+                max_depth=12,
+                min_child_samples=60,
+                n_estimators=280,
+                num_leaves=63,
+                objective="regression",
+                random_state=RANDOM_STATE,
+                reg_alpha=0.0,
+                reg_lambda=0.1,
+                subsample=0.85,
+                verbosity=-1,
+            ),
+            train_sample=600_000,
+            notes="lightgbm gradient boosting",
+        ),
+    ]
+
+
+def bike_change_tuned_model_specs() -> list[ModelSpec]:
+    from lightgbm import LGBMRegressor
+    from xgboost import XGBRegressor
+
+    return [
+        ModelSpec(
+            name="hist_gbm_focus",
+            kind="sklearn",
+            builder=lambda: HistGradientBoostingRegressor(
+                learning_rate=0.035,
+                max_depth=12,
+                max_iter=260,
+                min_samples_leaf=50,
+                l2_regularization=0.08,
+                random_state=RANDOM_STATE,
+            ),
+            train_sample=600_000,
+            notes="histgbm tuned for bike_change",
+        ),
+        ModelSpec(
+            name="lightgbm_balanced",
+            kind="lightgbm",
+            builder=lambda: LGBMRegressor(
+                colsample_bytree=0.85,
+                learning_rate=0.05,
+                max_depth=12,
+                min_child_samples=60,
+                n_estimators=320,
+                num_leaves=63,
+                objective="regression",
+                random_state=RANDOM_STATE,
+                reg_alpha=0.0,
+                reg_lambda=0.15,
+                subsample=0.85,
+                verbosity=-1,
+            ),
+            train_sample=600_000,
+            notes="lightgbm balanced tuning",
+        ),
+        ModelSpec(
+            name="lightgbm_leafy",
+            kind="lightgbm",
+            builder=lambda: LGBMRegressor(
+                colsample_bytree=0.9,
+                learning_rate=0.035,
+                max_depth=14,
+                min_child_samples=40,
+                n_estimators=420,
+                num_leaves=127,
+                objective="regression",
+                random_state=RANDOM_STATE,
+                reg_alpha=0.0,
+                reg_lambda=0.1,
+                subsample=0.9,
+                verbosity=-1,
+            ),
+            train_sample=600_000,
+            notes="lightgbm deeper leaves tuning",
+        ),
+        ModelSpec(
+            name="lightgbm_regularized",
+            kind="lightgbm",
+            builder=lambda: LGBMRegressor(
+                colsample_bytree=0.8,
+                learning_rate=0.04,
+                max_depth=10,
+                min_child_samples=85,
+                n_estimators=360,
+                num_leaves=63,
+                objective="regression",
+                random_state=RANDOM_STATE,
+                reg_alpha=0.08,
+                reg_lambda=0.35,
+                subsample=0.85,
+                verbosity=-1,
+            ),
+            train_sample=600_000,
+            notes="lightgbm regularized tuning",
+        ),
+        ModelSpec(
+            name="xgboost_balanced",
+            kind="xgboost",
+            builder=lambda: XGBRegressor(
+                colsample_bytree=0.85,
+                learning_rate=0.045,
+                max_depth=6,
+                min_child_weight=12,
+                n_estimators=340,
+                n_jobs=1,
+                objective="reg:squarederror",
+                random_state=RANDOM_STATE,
+                reg_alpha=0.0,
+                reg_lambda=1.1,
+                subsample=0.85,
+                tree_method="hist",
+                verbosity=0,
+            ),
+            train_sample=600_000,
+            notes="xgboost balanced tuning",
+        ),
+        ModelSpec(
+            name="xgboost_deep",
+            kind="xgboost",
+            builder=lambda: XGBRegressor(
+                colsample_bytree=0.9,
+                learning_rate=0.035,
+                max_depth=8,
+                min_child_weight=14,
+                n_estimators=320,
+                n_jobs=1,
+                objective="reg:squarederror",
+                random_state=RANDOM_STATE,
+                reg_alpha=0.0,
+                reg_lambda=1.0,
+                subsample=0.9,
+                tree_method="hist",
+                verbosity=0,
+            ),
+            train_sample=600_000,
+            notes="xgboost deeper tree tuning",
+        ),
+        ModelSpec(
+            name="xgboost_regularized",
+            kind="xgboost",
+            builder=lambda: XGBRegressor(
+                colsample_bytree=0.8,
+                learning_rate=0.04,
+                max_depth=6,
+                min_child_weight=20,
+                n_estimators=300,
+                n_jobs=1,
+                objective="reg:squarederror",
+                random_state=RANDOM_STATE,
+                reg_alpha=0.06,
+                reg_lambda=1.8,
+                subsample=0.8,
+                gamma=0.08,
+                tree_method="hist",
+                verbosity=0,
+            ),
+            train_sample=600_000,
+            notes="xgboost regularized tuning",
+        ),
+    ]
+
+
+def candidate_model_specs(target: str) -> list[ModelSpec]:
+    if target == "bike_change":
+        return bike_change_tuned_model_specs()
+    return model_specs()
+
 
 def main():
     df = build_dataset()
@@ -725,11 +1046,39 @@ def main():
     importances.to_csv(OUTPUT_DIR / "station_hour_feature_importance.csv", index=False, encoding="utf-8-sig")
 
     comparison = (
-        final_metrics[final_metrics["metric_scope"] == "all_hours"]
+        final_metrics[
+            (final_metrics["metric_scope"] == "all_hours")
+            & (final_metrics["data_split"] == "test")
+        ]
         .sort_values("nrmse_std")
         .reset_index(drop=True)
     )
     comparison.to_csv(OUTPUT_DIR / "station_hour_target_difficulty_comparison.csv", index=False, encoding="utf-8-sig")
+    split_comparison_pivot = final_metrics[final_metrics["metric_scope"] == "all_hours"].pivot(
+        index=["target", "best_model", "feature_set"],
+        columns="data_split",
+        values=["rmse", "mae", "r2"],
+    )
+    split_comparison = pd.DataFrame(
+        [
+            {
+                "target": idx[0],
+                "best_model": idx[1],
+                "feature_set": idx[2],
+                "train_rmse": row[("rmse", "train")],
+                "test_rmse": row[("rmse", "test")],
+                "train_mae": row[("mae", "train")],
+                "test_mae": row[("mae", "test")],
+                "train_r2": row[("r2", "train")],
+                "test_r2": row[("r2", "test")],
+            }
+            for idx, row in split_comparison_pivot.iterrows()
+        ]
+    )
+    split_comparison["rmse_gap"] = split_comparison["test_rmse"] - split_comparison["train_rmse"]
+    split_comparison["mae_gap"] = split_comparison["test_mae"] - split_comparison["train_mae"]
+    split_comparison["r2_gap"] = split_comparison["test_r2"] - split_comparison["train_r2"]
+    split_comparison.to_csv(OUTPUT_DIR / "station_hour_train_test_comparison.csv", index=False, encoding="utf-8-sig")
 
     meta = {
         "chosen_feature_set": chosen_feature_set,
@@ -742,6 +1091,355 @@ def main():
     print("chosen_feature_set", chosen_feature_set)
     print("best_ml_model", best_ml_model)
     print(final_metrics.to_string(index=False))
+
+def run_model_benchmark(df: pd.DataFrame, chosen_feature_set: dict[str, str]) -> tuple[pd.DataFrame, dict[str, str]]:
+    train_mask = df["year"] == 2023
+    valid_mask = df["year"] == 2024
+    feature_map = feature_sets()
+    records: list[dict[str, object]] = []
+    best_ml_model: dict[str, str] = {}
+
+    for target in ["bike_change", "bike_count_index"]:
+        selected_feature_name = chosen_feature_set[target]
+        cols = feature_map[selected_feature_name]
+        X_train = df.loc[train_mask, cols]
+        y_train = df.loc[train_mask, target]
+        X_valid = df.loc[valid_mask, cols]
+        y_valid = df.loc[valid_mask, target]
+
+        baseline_preds = baseline_predictions(df.loc[valid_mask], target)
+        for baseline_name, pred in baseline_preds.items():
+            metrics = evaluate_predictions(y_valid, pred)
+            records.append(
+                {
+                    "round": "validation_model_selection",
+                    "target": target,
+                    "feature_set": "baseline",
+                    "model": baseline_name,
+                    **metrics,
+                    "train_rows": int(train_mask.sum()),
+                    "eval_rows": int(valid_mask.sum()),
+                    "eval_split": "valid_2024",
+                    "notes": "baseline validation reference",
+                }
+            )
+
+        for spec in candidate_model_specs(target):
+            X_fit, y_fit = sample_train(X_train, y_train, spec.train_sample)
+            model = spec.builder()
+            model.fit(X_fit, y_fit)
+            pred = model.predict(X_valid)
+            metrics = evaluate_predictions(y_valid, pred)
+            records.append(
+                {
+                    "round": "validation_model_selection",
+                    "target": target,
+                    "feature_set": selected_feature_name,
+                    "model": spec.name,
+                    **metrics,
+                    "train_rows": len(X_fit),
+                    "eval_rows": int(valid_mask.sum()),
+                    "eval_split": "valid_2024",
+                    "notes": spec.notes,
+                }
+            )
+            gc.collect()
+
+        ml_only = [
+            r
+            for r in records
+            if r["round"] == "validation_model_selection"
+            and r["target"] == target
+            and r["model"] not in {"baseline_lag1", "baseline_lag24", "baseline_lag168"}
+        ]
+        best_ml_model[target] = min(ml_only, key=lambda r: r["rmse"])["model"]
+
+    return pd.DataFrame(records), best_ml_model
+
+
+def train_final_models(df: pd.DataFrame, chosen_feature_set: dict[str, str], best_ml_model: dict[str, str]):
+    train_mask = df["year"] == 2023
+    valid_mask = df["year"] == 2024
+    train_valid_mask = df["year"].isin([2023, 2024])
+    test_mask = df["year"] == 2025
+    feature_map = feature_sets()
+    prediction_frames = []
+    importance_frames = []
+    metrics_records = []
+
+    for target in ["bike_change", "bike_count_index"]:
+        model_name = best_ml_model[target]
+        cols = feature_map[chosen_feature_set[target]]
+        specs = {spec.name: spec for spec in candidate_model_specs(target)}
+        spec = specs[model_name]
+
+        X_train = df.loc[train_mask, cols]
+        y_train = df.loc[train_mask, target]
+        X_valid = df.loc[valid_mask, cols]
+        y_valid = df.loc[valid_mask, target]
+        X_train_valid = df.loc[train_valid_mask, cols]
+        y_train_valid = df.loc[train_valid_mask, target]
+        X_test = df.loc[test_mask, cols]
+        y_test = df.loc[test_mask, target]
+
+        X_select_fit, y_select_fit = sample_train(X_train, y_train, spec.train_sample)
+        selection_model = spec.builder()
+        selection_model.fit(X_select_fit, y_select_fit)
+
+        for split_name, X_eval, y_eval in [
+            ("train", X_train, y_train),
+            ("valid", X_valid, y_valid),
+        ]:
+            pred = selection_model.predict(X_eval)
+            overall = evaluate_predictions(y_eval, pred)
+            active_mask = y_eval.ne(0) if target == "bike_change" else pd.Series(True, index=y_eval.index)
+            active = evaluate_predictions(y_eval.loc[active_mask], pred[active_mask.to_numpy()])
+            metrics_records.append(
+                {
+                    "target": target,
+                    "best_model": model_name,
+                    "feature_set": chosen_feature_set[target],
+                    "evaluation_stage": "selection",
+                    "fit_period": "train_2023",
+                    "data_split": split_name,
+                    "metric_scope": "all_hours",
+                    **overall,
+                }
+            )
+            metrics_records.append(
+                {
+                    "target": target,
+                    "best_model": model_name,
+                    "feature_set": chosen_feature_set[target],
+                    "evaluation_stage": "selection",
+                    "fit_period": "train_2023",
+                    "data_split": split_name,
+                    "metric_scope": "active_hours" if target == "bike_change" else "all_hours_duplicate",
+                    **active,
+                }
+            )
+
+        X_final_fit, y_final_fit = sample_train(X_train_valid, y_train_valid, spec.train_sample)
+        final_model = spec.builder()
+        final_model.fit(X_final_fit, y_final_fit)
+        pred = final_model.predict(X_test)
+        overall = evaluate_predictions(y_test, pred)
+        active_mask = y_test.ne(0) if target == "bike_change" else pd.Series(True, index=y_test.index)
+        active = evaluate_predictions(y_test.loc[active_mask], pred[active_mask.to_numpy()])
+        metrics_records.append(
+            {
+                "target": target,
+                "best_model": model_name,
+                "feature_set": chosen_feature_set[target],
+                "evaluation_stage": "final",
+                "fit_period": "train_valid_2023_2024",
+                "data_split": "test",
+                "metric_scope": "all_hours",
+                **overall,
+            }
+        )
+        metrics_records.append(
+            {
+                "target": target,
+                "best_model": model_name,
+                "feature_set": chosen_feature_set[target],
+                "evaluation_stage": "final",
+                "fit_period": "train_valid_2023_2024",
+                "data_split": "test",
+                "metric_scope": "active_hours" if target == "bike_change" else "all_hours_duplicate",
+                **active,
+            }
+        )
+
+        test_slice = df.loc[test_mask, ["station_id", "time", target]].copy()
+        test_slice["prediction"] = pred
+        test_slice["abs_error"] = (test_slice[target] - test_slice["prediction"]).abs()
+        test_slice["target_name"] = target
+        prediction_frames.append(test_slice)
+
+        sample_eval = X_test.sample(n=min(5_000, len(X_test)), random_state=RANDOM_STATE)
+        sample_y = y_test.loc[sample_eval.index]
+        importance = permutation_importance(
+            final_model,
+            sample_eval,
+            sample_y,
+            scoring="neg_root_mean_squared_error",
+            n_repeats=3,
+            random_state=RANDOM_STATE,
+        )
+        importance_frames.append(
+            pd.DataFrame(
+                {
+                    "target": target,
+                    "feature": cols,
+                    "importance_mean": importance.importances_mean,
+                    "importance_std": importance.importances_std,
+                }
+            ).sort_values("importance_mean", ascending=False)
+        )
+
+    return (
+        pd.DataFrame(metrics_records),
+        pd.concat(prediction_frames, ignore_index=True),
+        pd.concat(importance_frames, ignore_index=True),
+    )
+
+
+def build_split_summary(final_metrics: pd.DataFrame) -> pd.DataFrame:
+    all_hours = final_metrics[final_metrics["metric_scope"] == "all_hours"]
+    rows: list[dict[str, object]] = []
+    for (target, best_model, feature_set), subset in all_hours.groupby(["target", "best_model", "feature_set"]):
+        train_row = subset[
+            (subset["evaluation_stage"] == "selection")
+            & (subset["fit_period"] == "train_2023")
+            & (subset["data_split"] == "train")
+        ].iloc[0]
+        valid_row = subset[
+            (subset["evaluation_stage"] == "selection")
+            & (subset["fit_period"] == "train_2023")
+            & (subset["data_split"] == "valid")
+        ].iloc[0]
+        test_row = subset[
+            (subset["evaluation_stage"] == "final")
+            & (subset["fit_period"] == "train_valid_2023_2024")
+            & (subset["data_split"] == "test")
+        ].iloc[0]
+        rows.append(
+            {
+                "target": target,
+                "best_model": best_model,
+                "feature_set": feature_set,
+                "train_rmse": train_row["rmse"],
+                "valid_rmse": valid_row["rmse"],
+                "test_rmse": test_row["rmse"],
+                "train_mae": train_row["mae"],
+                "valid_mae": valid_row["mae"],
+                "test_mae": test_row["mae"],
+                "train_r2": train_row["r2"],
+                "valid_r2": valid_row["r2"],
+                "test_r2": test_row["r2"],
+                "valid_minus_train_rmse": valid_row["rmse"] - train_row["rmse"],
+                "test_minus_valid_rmse": test_row["rmse"] - valid_row["rmse"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def write_report(validation_df, benchmark_df, final_metrics, importances):
+    report_path = OUTPUT_DIR / "station_hour_model_report.md"
+    split_summary = build_split_summary(final_metrics).set_index("target")
+    final_test = (
+        final_metrics[
+            (final_metrics["metric_scope"] == "all_hours")
+            & (final_metrics["evaluation_stage"] == "final")
+            & (final_metrics["data_split"] == "test")
+        ]
+        .sort_values(["target", "rmse"])
+        .drop_duplicates("target")
+        .set_index("target")
+    )
+    easier_target = final_test["nrmse_std"].idxmin()
+
+    lines = [
+        "# Station-Hour Regression Report",
+        "",
+        "## 1. Split Protocol",
+        "",
+        "- Train: 2023 only",
+        "- Validation: 2024 only",
+        "- Test: 2025 only",
+        "- Feature selection and model selection are done on validation only.",
+        "- Final test score is measured after retraining the selected model on 2023+2024.",
+        "",
+        "## 2. Selected Models",
+        "",
+        f"- bike_change: `{final_test.loc['bike_change', 'best_model']}` with `{final_test.loc['bike_change', 'feature_set']}`",
+        f"- bike_count_index: `{final_test.loc['bike_count_index', 'best_model']}` with `{final_test.loc['bike_count_index', 'feature_set']}`",
+        f"- Easier target by final test nRMSE: `{easier_target}`",
+        "",
+        "## 3. Train / Valid / Test Summary",
+        "",
+        split_summary.reset_index().round(4).to_markdown(index=False),
+        "",
+        "## 4. Interpretation",
+        "",
+    ]
+
+    for target, row in split_summary.iterrows():
+        lines.extend(
+            [
+                f"### {target}",
+                "",
+                f"- Train RMSE (fit on 2023, eval on 2023): `{row['train_rmse']:.4f}`",
+                f"- Valid RMSE (fit on 2023, eval on 2024): `{row['valid_rmse']:.4f}`",
+                f"- Test RMSE (fit on 2023+2024, eval on 2025): `{row['test_rmse']:.4f}`",
+                f"- Train MAE / Valid MAE / Test MAE: `{row['train_mae']:.4f}` / `{row['valid_mae']:.4f}` / `{row['test_mae']:.4f}`",
+                f"- Train R2 / Valid R2 / Test R2: `{row['train_r2']:.4f}` / `{row['valid_r2']:.4f}` / `{row['test_r2']:.4f}`",
+                "",
+            ]
+        )
+
+    lines.extend(
+        [
+            "## 5. Top Feature Importances",
+            "",
+        ]
+    )
+    for target in ["bike_change", "bike_count_index"]:
+        top = importances[importances["target"] == target].head(10)
+        lines.append(f"### {target}")
+        lines.append("")
+        for _, row in top.iterrows():
+            lines.append(f"- `{row['feature']}`: {row['importance_mean']:.6f}")
+        lines.append("")
+
+    report_path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def main():
+    df = build_dataset()
+
+    validation_df, chosen_feature_set = run_validation_rounds(df)
+    benchmark_df, best_ml_model = run_model_benchmark(df, chosen_feature_set)
+    final_metrics, predictions, importances = train_final_models(df, chosen_feature_set, best_ml_model)
+    split_summary = build_split_summary(final_metrics)
+
+    validation_df.to_csv(OUTPUT_DIR / "station_hour_validation_metrics.csv", index=False, encoding="utf-8-sig")
+    benchmark_df.to_csv(OUTPUT_DIR / "station_hour_validation_benchmark_metrics.csv", index=False, encoding="utf-8-sig")
+    benchmark_df.to_csv(OUTPUT_DIR / "station_hour_test_benchmark_metrics.csv", index=False, encoding="utf-8-sig")
+    final_metrics.to_csv(OUTPUT_DIR / "station_hour_final_model_metrics.csv", index=False, encoding="utf-8-sig")
+    split_summary.to_csv(OUTPUT_DIR / "station_hour_train_valid_test_summary.csv", index=False, encoding="utf-8-sig")
+    predictions.to_csv(OUTPUT_DIR / "station_hour_best_model_predictions_2025.csv", index=False, encoding="utf-8-sig")
+    importances.to_csv(OUTPUT_DIR / "station_hour_feature_importance.csv", index=False, encoding="utf-8-sig")
+
+    comparison = (
+        final_metrics[
+            (final_metrics["metric_scope"] == "all_hours")
+            & (final_metrics["evaluation_stage"] == "final")
+            & (final_metrics["data_split"] == "test")
+        ]
+        .sort_values("nrmse_std")
+        .reset_index(drop=True)
+    )
+    comparison.to_csv(OUTPUT_DIR / "station_hour_target_difficulty_comparison.csv", index=False, encoding="utf-8-sig")
+    split_summary.to_csv(OUTPUT_DIR / "station_hour_train_test_comparison.csv", index=False, encoding="utf-8-sig")
+
+    meta = {
+        "split_protocol": {
+            "train": "2023",
+            "valid": "2024",
+            "test": "2025",
+        },
+        "chosen_feature_set": chosen_feature_set,
+        "best_ml_model": best_ml_model,
+    }
+    (OUTPUT_DIR / "station_hour_model_meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    write_report(validation_df, benchmark_df, final_metrics, importances)
+
+    print("chosen_feature_set", chosen_feature_set)
+    print("best_ml_model", best_ml_model)
+    print(split_summary.to_string(index=False))
 
 
 if __name__ == "__main__":
