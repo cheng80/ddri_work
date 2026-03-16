@@ -1,0 +1,19 @@
+{
+  "train_rows": 3193008,
+  "test_rows": 1594320,
+  "x_train_shape": [
+    3193008,
+    27
+  ],
+  "x_test_shape": [
+    1594320,
+    27
+  ],
+  "best_model": "소프트보팅회귀",
+  "best_rmse": 0.9527968689405927,
+  "elapsed_seconds": 1625.982329082999,
+  "input_files": {
+    "train": "/Users/cheng80/Desktop/ddri_work/3조 공유폴더/station_hour_bike_flow_2023_2025/station_hour_bike_flow_train_2023_2024.csv",
+    "test": "/Users/cheng80/Desktop/ddri_work/3조 공유폴더/station_hour_bike_flow_2023_2025/station_hour_bike_flow_test_2025.csv"
+  }
+}

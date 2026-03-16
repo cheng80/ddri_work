@@ -77,6 +77,30 @@
   - `161개 확장`
   - `return_count` 또는 재고 계열 입력 추가 실험
 
+## 5-2. full161 HMW 정렬 실험
+
+- `rep15`와 별개로, 서비스 대상 `161개` 기준 `bike_change` 전체 확장 실험 경로를 추가한다
+- 이 실험은 HMW 원본 `station_hour_bike_flow` 파일에서 `161개 lookup`만 필터링해 사용한다
+- 목적은 `대표 15개` 기준이 아니라 `전체 서비스 대상` 기준 비교축을 맞추는 데 있다
+
+관련 문서:
+
+1. [09_ddri_bike_change_full161_hmw_aligned_experiment_design.md](/Users/cheng80/Desktop/ddri_work/works/07_prediction_bike_change/09_ddri_bike_change_full161_hmw_aligned_experiment_design.md)
+2. [10_run_ddri_bike_change_full161_hmw_aligned_regression_ensemble.py](/Users/cheng80/Desktop/ddri_work/works/07_prediction_bike_change/10_run_ddri_bike_change_full161_hmw_aligned_regression_ensemble.py)
+3. [10_ddri_bike_change_full161_hmw_aligned_run_all.ipynb](/Users/cheng80/Desktop/ddri_work/works/07_prediction_bike_change/10_ddri_bike_change_full161_hmw_aligned_run_all.ipynb)
+
+## 5-3. full161 정본 기본피처 정제 데이터
+
+- 정본 입력은 `3조 공유폴더/군집별 데이터_전체 스테이션/full_data/`를 사용한다
+- 피처는 정본 CSV에 이미 들어 있는 기본 컬럼만 사용한다
+- 추가 파생 피처는 붙이지 않고, 타깃만 `bike_change_raw`, `bike_change_deseasonalized`로 새로 만든다
+- seasonal mean은 `Train 2023` 기준으로만 계산해 누수를 막는다
+
+관련 문서:
+
+1. [09_ddri_bike_change_full161_base_feature_dataset_builder.py](/Users/cheng80/Desktop/ddri_work/works/07_prediction_bike_change/09_ddri_bike_change_full161_base_feature_dataset_builder.py)
+2. [09_ddri_bike_change_full161_base_feature_dataset_builder_run_all.ipynb](/Users/cheng80/Desktop/ddri_work/works/07_prediction_bike_change/09_ddri_bike_change_full161_base_feature_dataset_builder_run_all.ipynb)
+
 ## 6. 현재 읽기 순서
 
 1. 타깃 정의: [01_ddri_bike_change_target_definition.md](/Users/cheng80/Desktop/ddri_work/works/07_prediction_bike_change/01_ddri_bike_change_target_definition.md)

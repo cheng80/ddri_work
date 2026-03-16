@@ -13,6 +13,14 @@
 - ERD, API 명세, Architecture Design 같은 웹 프로젝트 산출물
 - 최종 시연과 동영상 제작 기준
 
+## 현재 우선 문서
+
+1. [01_ddri_flutter_web_service_preparation.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/01_ddri_flutter_web_service_preparation.md)
+2. [02_ddri_web_service_project_plan.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/02_ddri_web_service_project_plan.md)
+3. [03_ddri_web_service_screen_spec.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/03_ddri_web_service_screen_spec.md)
+4. [04_ddri_database_design.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/04_ddri_database_design.md)
+5. [05_ddri_erd.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/05_ddri_erd.md)
+
 ## 현재 근거 정본
 
 - 프로젝트 기준 문서:
@@ -27,6 +35,16 @@
   - [01_ddri_api_verification.ipynb](/Users/cheng80/Desktop/ddri_work/cheng80/01_ddri_api_verification.ipynb)
 - 발표 정본:
   - [04_presentation](/Users/cheng80/Desktop/ddri_work/works/04_presentation)
+- Flutter 서비스 준비 문서:
+  - [01_ddri_flutter_web_service_preparation.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/01_ddri_flutter_web_service_preparation.md)
+- 웹서비스 기획서:
+  - [02_ddri_web_service_project_plan.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/02_ddri_web_service_project_plan.md)
+- 화면 설계서:
+  - [03_ddri_web_service_screen_spec.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/03_ddri_web_service_screen_spec.md)
+- DB 설계서:
+  - [04_ddri_database_design.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/04_ddri_database_design.md)
+- ERD 초안:
+  - [05_ddri_erd.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/05_ddri_erd.md)
 
 ## 작성 계획
 
