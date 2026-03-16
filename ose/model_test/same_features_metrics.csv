@@ -1,0 +1,13 @@
+﻿model,split,rmse,mae,r2
+LightGBM_RMSE,validation_2024,1.01052,0.618371,0.567019
+LightGBM_RMSE,test_2025_refit,0.903342,0.553428,0.550191
+LightGBM_Poisson,validation_2024,1.027018,0.641124,0.552766
+LightGBM_Poisson,test_2025_refit,0.917687,0.577953,0.535792
+CatBoost_RMSE,validation_2024,1.042579,0.638413,0.539111
+CatBoost_RMSE,test_2025_refit,0.934478,0.570033,0.518648
+CatBoost_Poisson,validation_2024,1.040888,0.639738,0.540604
+CatBoost_Poisson,test_2025_refit,0.938704,0.576509,0.514285
+XGBoost_RMSE,validation_2024,1.030517,0.626353,0.549713
+XGBoost_RMSE,test_2025_refit,0.91354,0.556109,0.539977
+XGBoost_Poisson,validation_2024,1.068168,0.649983,0.516209
+XGBoost_Poisson,test_2025_refit,0.939667,0.580177,0.513288
