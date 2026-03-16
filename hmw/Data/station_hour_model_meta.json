@@ -1,10 +1,15 @@
 {
+  "split_protocol": {
+    "train": "2023",
+    "valid": "2024",
+    "test": "2025"
+  },
   "chosen_feature_set": {
     "bike_change": "enhanced",
     "bike_count_index": "basic"
   },
   "best_ml_model": {
-    "bike_change": "hist_gbm_tuned",
-    "bike_count_index": "ridge"
+    "bike_change": "lightgbm_leafy",
+    "bike_count_index": "gbm"
   }
 }

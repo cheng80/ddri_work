@@ -1,281 +1,281 @@
 ﻿cluster,cluster_name,best_model,feature,importance_mean,importance_std
-0,업무/상업 혼합형,hist_gbm_tuned,hour_sin,0.04058937512949823,0.007044976173024131
-0,업무/상업 혼합형,hist_gbm_tuned,is_weekend_or_holiday,0.030364940426118703,0.007263596622800628
-0,업무/상업 혼합형,hist_gbm_tuned,bike_change_lag_24,0.026882633329017303,0.002568981061948028
-0,업무/상업 혼합형,hist_gbm_tuned,bike_change_lag_168,0.025268860080863487,0.0020791468978815786
-0,업무/상업 혼합형,hist_gbm_tuned,bike_change_rollmean_24,0.010279998522935596,0.004077068842480269
-0,업무/상업 혼합형,hist_gbm_tuned,hour_cos,0.009977189885686077,0.0022024299184909557
-0,업무/상업 혼합형,hist_gbm_tuned,lat,0.009447249707604466,0.00026299533884321935
-0,업무/상업 혼합형,hist_gbm_tuned,hour,0.008941371606366433,0.000997999842637265
-0,업무/상업 혼합형,hist_gbm_tuned,bike_change_rollmean_3,0.005335222489412317,0.00033924546734831473
-0,업무/상업 혼합형,hist_gbm_tuned,is_commute_hour,0.005066904827134788,0.0003521176323870723
-0,업무/상업 혼합형,hist_gbm_tuned,temp_x_commute,0.0044475057305070065,0.0003679289328698543
-0,업무/상업 혼합형,hist_gbm_tuned,rental_count_lag_1,0.004205139529808055,0.0007322759434268411
-0,업무/상업 혼합형,hist_gbm_tuned,precipitation,0.003093625116433074,0.0030504530845441025
-0,업무/상업 혼합형,hist_gbm_tuned,bike_count_index_lag_168,0.0026191598718493525,0.0009711691928410149
-0,업무/상업 혼합형,hist_gbm_tuned,lon,0.0026141296094008837,0.0008438401867683076
-0,업무/상업 혼합형,hist_gbm_tuned,bike_change_lag_1,0.0024531004897506703,0.0010168815783656582
-0,업무/상업 혼합형,hist_gbm_tuned,return_count_lag_1,0.0023076882789110353,0.00027243816207001004
-0,업무/상업 혼합형,hist_gbm_tuned,bike_change_rollmean_168,0.002246179398596504,0.002080255213840476
-0,업무/상업 혼합형,hist_gbm_tuned,lcd_count,0.002228570674272623,7.233011183371829e-05
-0,업무/상업 혼합형,hist_gbm_tuned,bike_change_rollstd_168,0.0020270412192020526,0.0013167140947709655
-0,업무/상업 혼합형,hist_gbm_tuned,dock_total,0.0019017133728523872,0.00018698593220689563
-0,업무/상업 혼합형,hist_gbm_tuned,bike_count_index_lag_1,0.001684165621336331,0.0003579516598491983
-0,업무/상업 혼합형,hist_gbm_tuned,rental_count_lag_24,0.0014366664545124586,0.0001344488123893317
-0,업무/상업 혼합형,hist_gbm_tuned,humidity,0.0012993900860753804,0.0007852199294386963
-0,업무/상업 혼합형,hist_gbm_tuned,bike_change_rollstd_24,0.0010325469917066288,0.0002506166268821941
-0,업무/상업 혼합형,hist_gbm_tuned,bike_count_index_lag_24,0.0008170084296497127,0.00023406637025868982
-0,업무/상업 혼합형,hist_gbm_tuned,temperature,0.0007634009051732393,0.00023697996174620872
-0,업무/상업 혼합형,hist_gbm_tuned,bike_index_rollmean_24,0.0006825644392014496,0.0009567889307395827
-0,업무/상업 혼합형,hist_gbm_tuned,bike_count_index_lag_2,0.0006761475736336564,0.0003347056622973188
-0,업무/상업 혼합형,hist_gbm_tuned,weekday,0.0006020301810686357,0.00115482339042694
-0,업무/상업 혼합형,hist_gbm_tuned,weekday_sin,0.0004836781725594541,0.00013104887201365045
-0,업무/상업 혼합형,hist_gbm_tuned,month_cos,0.00015952483133252482,0.0003914734186664104
-0,업무/상업 혼합형,hist_gbm_tuned,qr_count,8.54489964426941e-05,0.0006833430181522049
-0,업무/상업 혼합형,hist_gbm_tuned,station_id,7.870796777698086e-05,3.869151084534561e-05
-0,업무/상업 혼합형,hist_gbm_tuned,is_rainy,0.0,0.0
-0,업무/상업 혼합형,hist_gbm_tuned,is_holiday_eve,0.0,0.0
-0,업무/상업 혼합형,hist_gbm_tuned,is_weekend,0.0,0.0
-0,업무/상업 혼합형,hist_gbm_tuned,rain_x_night,0.0,0.0
-0,업무/상업 혼합형,hist_gbm_tuned,heavy_rain,0.0,0.0
-0,업무/상업 혼합형,hist_gbm_tuned,year,0.0,0.0
-0,업무/상업 혼합형,hist_gbm_tuned,is_qr_mixed,0.0,0.0
-0,업무/상업 혼합형,hist_gbm_tuned,month,-1.9330797405014977e-06,5.729998055592489e-06
-0,업무/상업 혼합형,hist_gbm_tuned,is_holiday,-7.113489620014235e-06,7.113489620014235e-06
-0,업무/상업 혼합형,hist_gbm_tuned,rain_x_commute,-4.397613751727647e-05,0.0002241942107443773
-0,업무/상업 혼합형,hist_gbm_tuned,bike_change_lag_2,-6.204647454965961e-05,0.00012272722379458312
-0,업무/상업 혼합형,hist_gbm_tuned,is_night_hour,-7.201549275603902e-05,8.520894689145742e-05
-0,업무/상업 혼합형,hist_gbm_tuned,weekofyear,-8.89854423741232e-05,4.852162944424254e-05
-0,업무/상업 혼합형,hist_gbm_tuned,bike_index_rollmean_168,-0.0001011945871244313,0.0011071783686552594
-0,업무/상업 혼합형,hist_gbm_tuned,month_sin,-0.00013339965025227496,8.988206508508956e-05
-0,업무/상업 혼합형,hist_gbm_tuned,weekday_cos,-0.00016563240260769607,0.00010645899070860221
-0,업무/상업 혼합형,hist_gbm_tuned,return_count_lag_24,-0.00020888201276580975,0.0012327033806357468
-0,업무/상업 혼합형,hist_gbm_tuned,bike_index_rollmean_3,-0.00022234223929773478,0.0005793040392418902
-0,업무/상업 혼합형,hist_gbm_tuned,is_lunch_hour,-0.0002470553471423109,1.534821684412435e-05
-0,업무/상업 혼합형,hist_gbm_tuned,wind_speed,-0.00027753411099495917,0.000424246626196223
-0,업무/상업 혼합형,hist_gbm_tuned,dayofyear,-0.0003295382375650968,0.0001975327249131853
-0,업무/상업 혼합형,hist_gbm_tuned,day,-0.0005643443282675742,0.00015619595376226147
-1,아침 도착 업무 집중형,hist_gbm_tuned,hour_sin,0.3959412996967122,0.014229576110782016
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_change_lag_168,0.21841241377170018,0.0048198889060117045
-1,아침 도착 업무 집중형,hist_gbm_tuned,hour,0.16712193968160594,0.0024687974870138962
-1,아침 도착 업무 집중형,hist_gbm_tuned,is_weekend_or_holiday,0.13833659110658936,0.030269931899899905
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_change_lag_24,0.08581872269886837,0.0005301261124835976
-1,아침 도착 업무 집중형,hist_gbm_tuned,is_commute_hour,0.07817867787596877,9.913805065364656e-05
-1,아침 도착 업무 집중형,hist_gbm_tuned,return_count_lag_1,0.06764644432530387,0.015652771692002188
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_change_lag_1,0.06577064991318138,0.006077355916879412
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_change_rollstd_24,0.051628018546403975,0.00032547756958467566
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_change_rollmean_24,0.044634095601457036,0.004575350587916249
-1,아침 도착 업무 집중형,hist_gbm_tuned,precipitation,0.039013287252065765,4.3515594113752165e-05
-1,아침 도착 업무 집중형,hist_gbm_tuned,hour_cos,0.03607769365239166,0.0014574771720494706
-1,아침 도착 업무 집중형,hist_gbm_tuned,station_id,0.03046060046375909,0.001469035708602684
-1,아침 도착 업무 집중형,hist_gbm_tuned,lat,0.026054156270462148,0.011513484189019652
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_change_rollmean_3,0.019144648653520058,3.3523016589320775e-05
-1,아침 도착 업무 집중형,hist_gbm_tuned,temp_x_commute,0.01737104827185687,0.005028274520962772
-1,아침 도착 업무 집중형,hist_gbm_tuned,return_count_lag_24,0.01467942505968578,0.00047087823345193236
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_count_index_lag_1,0.00735374783374565,0.0036713551663639654
-1,아침 도착 업무 집중형,hist_gbm_tuned,lon,0.006562703231626221,0.0005961627398367586
-1,아침 도착 업무 집중형,hist_gbm_tuned,rain_x_commute,0.004467354341495922,0.0016194444369774796
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_count_index_lag_168,0.004436851449299617,0.004983843079999772
-1,아침 도착 업무 집중형,hist_gbm_tuned,humidity,0.004343539080088332,0.00489669266512438
-1,아침 도착 업무 집중형,hist_gbm_tuned,rental_count_lag_1,0.0032278251462164453,0.0028139832367432005
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_index_rollmean_168,0.0028824873099360104,0.00033375996198570235
-1,아침 도착 업무 집중형,hist_gbm_tuned,weekday,0.0024713802832934118,0.0019404577718944438
-1,아침 도착 업무 집중형,hist_gbm_tuned,rental_count_lag_24,0.002251134760349993,0.0003245688181099382
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_count_index_lag_2,0.0012463693977805557,0.00035895285856357706
-1,아침 도착 업무 집중형,hist_gbm_tuned,is_lunch_hour,0.000897447704479748,5.385662289725257e-05
-1,아침 도착 업무 집중형,hist_gbm_tuned,weekday_cos,0.000852629776741276,2.888543340384686e-05
-1,아침 도착 업무 집중형,hist_gbm_tuned,month_cos,0.0005729586937505138,0.00042140427462566965
-1,아침 도착 업무 집중형,hist_gbm_tuned,lcd_count,0.0004551776296982668,5.203813046439354e-05
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_change_lag_2,0.00022245088641847932,0.0002958272878735846
-1,아침 도착 업무 집중형,hist_gbm_tuned,is_night_hour,9.07584271726547e-05,3.1457191365213966e-05
-1,아침 도착 업무 집중형,hist_gbm_tuned,month,3.530502021842352e-05,3.632430929378927e-05
-1,아침 도착 업무 집중형,hist_gbm_tuned,rain_x_night,0.0,0.0
-1,아침 도착 업무 집중형,hist_gbm_tuned,qr_count,0.0,0.0
-1,아침 도착 업무 집중형,hist_gbm_tuned,heavy_rain,0.0,0.0
-1,아침 도착 업무 집중형,hist_gbm_tuned,is_rainy,0.0,0.0
-1,아침 도착 업무 집중형,hist_gbm_tuned,dock_total,0.0,0.0
-1,아침 도착 업무 집중형,hist_gbm_tuned,is_qr_mixed,0.0,0.0
-1,아침 도착 업무 집중형,hist_gbm_tuned,is_weekend,0.0,0.0
-1,아침 도착 업무 집중형,hist_gbm_tuned,year,0.0,0.0
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_index_rollmean_3,-4.736980900910126e-05,0.00016549172119173505
-1,아침 도착 업무 집중형,hist_gbm_tuned,weekday_sin,-0.00015172860824419487,0.00028771566487284517
-1,아침 도착 업무 집중형,hist_gbm_tuned,weekofyear,-0.00019769942087355385,9.30803507034339e-05
-1,아침 도착 업무 집중형,hist_gbm_tuned,month_sin,-0.0002660440512067819,0.0002734672700615004
-1,아침 도착 업무 집중형,hist_gbm_tuned,day,-0.0003442873636277932,0.0003448964503954821
-1,아침 도착 업무 집중형,hist_gbm_tuned,is_holiday,-0.0003549585752190554,0.0003809959786448269
-1,아침 도착 업무 집중형,hist_gbm_tuned,is_holiday_eve,-0.00035701898829010315,0.00021772263706976158
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_index_rollmean_24,-0.00038225012039438955,0.0005003959461965524
-1,아침 도착 업무 집중형,hist_gbm_tuned,wind_speed,-0.0009632776281803812,0.0006923708594567257
-1,아침 도착 업무 집중형,hist_gbm_tuned,dayofyear,-0.001381987858889322,0.0008191132561626846
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_count_index_lag_24,-0.0016786368876753333,0.0005197529014735469
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_change_rollstd_168,-0.001779637327106398,0.013880337869950354
-1,아침 도착 업무 집중형,hist_gbm_tuned,bike_change_rollmean_168,-0.0033017765551163203,0.00024516243367223023
-1,아침 도착 업무 집중형,hist_gbm_tuned,temperature,-0.008261169979742466,0.006343767960005242
-2,주거 도착형,hist_gbm_tuned,hour_sin,0.05729291157374938,0.023358529161351504
-2,주거 도착형,hist_gbm_tuned,hour,0.048125647122323034,0.013966815724414383
-2,주거 도착형,hist_gbm_tuned,bike_change_lag_168,0.03983601623641175,0.002380335757749874
-2,주거 도착형,hist_gbm_tuned,bike_change_lag_24,0.01679951630557386,0.0019138659292046167
-2,주거 도착형,hist_gbm_tuned,is_weekend_or_holiday,0.008075666899078349,0.00010459896867842655
-2,주거 도착형,hist_gbm_tuned,bike_change_rollstd_24,0.0074731162040325705,0.0003411797307181219
-2,주거 도착형,hist_gbm_tuned,hour_cos,0.007347491195915712,0.0005052809487302579
-2,주거 도착형,hist_gbm_tuned,rental_count_lag_1,0.006146114720820717,0.0020693598056792384
-2,주거 도착형,hist_gbm_tuned,lat,0.006014289100853554,0.0007055696309993253
-2,주거 도착형,hist_gbm_tuned,bike_change_rollstd_168,0.004758011843347787,0.0010432499723541655
-2,주거 도착형,hist_gbm_tuned,bike_change_rollmean_24,0.003746278982277418,0.0025475511401146234
-2,주거 도착형,hist_gbm_tuned,precipitation,0.0035184657223171767,0.00044236848201595347
-2,주거 도착형,hist_gbm_tuned,station_id,0.0033818531715616995,8.054030639303988e-05
-2,주거 도착형,hist_gbm_tuned,bike_change_lag_1,0.0027276988767187538,0.001406789856567392
-2,주거 도착형,hist_gbm_tuned,lon,0.002611188026150013,0.001285735614728556
-2,주거 도착형,hist_gbm_tuned,bike_change_rollmean_168,0.0023866439159828667,0.0009040223311699291
-2,주거 도착형,hist_gbm_tuned,qr_count,0.0018613839696131063,0.00042567124283188207
-2,주거 도착형,hist_gbm_tuned,return_count_lag_24,0.0017676439302364289,0.0004609694196903158
-2,주거 도착형,hist_gbm_tuned,return_count_lag_1,0.0016143314344940762,0.00035468937952765067
-2,주거 도착형,hist_gbm_tuned,humidity,0.0013098350737409392,0.0003576376226316347
-2,주거 도착형,hist_gbm_tuned,bike_count_index_lag_168,0.0012906260557844496,0.00025105920655998926
-2,주거 도착형,hist_gbm_tuned,bike_count_index_lag_24,0.0009553189188125089,0.00020304166626994302
-2,주거 도착형,hist_gbm_tuned,day,0.0009433668327107902,0.0004338889607851115
-2,주거 도착형,hist_gbm_tuned,bike_count_index_lag_2,0.0008037838572336753,0.0003867546971580982
-2,주거 도착형,hist_gbm_tuned,weekday_sin,0.0007695184463099025,7.997731342768155e-05
-2,주거 도착형,hist_gbm_tuned,bike_index_rollmean_24,0.0005357493902324872,0.00028871337761904314
-2,주거 도착형,hist_gbm_tuned,is_night_hour,0.0005090162675590593,0.00011554649887834945
-2,주거 도착형,hist_gbm_tuned,lcd_count,0.00024060772514589157,0.00010514595918376113
-2,주거 도착형,hist_gbm_tuned,bike_change_lag_2,0.00017052939973916104,6.609965658066486e-05
-2,주거 도착형,hist_gbm_tuned,rental_count_lag_24,0.00013311529697168645,0.0005204714210260697
-2,주거 도착형,hist_gbm_tuned,month,0.00012528029346348113,3.5883151119797674e-05
-2,주거 도착형,hist_gbm_tuned,bike_change_rollmean_3,0.00011577104993143461,0.001454121861233948
-2,주거 도착형,hist_gbm_tuned,wind_speed,0.00010544086390895657,0.00015500710137428264
-2,주거 도착형,hist_gbm_tuned,month_sin,5.983567298428749e-05,5.2322562369533365e-05
-2,주거 도착형,hist_gbm_tuned,weekday_cos,5.416736986241233e-05,0.00012375541443665483
-2,주거 도착형,hist_gbm_tuned,is_holiday,3.0409877590620304e-05,2.6313983061521107e-05
-2,주거 도착형,hist_gbm_tuned,bike_index_rollmean_168,2.9213769272562473e-06,0.00036298311306115494
-2,주거 도착형,hist_gbm_tuned,is_rainy,0.0,0.0
-2,주거 도착형,hist_gbm_tuned,is_lunch_hour,0.0,0.0
-2,주거 도착형,hist_gbm_tuned,year,0.0,0.0
-2,주거 도착형,hist_gbm_tuned,is_weekend,0.0,0.0
-2,주거 도착형,hist_gbm_tuned,rain_x_night,0.0,0.0
-2,주거 도착형,hist_gbm_tuned,heavy_rain,0.0,0.0
-2,주거 도착형,hist_gbm_tuned,is_qr_mixed,0.0,0.0
-2,주거 도착형,hist_gbm_tuned,rain_x_commute,-1.8472297674820837e-06,5.239466956186156e-06
-2,주거 도착형,hist_gbm_tuned,month_cos,-9.138862963942174e-06,0.00021400380915070905
-2,주거 도착형,hist_gbm_tuned,is_holiday_eve,-1.876711887849325e-05,5.764346179493174e-06
-2,주거 도착형,hist_gbm_tuned,temperature,-0.00015869204326857123,0.0001040398613263438
-2,주거 도착형,hist_gbm_tuned,weekofyear,-0.0001851089177036247,4.032482625371259e-05
-2,주거 도착형,hist_gbm_tuned,bike_index_rollmean_3,-0.00026560590875679413,0.00015576836119335358
-2,주거 도착형,hist_gbm_tuned,dayofyear,-0.00038397781026999755,2.6026705589599075e-06
-2,주거 도착형,hist_gbm_tuned,temp_x_commute,-0.0008737145897542709,0.0009667091506656567
-2,주거 도착형,hist_gbm_tuned,is_commute_hour,-0.0015140824358450544,7.72428150597193e-06
-2,주거 도착형,hist_gbm_tuned,bike_count_index_lag_1,-0.0016515736697975125,0.0007107033560014298
-2,주거 도착형,hist_gbm_tuned,dock_total,-0.0022071204492447594,0.0009164888284970418
-2,주거 도착형,hist_gbm_tuned,weekday,-0.002476423483028456,0.00013416784089159695
-3,생활·상권 혼합형,hist_gbm,bike_change_lag_168,0.014911104438394052,0.0016221802413582953
-3,생활·상권 혼합형,hist_gbm,bike_change_lag_24,0.014652724581512455,0.003400772461067403
-3,생활·상권 혼합형,hist_gbm,bike_change_rollmean_168,0.009204848785514197,0.0019842080719228994
-3,생활·상권 혼합형,hist_gbm,bike_change_rollmean_24,0.004738780712262469,0.00332742280991033
-3,생활·상권 혼합형,hist_gbm,hour_sin,0.00442264173624235,0.0019015691650791644
-3,생활·상권 혼합형,hist_gbm,hour,0.003868871116382344,0.0008555280979658519
-3,생활·상권 혼합형,hist_gbm,bike_count_index_lag_168,0.0035721376254828074,0.0006361326539928713
-3,생활·상권 혼합형,hist_gbm,rental_count_lag_1,0.0033351399799374515,0.0012167388216566821
-3,생활·상권 혼합형,hist_gbm,bike_change_rollstd_168,0.002449721257059445,0.00015092313410047797
-3,생활·상권 혼합형,hist_gbm,bike_change_rollstd_24,0.0017643991744188403,9.1938273278247e-05
-3,생활·상권 혼합형,hist_gbm,return_count_lag_1,0.0014677940295337866,0.00044192140716137196
-3,생활·상권 혼합형,hist_gbm,bike_change_lag_1,0.0013298332967390247,0.0011342090349992229
-3,생활·상권 혼합형,hist_gbm,bike_count_index_lag_24,0.0012384547328317397,0.0003130068449490042
-3,생활·상권 혼합형,hist_gbm,humidity,0.0011830092935442016,9.178046033031517e-05
-3,생활·상권 혼합형,hist_gbm,bike_index_rollmean_168,0.0009150789773936796,0.0002170039946400304
-3,생활·상권 혼합형,hist_gbm,qr_count,0.0008405085311565252,0.0001914183446615758
-3,생활·상권 혼합형,hist_gbm,station_id,0.0006205730702877887,0.0002936008804884094
-3,생활·상권 혼합형,hist_gbm,bike_count_index_lag_1,0.0005565620310755692,7.246251783155078e-05
-3,생활·상권 혼합형,hist_gbm,wind_speed,0.0005460558245331537,7.050115850293359e-05
-3,생활·상권 혼합형,hist_gbm,precipitation,0.0004940965691055399,0.0003251781862314007
-3,생활·상권 혼합형,hist_gbm,lat,0.0004662134246417038,0.0006184840860292695
-3,생활·상권 혼합형,hist_gbm,bike_index_rollmean_3,0.0004627966906161629,0.00014929089923981786
-3,생활·상권 혼합형,hist_gbm,return_count_lag_24,0.0004527383532728635,5.645173199841924e-05
-3,생활·상권 혼합형,hist_gbm,is_lunch_hour,0.00029488800528015835,0.0001066295851059329
-3,생활·상권 혼합형,hist_gbm,bike_change_lag_2,0.0002817873668363724,9.943861527528242e-06
-3,생활·상권 혼합형,hist_gbm,month_cos,0.00026238530808547766,0.00013546024535299184
-3,생활·상권 혼합형,hist_gbm,hour_cos,0.0002186719450866792,0.0011538927514967434
-3,생활·상권 혼합형,hist_gbm,weekday_sin,0.0002096294046133873,3.3326792038879116e-05
-3,생활·상권 혼합형,hist_gbm,dock_total,0.00019139778633581184,0.00023295602942141613
-3,생활·상권 혼합형,hist_gbm,bike_count_index_lag_2,0.00018463261038426104,4.738999134445976e-06
-3,생활·상권 혼합형,hist_gbm,dayofyear,0.00011340833941025918,7.98995054934748e-06
-3,생활·상권 혼합형,hist_gbm,month_sin,0.00011100061855306986,4.676466104658328e-05
-3,생활·상권 혼합형,hist_gbm,rain_x_commute,8.99587372849564e-05,3.1148956945170614e-05
-3,생활·상권 혼합형,hist_gbm,bike_index_rollmean_24,7.774672701449381e-05,0.0003664798899170596
-3,생활·상권 혼합형,hist_gbm,lon,5.792844513252682e-05,0.0009829179036255908
-3,생활·상권 혼합형,hist_gbm,heavy_rain,0.0,0.0
-3,생활·상권 혼합형,hist_gbm,is_rainy,0.0,0.0
-3,생활·상권 혼합형,hist_gbm,rain_x_night,0.0,0.0
-3,생활·상권 혼합형,hist_gbm,is_qr_mixed,0.0,0.0
-3,생활·상권 혼합형,hist_gbm,is_night_hour,0.0,0.0
-3,생활·상권 혼합형,hist_gbm,is_weekend,0.0,0.0
-3,생활·상권 혼합형,hist_gbm,year,0.0,0.0
-3,생활·상권 혼합형,hist_gbm,weekofyear,-9.539741608111107e-06,9.088014085467666e-05
-3,생활·상권 혼합형,hist_gbm,rental_count_lag_24,-9.730738560809193e-06,0.0004111362120385875
-3,생활·상권 혼합형,hist_gbm,is_holiday_eve,-2.4193006694428476e-05,3.358014540877363e-07
-3,생활·상권 혼합형,hist_gbm,lcd_count,-5.139996770575639e-05,0.00023656707753172412
-3,생활·상권 혼합형,hist_gbm,is_holiday,-6.08222302257988e-05,9.537553288641032e-06
-3,생활·상권 혼합형,hist_gbm,weekday,-6.983080229794325e-05,0.00018552499766200103
-3,생활·상권 혼합형,hist_gbm,day,-7.347721246464545e-05,4.061008266020849e-05
-3,생활·상권 혼합형,hist_gbm,is_commute_hour,-0.0001367098252157417,0.0001852631268204341
-3,생활·상권 혼합형,hist_gbm,month,-0.00013872392382019427,3.904274276511632e-05
-3,생활·상권 혼합형,hist_gbm,temp_x_commute,-0.00029873227648824496,0.0003551544443216592
-3,생활·상권 혼합형,hist_gbm,weekday_cos,-0.0003260322131197202,0.00017412417203349628
-3,생활·상권 혼합형,hist_gbm,is_weekend_or_holiday,-0.00047950329687768134,0.0004844942286454379
-3,생활·상권 혼합형,hist_gbm,temperature,-0.0007020598918455745,0.00037400261666842294
-3,생활·상권 혼합형,hist_gbm,bike_change_rollmean_3,-0.0008312556746480348,0.00047820947010024373
-4,외곽 주거형,hist_gbm_tuned,bike_change_lag_168,0.032965511936002834,0.0002164326951193951
-4,외곽 주거형,hist_gbm_tuned,hour_sin,0.030308929586761457,0.005424410661897694
-4,외곽 주거형,hist_gbm_tuned,hour_cos,0.017770171554647607,0.0008366951244104803
-4,외곽 주거형,hist_gbm_tuned,is_weekend_or_holiday,0.014182240644011412,0.002343586135024056
-4,외곽 주거형,hist_gbm_tuned,bike_change_lag_24,0.011348703528122173,0.0027906988318774917
-4,외곽 주거형,hist_gbm_tuned,hour,0.008614009834853498,0.0016361883307385305
-4,외곽 주거형,hist_gbm_tuned,bike_change_rollmean_168,0.008486667039474372,0.00037192333081553786
-4,외곽 주거형,hist_gbm_tuned,bike_change_rollmean_24,0.008224090687767083,0.0009070256872938387
-4,외곽 주거형,hist_gbm_tuned,bike_change_rollstd_168,0.00616918405520972,0.0013303839578067134
-4,외곽 주거형,hist_gbm_tuned,rental_count_lag_1,0.004450457692470267,0.0009308519372390189
-4,외곽 주거형,hist_gbm_tuned,precipitation,0.004098960256821771,0.0003350707970213307
-4,외곽 주거형,hist_gbm_tuned,lat,0.002738881683286787,0.0012584163265381698
-4,외곽 주거형,hist_gbm_tuned,bike_change_rollmean_3,0.0025539293581039457,0.0008441628289533876
-4,외곽 주거형,hist_gbm_tuned,temperature,0.0019537235223069382,8.554143548067383e-05
-4,외곽 주거형,hist_gbm_tuned,bike_count_index_lag_24,0.0017281370807319396,0.0006277416598029495
-4,외곽 주거형,hist_gbm_tuned,bike_change_lag_1,0.0015693057092191487,0.0012681567329017596
-4,외곽 주거형,hist_gbm_tuned,temp_x_commute,0.0013627586342565001,0.0003017781496067462
-4,외곽 주거형,hist_gbm_tuned,return_count_lag_1,0.000997864408462501,0.00016802718868946798
-4,외곽 주거형,hist_gbm_tuned,is_commute_hour,0.0009637204027307944,0.0003727940872896851
-4,외곽 주거형,hist_gbm_tuned,bike_change_lag_2,0.0009396650580901222,0.000323504296628363
-4,외곽 주거형,hist_gbm_tuned,bike_count_index_lag_1,0.0006234520506849806,0.0001819033364551248
-4,외곽 주거형,hist_gbm_tuned,bike_count_index_lag_168,0.0005830382518047794,0.0009846129332154452
-4,외곽 주거형,hist_gbm_tuned,humidity,0.0005271006880604445,0.00011309700507483589
-4,외곽 주거형,hist_gbm_tuned,station_id,0.0004345326146258377,0.0001292813072503729
-4,외곽 주거형,hist_gbm_tuned,wind_speed,0.00035348549073421776,0.0005555293308449061
-4,외곽 주거형,hist_gbm_tuned,bike_index_rollmean_24,0.00022645543496557785,0.000261188699807291
-4,외곽 주거형,hist_gbm_tuned,weekday,0.00021229242430609307,0.00026866227565214285
-4,외곽 주거형,hist_gbm_tuned,bike_index_rollmean_168,0.000197200934607622,0.0007241336830430267
-4,외곽 주거형,hist_gbm_tuned,weekday_cos,0.000172278134597581,9.289866246026124e-05
-4,외곽 주거형,hist_gbm_tuned,lon,0.0001589121993539333,0.00033115277640083374
-4,외곽 주거형,hist_gbm_tuned,is_night_hour,5.075497750550717e-05,2.333221165706778e-05
-4,외곽 주거형,hist_gbm_tuned,weekofyear,5.058670730978543e-05,1.0841794847060715e-05
-4,외곽 주거형,hist_gbm_tuned,is_holiday,4.854895124228875e-05,0.00016046298107375012
-4,외곽 주거형,hist_gbm_tuned,return_count_lag_24,2.8214223190103915e-05,0.00016815749168275218
-4,외곽 주거형,hist_gbm_tuned,month,3.6591563735144383e-06,3.6591563735144383e-06
-4,외곽 주거형,hist_gbm_tuned,rain_x_night,0.0,0.0
-4,외곽 주거형,hist_gbm_tuned,heavy_rain,0.0,0.0
-4,외곽 주거형,hist_gbm_tuned,is_rainy,0.0,0.0
-4,외곽 주거형,hist_gbm_tuned,is_qr_mixed,0.0,0.0
-4,외곽 주거형,hist_gbm_tuned,is_weekend,0.0,0.0
-4,외곽 주거형,hist_gbm_tuned,year,0.0,0.0
-4,외곽 주거형,hist_gbm_tuned,is_holiday_eve,0.0,0.0
-4,외곽 주거형,hist_gbm_tuned,lcd_count,-5.0233611916084e-05,0.00011290410521708205
-4,외곽 주거형,hist_gbm_tuned,rain_x_commute,-5.256580807649902e-05,3.507894635879083e-08
-4,외곽 주거형,hist_gbm_tuned,rental_count_lag_24,-0.0001526031727440147,0.0007792391419297884
-4,외곽 주거형,hist_gbm_tuned,day,-0.0001660158656620614,8.718553919345728e-05
-4,외곽 주거형,hist_gbm_tuned,month_cos,-0.0001835976767450287,9.40658221382229e-06
-4,외곽 주거형,hist_gbm_tuned,dock_total,-0.00020614500415772063,7.924020694705103e-05
-4,외곽 주거형,hist_gbm_tuned,is_lunch_hour,-0.00020732997705802392,6.024236290264051e-05
-4,외곽 주거형,hist_gbm_tuned,bike_index_rollmean_3,-0.00031365819566792075,0.00013967895682004405
-4,외곽 주거형,hist_gbm_tuned,weekday_sin,-0.00036259211893674426,0.0002837510502001761
-4,외곽 주거형,hist_gbm_tuned,month_sin,-0.00037924313548992616,0.0004146768866216122
-4,외곽 주거형,hist_gbm_tuned,qr_count,-0.0003949348696026256,2.6951682752240913e-05
-4,외곽 주거형,hist_gbm_tuned,bike_count_index_lag_2,-0.00040404181085718083,0.000371870995282797
-4,외곽 주거형,hist_gbm_tuned,dayofyear,-0.0006198107383554863,0.0001495526448506146
-4,외곽 주거형,hist_gbm_tuned,bike_change_rollstd_24,-0.0010797053250674593,0.0007035389804406766
+0,업무/상업 혼합형,lightgbm_regularized,hour_sin,0.03504377018227822,0.008313217135787698
+0,업무/상업 혼합형,lightgbm_regularized,is_weekend_or_holiday,0.024746677488964974,0.007669315308950986
+0,업무/상업 혼합형,lightgbm_regularized,bike_change_lag_24,0.023094739507691697,0.002787912053469066
+0,업무/상업 혼합형,lightgbm_regularized,bike_change_lag_168,0.01746393535743007,0.002040864407760856
+0,업무/상업 혼합형,lightgbm_regularized,hour,0.011391945012604987,0.0005131217194400683
+0,업무/상업 혼합형,lightgbm_regularized,bike_change_rollmean_24,0.00869288917668265,0.004417397654842503
+0,업무/상업 혼합형,lightgbm_regularized,hour_cos,0.007269473116077618,0.00011495293280505692
+0,업무/상업 혼합형,lightgbm_regularized,temp_x_commute,0.006134496689964353,0.0014960588885386539
+0,업무/상업 혼합형,lightgbm_regularized,lat,0.0061220236524007765,0.0008506890152509827
+0,업무/상업 혼합형,lightgbm_regularized,rental_count_lag_1,0.004422702608954832,0.0013783088427264945
+0,업무/상업 혼합형,lightgbm_regularized,is_commute_hour,0.0040576184267659965,0.0007979845961822996
+0,업무/상업 혼합형,lightgbm_regularized,return_count_lag_1,0.003874928538319611,0.0014386650203254137
+0,업무/상업 혼합형,lightgbm_regularized,lon,0.0037128283570218024,0.0007611545580268331
+0,업무/상업 혼합형,lightgbm_regularized,precipitation,0.003665179498559046,0.0032985955215464324
+0,업무/상업 혼합형,lightgbm_regularized,bike_change_rollmean_168,0.003255513207627181,0.0026474795021932396
+0,업무/상업 혼합형,lightgbm_regularized,bike_change_rollmean_3,0.0030843397275525097,0.001593038203331676
+0,업무/상업 혼합형,lightgbm_regularized,dock_total,0.002711272153499533,0.001253831264457328
+0,업무/상업 혼합형,lightgbm_regularized,bike_change_rollstd_168,0.0018862170244121623,0.0014306172427963615
+0,업무/상업 혼합형,lightgbm_regularized,rental_count_lag_24,0.0016395800473809619,0.0005253102322815284
+0,업무/상업 혼합형,lightgbm_regularized,wind_speed,0.0014809091852323597,0.00034775625459682047
+0,업무/상업 혼합형,lightgbm_regularized,bike_count_index_lag_1,0.0011907350321851418,0.00030280575742036575
+0,업무/상업 혼합형,lightgbm_regularized,bike_change_rollstd_24,0.0010324911043694263,0.0007859213188009528
+0,업무/상업 혼합형,lightgbm_regularized,humidity,0.0009942600664701873,0.0017176789706264683
+0,업무/상업 혼합형,lightgbm_regularized,is_holiday,0.0008217084988028089,0.00017907203608336086
+0,업무/상업 혼합형,lightgbm_regularized,weekday_sin,0.0008082637881505761,8.469277672196185e-05
+0,업무/상업 혼합형,lightgbm_regularized,bike_change_lag_2,0.0008016164955715332,0.0006366121356429222
+0,업무/상업 혼합형,lightgbm_regularized,bike_index_rollmean_168,0.0007249648527072328,0.0015748965783759505
+0,업무/상업 혼합형,lightgbm_regularized,weekday,0.0007203694488310264,0.003551674603259669
+0,업무/상업 혼합형,lightgbm_regularized,temperature,0.000705233492853452,0.0004987289399751571
+0,업무/상업 혼합형,lightgbm_regularized,bike_count_index_lag_2,0.00036997073852595985,0.001209020802009353
+0,업무/상업 혼합형,lightgbm_regularized,weekday_cos,0.0003255376317409242,0.0010160221156175764
+0,업무/상업 혼합형,lightgbm_regularized,is_weekend,0.00025756384185604553,0.00043694540535477167
+0,업무/상업 혼합형,lightgbm_regularized,rain_x_commute,6.105788080668084e-05,4.904864012988952e-05
+0,업무/상업 혼합형,lightgbm_regularized,is_night_hour,5.486375301666513e-05,0.00011120660322183618
+0,업무/상업 혼합형,lightgbm_regularized,is_qr_mixed,7.234168855063672e-06,0.0
+0,업무/상업 혼합형,lightgbm_regularized,heavy_rain,0.0,0.0
+0,업무/상업 혼합형,lightgbm_regularized,rain_x_night,0.0,0.0
+0,업무/상업 혼합형,lightgbm_regularized,year,0.0,0.0
+0,업무/상업 혼합형,lightgbm_regularized,month,-4.3034281550502484e-05,0.00013081866411868148
+0,업무/상업 혼합형,lightgbm_regularized,day,-7.318543301693126e-05,0.0007493993471525684
+0,업무/상업 혼합형,lightgbm_regularized,is_holiday_eve,-8.289810326567171e-05,1.4909801539397805e-05
+0,업무/상업 혼합형,lightgbm_regularized,bike_index_rollmean_24,-9.104420191896612e-05,0.000815309892183147
+0,업무/상업 혼합형,lightgbm_regularized,month_sin,-9.231802673137501e-05,2.936698371769353e-05
+0,업무/상업 혼합형,lightgbm_regularized,is_rainy,-0.00010692758031682903,0.00010302767056880047
+0,업무/상업 혼합형,lightgbm_regularized,station_id,-0.00017980543241991054,0.0012240488031162178
+0,업무/상업 혼합형,lightgbm_regularized,weekofyear,-0.00024328891318603496,0.0003621954940400407
+0,업무/상업 혼합형,lightgbm_regularized,month_cos,-0.00029071528469493124,0.0001756854043488687
+0,업무/상업 혼합형,lightgbm_regularized,is_lunch_hour,-0.0005389681743676045,0.0007168532308771125
+0,업무/상업 혼합형,lightgbm_regularized,dayofyear,-0.0006134437187146347,0.0008330903220088448
+0,업무/상업 혼합형,lightgbm_regularized,lcd_count,-0.0006737945471215756,2.240283816234978e-05
+0,업무/상업 혼합형,lightgbm_regularized,qr_count,-0.0007110777708193572,0.0008994165197092618
+0,업무/상업 혼합형,lightgbm_regularized,bike_count_index_lag_24,-0.001520047609594899,0.0011456379618530743
+0,업무/상업 혼합형,lightgbm_regularized,bike_change_lag_1,-0.0015823301950254054,0.0006227746922103927
+0,업무/상업 혼합형,lightgbm_regularized,bike_index_rollmean_3,-0.0016142170666967326,0.0009458685954705226
+0,업무/상업 혼합형,lightgbm_regularized,bike_count_index_lag_168,-0.0021199118273306228,0.0018810595533172991
+0,업무/상업 혼합형,lightgbm_regularized,return_count_lag_24,-0.002367999480105132,0.000436364396368516
+1,아침 도착 업무 집중형,xgboost_regularized,hour_sin,0.4103356599807739,0.005309343338012695
+1,아침 도착 업무 집중형,xgboost_regularized,hour,0.30549168586730957,0.023250699043273926
+1,아침 도착 업무 집중형,xgboost_regularized,bike_change_lag_1,0.18522632122039795,0.012795329093933105
+1,아침 도착 업무 집중형,xgboost_regularized,bike_change_lag_168,0.16841894388198853,0.0012043118476867676
+1,아침 도착 업무 집중형,xgboost_regularized,is_weekend_or_holiday,0.12428152561187744,0.02485835552215576
+1,아침 도착 업무 집중형,xgboost_regularized,bike_change_lag_24,0.08308601379394531,0.0010669231414794922
+1,아침 도착 업무 집중형,xgboost_regularized,is_commute_hour,0.07142573595046997,0.004565060138702393
+1,아침 도착 업무 집중형,xgboost_regularized,return_count_lag_1,0.05463379621505737,0.008990466594696045
+1,아침 도착 업무 집중형,xgboost_regularized,bike_change_rollstd_24,0.053479790687561035,0.002583026885986328
+1,아침 도착 업무 집중형,xgboost_regularized,hour_cos,0.04840278625488281,0.002444744110107422
+1,아침 도착 업무 집중형,xgboost_regularized,bike_change_rollmean_24,0.04735088348388672,0.002172231674194336
+1,아침 도착 업무 집중형,xgboost_regularized,lat,0.03736388683319092,0.0020188093185424805
+1,아침 도착 업무 집중형,xgboost_regularized,station_id,0.025132060050964355,0.0073136091232299805
+1,아침 도착 업무 집중형,xgboost_regularized,return_count_lag_24,0.024675726890563965,0.00046622753143310547
+1,아침 도착 업무 집중형,xgboost_regularized,precipitation,0.024576783180236816,0.0014933347702026367
+1,아침 도착 업무 집중형,xgboost_regularized,temp_x_commute,0.0229647159576416,0.006228923797607422
+1,아침 도착 업무 집중형,xgboost_regularized,bike_change_rollmean_3,0.014517605304718018,0.0011633038520812988
+1,아침 도착 업무 집중형,xgboost_regularized,rental_count_lag_1,0.009825944900512695,0.0034383535385131836
+1,아침 도착 업무 집중형,xgboost_regularized,humidity,0.008550167083740234,0.0043479204177856445
+1,아침 도착 업무 집중형,xgboost_regularized,bike_count_index_lag_168,0.007460236549377441,0.0034339427947998047
+1,아침 도착 업무 집중형,xgboost_regularized,weekday,0.007270216941833496,0.0005468130111694336
+1,아침 도착 업무 집중형,xgboost_regularized,bike_count_index_lag_1,0.006751537322998047,0.0011780261993408203
+1,아침 도착 업무 집중형,xgboost_regularized,bike_change_rollstd_168,0.005412280559539795,0.015617549419403076
+1,아침 도착 업무 집중형,xgboost_regularized,dayofyear,0.0047092437744140625,0.0012034177780151367
+1,아침 도착 업무 집중형,xgboost_regularized,bike_change_lag_2,0.004558086395263672,0.00028884410858154297
+1,아침 도착 업무 집중형,xgboost_regularized,lcd_count,0.0036554932594299316,0.0005324482917785645
+1,아침 도착 업무 집중형,xgboost_regularized,weekday_sin,0.003214418888092041,0.0003497004508972168
+1,아침 도착 업무 집중형,xgboost_regularized,lon,0.0030595064163208008,0.0005437135696411133
+1,아침 도착 업무 집중형,xgboost_regularized,weekday_cos,0.0022678375244140625,0.00017464160919189453
+1,아침 도착 업무 집중형,xgboost_regularized,bike_count_index_lag_24,0.001772165298461914,0.0017933845520019531
+1,아침 도착 업무 집중형,xgboost_regularized,month_cos,0.0014693737030029297,0.00047957897186279297
+1,아침 도착 업무 집중형,xgboost_regularized,rental_count_lag_24,0.0012394189834594727,2.872943878173828e-05
+1,아침 도착 업무 집중형,xgboost_regularized,rain_x_commute,0.001119077205657959,0.0008553862571716309
+1,아침 도착 업무 집중형,xgboost_regularized,bike_index_rollmean_3,0.0010530948638916016,0.0013124942779541016
+1,아침 도착 업무 집중형,xgboost_regularized,bike_index_rollmean_24,0.0008952617645263672,0.0006999969482421875
+1,아침 도착 업무 집중형,xgboost_regularized,bike_count_index_lag_2,0.0008345246315002441,0.0007912516593933105
+1,아침 도착 업무 집중형,xgboost_regularized,weekofyear,0.0007746219635009766,0.0011217594146728516
+1,아침 도착 업무 집중형,xgboost_regularized,is_rainy,0.00027567148208618164,0.0003445744514465332
+1,아침 도착 업무 집중형,xgboost_regularized,is_holiday_eve,0.000244140625,0.00036597251892089844
+1,아침 도착 업무 집중형,xgboost_regularized,is_lunch_hour,0.0001417994499206543,0.00020116567611694336
+1,아침 도착 업무 집중형,xgboost_regularized,is_weekend,0.0001328587532043457,0.00016742944717407227
+1,아침 도착 업무 집중형,xgboost_regularized,heavy_rain,0.0,0.0
+1,아침 도착 업무 집중형,xgboost_regularized,rain_x_night,0.0,0.0
+1,아침 도착 업무 집중형,xgboost_regularized,year,0.0,0.0
+1,아침 도착 업무 집중형,xgboost_regularized,dock_total,0.0,0.0
+1,아침 도착 업무 집중형,xgboost_regularized,is_qr_mixed,0.0,0.0
+1,아침 도착 업무 집중형,xgboost_regularized,is_night_hour,-9.5367431640625e-07,1.52587890625e-05
+1,아침 도착 업무 집중형,xgboost_regularized,month_sin,-0.00043761730194091797,0.0001825094223022461
+1,아침 도착 업무 집중형,xgboost_regularized,qr_count,-0.000489652156829834,0.0002701878547668457
+1,아침 도착 업무 집중형,xgboost_regularized,month,-0.0004946589469909668,0.0004113316535949707
+1,아침 도착 업무 집중형,xgboost_regularized,bike_index_rollmean_168,-0.0006153583526611328,0.001128077507019043
+1,아침 도착 업무 집중형,xgboost_regularized,is_holiday,-0.0008562207221984863,0.0005461573600769043
+1,아침 도착 업무 집중형,xgboost_regularized,wind_speed,-0.0009548664093017578,0.0002912282943725586
+1,아침 도착 업무 집중형,xgboost_regularized,temperature,-0.0013725757598876953,0.0004928112030029297
+1,아침 도착 업무 집중형,xgboost_regularized,day,-0.002438187599182129,0.0007808208465576172
+1,아침 도착 업무 집중형,xgboost_regularized,bike_change_rollmean_168,-0.0027450919151306152,0.0012503266334533691
+2,주거 도착형,lightgbm_regularized,hour,0.05756457693984596,0.015201961846431966
+2,주거 도착형,lightgbm_regularized,hour_sin,0.05283993991703617,0.015635833812402633
+2,주거 도착형,lightgbm_regularized,bike_change_lag_168,0.038220057615467096,0.002011922672436106
+2,주거 도착형,lightgbm_regularized,bike_change_lag_24,0.01846094622072847,0.003528270092874597
+2,주거 도착형,lightgbm_regularized,bike_change_rollstd_24,0.013214004621828646,0.0003420670851305152
+2,주거 도착형,lightgbm_regularized,lat,0.009284805470746282,0.0010010318506606941
+2,주거 도착형,lightgbm_regularized,is_weekend_or_holiday,0.009017753056814848,0.0001071011122314447
+2,주거 도착형,lightgbm_regularized,hour_cos,0.0088034981164965,0.000331808764356345
+2,주거 도착형,lightgbm_regularized,bike_change_rollstd_168,0.008291012696201028,0.00015066736303670503
+2,주거 도착형,lightgbm_regularized,lon,0.006852588791288139,0.0019034731726838006
+2,주거 도착형,lightgbm_regularized,rental_count_lag_1,0.00556963726796611,0.002968408490210628
+2,주거 도착형,lightgbm_regularized,bike_change_rollmean_168,0.00490986430986029,0.0018586665699843463
+2,주거 도착형,lightgbm_regularized,return_count_lag_1,0.004380596233433343,0.0005715040445104513
+2,주거 도착형,lightgbm_regularized,bike_change_rollmean_24,0.0038389487995366123,2.7565252638583893e-05
+2,주거 도착형,lightgbm_regularized,precipitation,0.003756556201610861,0.0008248220110829152
+2,주거 도착형,lightgbm_regularized,station_id,0.0033677091871204823,0.0007621738493870378
+2,주거 도착형,lightgbm_regularized,temperature,0.002369434671563364,0.00011544166246413301
+2,주거 도착형,lightgbm_regularized,is_commute_hour,0.002320419827886555,0.0011333337484356054
+2,주거 도착형,lightgbm_regularized,wind_speed,0.0021963121708553635,0.00030862441258039386
+2,주거 도착형,lightgbm_regularized,rental_count_lag_24,0.0017234868006463788,0.000459526672681676
+2,주거 도착형,lightgbm_regularized,bike_change_lag_2,0.001637162960013816,0.00043570931892800147
+2,주거 도착형,lightgbm_regularized,bike_index_rollmean_24,0.001477172823221795,0.00012525172186539368
+2,주거 도착형,lightgbm_regularized,bike_count_index_lag_24,0.0011603586560775536,0.0001477211563580827
+2,주거 도착형,lightgbm_regularized,lcd_count,0.0009744478053598238,9.580564954203563e-05
+2,주거 도착형,lightgbm_regularized,bike_count_index_lag_168,0.00096450813807758,0.00024112284362010072
+2,주거 도착형,lightgbm_regularized,month_cos,0.0009337854463992157,1.5097641102745918e-05
+2,주거 도착형,lightgbm_regularized,day,0.0005781775437450065,0.00017150170692237232
+2,주거 도착형,lightgbm_regularized,is_lunch_hour,0.0003122240011927957,0.00030525808498049756
+2,주거 도착형,lightgbm_regularized,dayofyear,0.00025562032306414295,0.00010473698819990496
+2,주거 도착형,lightgbm_regularized,is_rainy,0.00020144652842379873,0.00012809257654489148
+2,주거 도착형,lightgbm_regularized,is_night_hour,0.00017655532126137352,4.993624836213684e-05
+2,주거 도착형,lightgbm_regularized,is_holiday,0.0001218911337725892,1.0188925804621718e-05
+2,주거 도착형,lightgbm_regularized,is_weekend,2.7249390682992924e-05,4.5794493030770766e-05
+2,주거 도착형,lightgbm_regularized,is_qr_mixed,4.225604405272421e-06,3.850961496332239e-05
+2,주거 도착형,lightgbm_regularized,heavy_rain,0.0,0.0
+2,주거 도착형,lightgbm_regularized,rain_x_night,0.0,0.0
+2,주거 도착형,lightgbm_regularized,year,0.0,0.0
+2,주거 도착형,lightgbm_regularized,bike_count_index_lag_2,-3.559166852462603e-05,0.0003831841235857336
+2,주거 도착형,lightgbm_regularized,is_holiday_eve,-5.730408371662499e-05,9.612421985560893e-05
+2,주거 도착형,lightgbm_regularized,month,-9.333476621653514e-05,9.092148974010339e-05
+2,주거 도착형,lightgbm_regularized,weekday,-0.0001385471247629111,0.001025855864621783
+2,주거 도착형,lightgbm_regularized,weekday_sin,-0.00014830950593414105,6.135466337842121e-05
+2,주거 도착형,lightgbm_regularized,month_sin,-0.00015779523720671484,0.00024037284317390828
+2,주거 도착형,lightgbm_regularized,qr_count,-0.00027163319848833023,0.0006651795970903374
+2,주거 도착형,lightgbm_regularized,bike_index_rollmean_3,-0.00034674210488550017,0.00022255730959019893
+2,주거 도착형,lightgbm_regularized,humidity,-0.00038758509528968865,0.001166111022338212
+2,주거 도착형,lightgbm_regularized,weekofyear,-0.00044179856789861027,7.785193946152624e-05
+2,주거 도착형,lightgbm_regularized,rain_x_commute,-0.0004588003171573929,0.00044556228803582787
+2,주거 도착형,lightgbm_regularized,weekday_cos,-0.0006460449784874145,0.0004671528163900929
+2,주거 도착형,lightgbm_regularized,bike_change_lag_1,-0.0007498183932040936,0.0004417150675594117
+2,주거 도착형,lightgbm_regularized,bike_index_rollmean_168,-0.0009206981845994999,1.267677346739049e-05
+2,주거 도착형,lightgbm_regularized,temp_x_commute,-0.00147983726888401,0.0009177955038954799
+2,주거 도착형,lightgbm_regularized,bike_count_index_lag_1,-0.0017010840653876036,0.0006354152171924587
+2,주거 도착형,lightgbm_regularized,bike_change_rollmean_3,-0.0018506522367566225,0.0018849605671628078
+2,주거 도착형,lightgbm_regularized,return_count_lag_24,-0.0018592920801425716,0.0006851680725259435
+2,주거 도착형,lightgbm_regularized,dock_total,-0.0025474475239033456,0.0006200187148941438
+3,생활·상권 혼합형,lightgbm_balanced,bike_change_lag_24,0.011818607164723938,0.001996237218916952
+3,생활·상권 혼합형,lightgbm_balanced,bike_change_lag_168,0.00829235383128557,4.154953941892803e-05
+3,생활·상권 혼합형,lightgbm_balanced,bike_change_rollmean_24,0.006684630919248258,0.0022270706859900957
+3,생활·상권 혼합형,lightgbm_balanced,bike_change_rollmean_168,0.0053528535326330395,0.0013335180075184638
+3,생활·상권 혼합형,lightgbm_balanced,bike_change_rollstd_168,0.003373676471094267,0.00011272857670369119
+3,생활·상권 혼합형,lightgbm_balanced,return_count_lag_1,0.0028729549263245002,0.0005528410751583501
+3,생활·상권 혼합형,lightgbm_balanced,hour_sin,0.0025495757569707345,0.00045041086766167693
+3,생활·상권 혼합형,lightgbm_balanced,humidity,0.0023623416952109344,0.00017039967968573988
+3,생활·상권 혼합형,lightgbm_balanced,lon,0.002297324936355316,0.0009854534824392247
+3,생활·상권 혼합형,lightgbm_balanced,rental_count_lag_1,0.002195677632140014,0.0018666814715646574
+3,생활·상권 혼합형,lightgbm_balanced,hour_cos,0.002005444934297995,0.0019326146872797878
+3,생활·상권 혼합형,lightgbm_balanced,dayofyear,0.0019143729561040823,0.00043795760830667163
+3,생활·상권 혼합형,lightgbm_balanced,station_id,0.0018795995149598066,0.000946724776085095
+3,생활·상권 혼합형,lightgbm_balanced,hour,0.001847906813916611,0.0022555888185492035
+3,생활·상권 혼합형,lightgbm_balanced,dock_total,0.0017803033649101407,7.505308357630414e-05
+3,생활·상권 혼합형,lightgbm_balanced,return_count_lag_24,0.0017295057458593388,5.9191533473834657e-05
+3,생활·상권 혼합형,lightgbm_balanced,bike_change_lag_1,0.0013753329286588234,0.0009121518391548844
+3,생활·상권 혼합형,lightgbm_balanced,bike_change_rollmean_3,0.0013423559151624076,0.001970270753534842
+3,생활·상권 혼합형,lightgbm_balanced,bike_count_index_lag_24,0.0010403674149070952,0.00035094092848231284
+3,생활·상권 혼합형,lightgbm_balanced,qr_count,0.0010255919325038998,0.0006091358133263891
+3,생활·상권 혼합형,lightgbm_balanced,weekofyear,0.001009972248687041,4.29318130937828e-05
+3,생활·상권 혼합형,lightgbm_balanced,lat,0.0010085914413287544,0.0007109516165632601
+3,생활·상권 혼합형,lightgbm_balanced,bike_count_index_lag_168,0.0009823058386944639,0.0010922177345564221
+3,생활·상권 혼합형,lightgbm_balanced,bike_change_rollstd_24,0.0007678278174247377,0.0004819960885125707
+3,생활·상권 혼합형,lightgbm_balanced,lcd_count,0.0006555585449782297,7.534631484773513e-05
+3,생활·상권 혼합형,lightgbm_balanced,month_sin,0.00057747397465302,0.0003235877604544912
+3,생활·상권 혼합형,lightgbm_balanced,precipitation,0.0005187611604515752,0.00019465418400399503
+3,생활·상권 혼합형,lightgbm_balanced,temp_x_commute,0.0004573756932351736,0.0003111964168407977
+3,생활·상권 혼합형,lightgbm_balanced,day,0.0004154343656057047,0.0001332058346915077
+3,생활·상권 혼합형,lightgbm_balanced,month_cos,0.0003927691122211363,9.620583529484916e-05
+3,생활·상권 혼합형,lightgbm_balanced,weekday_sin,0.0002987402580921228,0.00016465200401677427
+3,생활·상권 혼합형,lightgbm_balanced,wind_speed,0.00028576218646231277,0.0009799665299329852
+3,생활·상권 혼합형,lightgbm_balanced,bike_change_lag_2,0.0001025396929207889,0.000151326583575917
+3,생활·상권 혼합형,lightgbm_balanced,is_holiday,7.100476038662817e-05,4.7323121480924435e-06
+3,생활·상권 혼합형,lightgbm_balanced,rental_count_lag_24,5.733799944718232e-05,0.0006714551222467557
+3,생활·상권 혼합형,lightgbm_balanced,temperature,5.053938073290576e-05,0.0001980538540120036
+3,생활·상권 혼합형,lightgbm_balanced,is_qr_mixed,1.549034748027367e-05,5.736756475749338e-06
+3,생활·상권 혼합형,lightgbm_balanced,is_lunch_hour,8.886137318975251e-06,5.799705664955024e-05
+3,생활·상권 혼합형,lightgbm_balanced,heavy_rain,0.0,0.0
+3,생활·상권 혼합형,lightgbm_balanced,rain_x_night,0.0,0.0
+3,생활·상권 혼합형,lightgbm_balanced,year,0.0,0.0
+3,생활·상권 혼합형,lightgbm_balanced,is_rainy,-1.1015478961207137e-06,3.41964067669398e-05
+3,생활·상권 혼합형,lightgbm_balanced,is_night_hour,-4.439120778132466e-06,3.5533719639491146e-06
+3,생활·상권 혼합형,lightgbm_balanced,is_weekend,-2.3909395569343683e-05,8.791023401327758e-05
+3,생활·상권 혼합형,lightgbm_balanced,is_holiday_eve,-3.3860143176689395e-05,5.393971829786848e-05
+3,생활·상권 혼합형,lightgbm_balanced,month,-4.7456483539043415e-05,4.560666357483756e-05
+3,생활·상권 혼합형,lightgbm_balanced,rain_x_commute,-0.00011191234180418785,0.00012330451845876667
+3,생활·상권 혼합형,lightgbm_balanced,is_commute_hour,-0.00025255158489984053,5.4821687546946496e-05
+3,생활·상권 혼합형,lightgbm_balanced,weekday,-0.0003493299972209818,0.0001482573658667108
+3,생활·상권 혼합형,lightgbm_balanced,bike_count_index_lag_2,-0.00048339579103207075,0.00026082854285502943
+3,생활·상권 혼합형,lightgbm_balanced,bike_index_rollmean_24,-0.0005273929998514393,0.0003396439912611293
+3,생활·상권 혼합형,lightgbm_balanced,weekday_cos,-0.0005523339339845723,4.7087416703894824e-05
+3,생활·상권 혼합형,lightgbm_balanced,bike_index_rollmean_168,-0.0005729559840790821,0.0010571352667970157
+3,생활·상권 혼합형,lightgbm_balanced,bike_index_rollmean_3,-0.0006371953296306909,6.821728443873187e-05
+3,생활·상권 혼합형,lightgbm_balanced,bike_count_index_lag_1,-0.0007464236329944307,0.0005578418325354328
+3,생활·상권 혼합형,lightgbm_balanced,is_weekend_or_holiday,-0.0013574066107142069,0.00041225080616164034
+4,외곽 주거형,hist_gbm_focus,bike_change_lag_168,0.02904280156773642,0.0006370347280357791
+4,외곽 주거형,hist_gbm_focus,hour_sin,0.028625172090832762,0.003986258421688371
+4,외곽 주거형,hist_gbm_focus,hour_cos,0.01669365862175659,0.0006259890779845567
+4,외곽 주거형,hist_gbm_focus,is_weekend_or_holiday,0.013698275674618232,0.0025832859445024114
+4,외곽 주거형,hist_gbm_focus,bike_change_lag_24,0.010546286366190982,0.0024457541194060073
+4,외곽 주거형,hist_gbm_focus,hour,0.009139981325855084,0.0025149896266734584
+4,외곽 주거형,hist_gbm_focus,bike_change_rollmean_168,0.007508287449568329,0.0006691923178893111
+4,외곽 주거형,hist_gbm_focus,bike_change_rollmean_24,0.006994054480403911,0.00033767670488482615
+4,외곽 주거형,hist_gbm_focus,bike_change_rollstd_168,0.004934269111669498,0.0019314598064634758
+4,외곽 주거형,hist_gbm_focus,precipitation,0.003950244373266409,0.0004849446504120447
+4,외곽 주거형,hist_gbm_focus,rental_count_lag_1,0.0037195582368057534,0.0007507169815885173
+4,외곽 주거형,hist_gbm_focus,lat,0.0033008565189580064,0.0017609929657323442
+4,외곽 주거형,hist_gbm_focus,bike_change_rollmean_3,0.002269196765973036,0.0004338194384609917
+4,외곽 주거형,hist_gbm_focus,return_count_lag_1,0.002014722580476247,0.00046655263076850195
+4,외곽 주거형,hist_gbm_focus,bike_count_index_lag_168,0.0019684006627391226,0.00039937959851460425
+4,외곽 주거형,hist_gbm_focus,temperature,0.0016976350409029783,0.0001984944472698813
+4,외곽 주거형,hist_gbm_focus,bike_change_lag_1,0.0012482862713500409,0.0015955735724837994
+4,외곽 주거형,hist_gbm_focus,bike_change_lag_2,0.0009843979242322165,0.00030868040365961136
+4,외곽 주거형,hist_gbm_focus,wind_speed,0.0009168905965922236,0.0006248790769010637
+4,외곽 주거형,hist_gbm_focus,is_commute_hour,0.0006222127944744971,0.0002321368182669481
+4,외곽 주거형,hist_gbm_focus,weekday,0.000577725015863062,0.000353354413923479
+4,외곽 주거형,hist_gbm_focus,rental_count_lag_24,0.0004065267273469231,0.0006963432455398544
+4,외곽 주거형,hist_gbm_focus,bike_index_rollmean_3,0.0003694536212277,2.2887434715290755e-05
+4,외곽 주거형,hist_gbm_focus,bike_count_index_lag_1,0.00033034505243195733,0.0005407976626536359
+4,외곽 주거형,hist_gbm_focus,bike_count_index_lag_24,0.000329894386057239,2.2064397542376213e-05
+4,외곽 주거형,hist_gbm_focus,lon,0.00022027082870079706,0.00037120227034548314
+4,외곽 주거형,hist_gbm_focus,is_night_hour,0.00021737096434432113,0.00017428091304544369
+4,외곽 주거형,hist_gbm_focus,bike_index_rollmean_24,0.00018274381745303492,8.569440649591753e-05
+4,외곽 주거형,hist_gbm_focus,is_holiday,0.00018192981102610473,0.00018844975585402546
+4,외곽 주거형,hist_gbm_focus,month,0.00011820932064871004,5.060680898727465e-06
+4,외곽 주거형,hist_gbm_focus,station_id,9.07940119923012e-05,3.133481595918308e-05
+4,외곽 주거형,hist_gbm_focus,weekofyear,2.8332100128647397e-05,1.340675875538544e-05
+4,외곽 주거형,hist_gbm_focus,rain_x_commute,1.1748207429884694e-05,1.1748207429884694e-05
+4,외곽 주거형,hist_gbm_focus,year,0.0,0.0
+4,외곽 주거형,hist_gbm_focus,rain_x_night,0.0,0.0
+4,외곽 주거형,hist_gbm_focus,heavy_rain,0.0,0.0
+4,외곽 주거형,hist_gbm_focus,is_rainy,0.0,0.0
+4,외곽 주거형,hist_gbm_focus,is_weekend,0.0,0.0
+4,외곽 주거형,hist_gbm_focus,is_qr_mixed,0.0,0.0
+4,외곽 주거형,hist_gbm_focus,is_holiday_eve,-4.255670989361526e-05,3.241675834575464e-05
+4,외곽 주거형,hist_gbm_focus,dock_total,-8.58946391895099e-05,3.358982142875888e-06
+4,외곽 주거형,hist_gbm_focus,day,-0.00011726816315010824,0.00016340812917109426
+4,외곽 주거형,hist_gbm_focus,month_cos,-0.00012120424397304985,6.491433165539684e-05
+4,외곽 주거형,hist_gbm_focus,is_lunch_hour,-0.00014301090126050964,4.425767482890697e-05
+4,외곽 주거형,hist_gbm_focus,humidity,-0.00014527950050424732,0.0007657371373177568
+4,외곽 주거형,hist_gbm_focus,weekday_cos,-0.0002668774322706069,2.86680395904515e-05
+4,외곽 주거형,hist_gbm_focus,weekday_sin,-0.00028283975596476996,0.00017300774226636229
+4,외곽 주거형,hist_gbm_focus,month_sin,-0.0002907225530913715,0.0005323623049384718
+4,외곽 주거형,hist_gbm_focus,return_count_lag_24,-0.00030035197797390056,8.945468066673401e-05
+4,외곽 주거형,hist_gbm_focus,dayofyear,-0.000326181722800023,0.0005350500379624479
+4,외곽 주거형,hist_gbm_focus,lcd_count,-0.0003481274419518954,0.0002404493647095718
+4,외곽 주거형,hist_gbm_focus,temp_x_commute,-0.000490666219603253,2.2989957205510336e-05
+4,외곽 주거형,hist_gbm_focus,bike_index_rollmean_168,-0.0005561066251213997,0.00014180322960721803
+4,외곽 주거형,hist_gbm_focus,bike_count_index_lag_2,-0.000965636530217362,0.0013764634828845046
+4,외곽 주거형,hist_gbm_focus,qr_count,-0.001160932340679155,0.0001840155107136754
+4,외곽 주거형,hist_gbm_focus,bike_change_rollstd_24,-0.002439630768396095,0.0004919712789931974

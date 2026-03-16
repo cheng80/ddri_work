@@ -56,6 +56,18 @@ def load_cluster_labels() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.
     return train, test, rep, summary
 
 
+def load_benchmark_metrics() -> pd.DataFrame:
+    preferred = DATA_DIR / "station_hour_validation_benchmark_metrics.csv"
+    fallback = DATA_DIR / "station_hour_test_benchmark_metrics.csv"
+    path = preferred if preferred.exists() else fallback
+    return pd.read_csv(path, encoding="utf-8-sig")
+
+
+def load_split_summary() -> pd.DataFrame:
+    path = DATA_DIR / "station_hour_train_valid_test_summary.csv"
+    return pd.read_csv(path, encoding="utf-8-sig")
+
+
 def add_cluster_features(df: pd.DataFrame, train_labels: pd.DataFrame) -> pd.DataFrame:
     station_cluster = train_labels[["station_id", "cluster"]].drop_duplicates("station_id").copy()
     station_cluster["station_id"] = pd.to_numeric(station_cluster["station_id"], errors="coerce").astype(int)
@@ -262,16 +274,20 @@ def run_reduced_feature_experiment(df: pd.DataFrame, importance_df: pd.DataFrame
 def run_cluster_specific_model_experiment(
     df: pd.DataFrame, global_prediction_df: pd.DataFrame
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    train_mask = df["year"].isin([2023, 2024])
+    train_mask = df["year"] == 2023
+    valid_mask = df["year"] == 2024
+    train_valid_mask = df["year"].isin([2023, 2024])
     test_mask = df["year"] == 2025
     feature_cols = base.feature_sets()["enhanced"]
-    specs = [spec for spec in base.model_specs() if spec.name != "dummy_mean"]
+    specs = base.bike_change_tuned_model_specs()
     cluster_sample_caps = {
-        "ridge": 120_000,
-        "random_forest": 40_000,
-        "extra_trees": 40_000,
-        "hist_gbm": 150_000,
-        "hist_gbm_tuned": 180_000,
+        "hist_gbm_focus": 180_000,
+        "lightgbm_balanced": 220_000,
+        "lightgbm_leafy": 220_000,
+        "lightgbm_regularized": 220_000,
+        "xgboost_balanced": 220_000,
+        "xgboost_deep": 220_000,
+        "xgboost_regularized": 220_000,
     }
     benchmark_rows: list[dict[str, object]] = []
     best_rows: list[dict[str, object]] = []
@@ -284,31 +300,38 @@ def run_cluster_specific_model_experiment(
 
     for cluster_id in range(5):
         cluster_train_mask = train_mask & (df["cluster"] == cluster_id)
+        cluster_valid_mask = valid_mask & (df["cluster"] == cluster_id)
+        cluster_train_valid_mask = train_valid_mask & (df["cluster"] == cluster_id)
         cluster_test_mask = test_mask & (df["cluster"] == cluster_id)
         X_train = df.loc[cluster_train_mask, feature_cols]
         y_train = df.loc[cluster_train_mask, "bike_change"]
+        X_valid = df.loc[cluster_valid_mask, feature_cols]
+        y_valid = df.loc[cluster_valid_mask, "bike_change"]
+        X_train_valid = df.loc[cluster_train_valid_mask, feature_cols]
+        y_train_valid = df.loc[cluster_train_valid_mask, "bike_change"]
         X_test = df.loc[cluster_test_mask, feature_cols]
         y_test = df.loc[cluster_test_mask, "bike_change"]
 
-        if len(X_train) == 0 or len(X_test) == 0:
+        if len(X_train) == 0 or len(X_valid) == 0 or len(X_test) == 0:
             continue
 
-        cluster_predictions: dict[str, np.ndarray] = {}
+        cluster_valid_predictions: dict[str, np.ndarray] = {}
         for spec in specs:
             sample_cap = cluster_sample_caps.get(spec.name, spec.train_sample)
             X_fit, y_fit = base.sample_train(X_train, y_train, sample_cap)
             model = spec.builder()
             model.fit(X_fit, y_fit)
-            pred = model.predict(X_test)
-            cluster_predictions[spec.name] = pred
-            metrics = base.evaluate_predictions(y_test, pred)
+            pred = model.predict(X_valid)
+            cluster_valid_predictions[spec.name] = pred
+            metrics = base.evaluate_predictions(y_valid, pred)
             benchmark_rows.append(
                 {
                     "cluster": cluster_id,
                     "cluster_name": CLUSTER_NAME_MAP.get(cluster_id, f"cluster_{cluster_id}"),
                     "model": spec.name,
                     "train_rows": len(X_fit),
-                    "eval_rows": len(X_test),
+                    "eval_rows": len(X_valid),
+                    "selection_stage": "valid_2024",
                     **metrics,
                     "feature_set": "enhanced_no_cluster",
                 }
@@ -317,13 +340,30 @@ def run_cluster_specific_model_experiment(
         cluster_benchmark = pd.DataFrame([row for row in benchmark_rows if row["cluster"] == cluster_id]).sort_values(["rmse", "mae"])
         best_row = cluster_benchmark.iloc[0].to_dict()
         best_model_name = best_row["model"]
-        best_rows.append(best_row)
-
         best_sample_cap = cluster_sample_caps.get(best_model_name, next(spec.train_sample for spec in specs if spec.name == best_model_name))
-        X_fit, y_fit = base.sample_train(X_train, y_train, best_sample_cap)
+        X_fit, y_fit = base.sample_train(X_train_valid, y_train_valid, best_sample_cap)
         best_model = next(spec.builder() for spec in specs if spec.name == best_model_name)
         best_model.fit(X_fit, y_fit)
-        best_pred = cluster_predictions[best_model_name]
+        best_pred = best_model.predict(X_test)
+        best_test_metrics = base.evaluate_predictions(y_test, best_pred)
+        best_rows.append(
+            {
+                **best_row,
+                "selection_rmse": best_row["rmse"],
+                "selection_mae": best_row["mae"],
+                "selection_r2": best_row["r2"],
+                "train_rows": len(X_fit),
+                "eval_rows": len(X_test),
+                "test_rmse": best_test_metrics["rmse"],
+                "test_mae": best_test_metrics["mae"],
+                "test_r2": best_test_metrics["r2"],
+                "rmse": best_test_metrics["rmse"],
+                "mae": best_test_metrics["mae"],
+                "r2": best_test_metrics["r2"],
+                "fit_period": "train_valid_2023_2024",
+                "test_split": "test_2025",
+            }
+        )
 
         specialist_frame = df.loc[cluster_test_mask, ["station_id", "time", "cluster", "bike_change"]].copy()
         specialist_frame["specialist_prediction"] = best_pred
@@ -610,7 +650,7 @@ def build_station_charts(
     pred_map = prediction_df.merge(train_labels[["station_id", "cluster"]].drop_duplicates(), on="station_id", how="left")
     pred_map["cluster_name"] = pred_map["cluster"].map(CLUSTER_NAME_MAP)
 
-    benchmark = pd.read_csv(DATA_DIR / "station_hour_test_benchmark_metrics.csv", encoding="utf-8-sig")
+    benchmark = load_benchmark_metrics()
     for target in ["bike_change", "bike_count_index"]:
         subset = benchmark[benchmark["target"] == target].copy().sort_values("rmse")
         fig, ax = plt.subplots(figsize=(10, 5))
@@ -772,7 +812,10 @@ def build_station_charts(
     plt.close(fig)
 
     final_metrics = pd.read_csv(DATA_DIR / "station_hour_final_model_metrics.csv", encoding="utf-8-sig")
-    final_all = final_metrics[final_metrics["metric_scope"] == "all_hours"].copy()
+    final_all = final_metrics[
+        (final_metrics["metric_scope"] == "all_hours")
+        & (final_metrics.get("data_split", "test") == "test")
+    ].copy()
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
     axes[0].bar(final_all["target"], final_all["mae"], color=["#e76f51", "#2a9d8f"])
     axes[0].set_title("최종 모델 MAE")
@@ -821,7 +864,7 @@ def build_cluster_specific_charts(best_models: pd.DataFrame, comparison: pd.Data
 def write_markdown(cluster_stability: pd.DataFrame, cluster_experiment: pd.DataFrame, selected: pd.DataFrame, final_metrics: pd.DataFrame):
     changed = int(cluster_stability["cluster_changed"].sum())
     total = int(len(cluster_stability))
-    benchmark = pd.read_csv(DATA_DIR / "station_hour_test_benchmark_metrics.csv", encoding="utf-8-sig")
+    benchmark = load_benchmark_metrics()
     augmented_importance = pd.read_csv(DATA_DIR / "station_hour_cluster_augmented_feature_importance.csv", encoding="utf-8-sig")
     feature_inventory = pd.read_csv(DATA_DIR / "station_hour_feature_inventory.csv", encoding="utf-8-sig")
     reduced_feature_experiment = pd.read_csv(DATA_DIR / "station_hour_reduced_feature_experiment.csv", encoding="utf-8-sig")
@@ -1174,9 +1217,12 @@ def write_pdf(cluster_experiment: pd.DataFrame, selected: pd.DataFrame, cluster_
     base_index = bike_index_cmp[bike_index_cmp["feature_variant"] == "bike_count_index_without_cluster"].iloc[0]
     with_index = bike_index_cmp[bike_index_cmp["feature_variant"] == "bike_count_index_with_cluster"].iloc[0]
     final_metrics = pd.read_csv(DATA_DIR / "station_hour_final_model_metrics.csv", encoding="utf-8-sig")
-    benchmark = pd.read_csv(DATA_DIR / "station_hour_test_benchmark_metrics.csv", encoding="utf-8-sig")
+    benchmark = load_benchmark_metrics()
     importance = pd.read_csv(DATA_DIR / "station_hour_feature_importance.csv", encoding="utf-8-sig")
-    overall = final_metrics[final_metrics["metric_scope"] == "all_hours"].set_index("target")
+    overall = final_metrics[
+        (final_metrics["metric_scope"] == "all_hours")
+        & (final_metrics.get("data_split", "test") == "test")
+    ].set_index("target")
     changed = int(cluster_stability["cluster_changed"].sum())
     total = int(len(cluster_stability))
     train_flow = pd.read_csv(DATA_DIR / "station_hour_bike_flow_train_2023_2024.csv", encoding="utf-8-sig", parse_dates=["time"])
@@ -1203,7 +1249,11 @@ def write_pdf(cluster_experiment: pd.DataFrame, selected: pd.DataFrame, cluster_
     metrics_df["rmse"] = metrics_df["rmse"].map(lambda x: f"{x:.4f}")
     metrics_df["mae"] = metrics_df["mae"].map(lambda x: f"{x:.4f}")
     metrics_df["r2"] = metrics_df["r2"].map(lambda x: f"{x:.4f}")
-    metrics_df = metrics_df[["target", "best_model", "feature_set", "metric_scope", "rmse", "mae", "r2"]]
+    metric_cols = ["target", "best_model", "feature_set"]
+    if "data_split" in metrics_df.columns:
+        metric_cols.append("data_split")
+    metric_cols.extend(["metric_scope", "rmse", "mae", "r2"])
+    metrics_df = metrics_df[metric_cols]
     representative_summary = selected[["cluster_name", "station_name", "rental_total_2025", "mean_abs_error"]].copy()
     representative_summary["rental_total_2025"] = representative_summary["rental_total_2025"].astype(int)
     representative_summary["mean_abs_error"] = representative_summary["mean_abs_error"].map(lambda x: f"{x:.3f}")
@@ -1519,7 +1569,7 @@ def write_markdown_reframed(
 ):
     changed = int(cluster_stability["cluster_changed"].sum())
     total = int(len(cluster_stability))
-    benchmark = pd.read_csv(DATA_DIR / "station_hour_test_benchmark_metrics.csv", encoding="utf-8-sig")
+    benchmark = load_benchmark_metrics()
     augmented_importance = pd.read_csv(DATA_DIR / "station_hour_cluster_augmented_feature_importance.csv", encoding="utf-8-sig")
     feature_inventory = pd.read_csv(DATA_DIR / "station_hour_feature_inventory.csv", encoding="utf-8-sig")
     reduced_feature_experiment = pd.read_csv(DATA_DIR / "station_hour_reduced_feature_experiment.csv", encoding="utf-8-sig")
@@ -1531,7 +1581,9 @@ def write_markdown_reframed(
     base_index = bike_index_cmp[bike_index_cmp["feature_variant"] == "bike_count_index_without_cluster"].iloc[0]
     with_index = bike_index_cmp[bike_index_cmp["feature_variant"] == "bike_count_index_with_cluster"].iloc[0]
     change_metrics = final_metrics[
-        (final_metrics["target"] == "bike_change") & (final_metrics["metric_scope"] == "all_hours")
+        (final_metrics["target"] == "bike_change")
+        & (final_metrics["metric_scope"] == "all_hours")
+        & (final_metrics.get("data_split", "test") == "test")
     ].iloc[0]
 
     def model_rank_table(target: str) -> pd.DataFrame:
@@ -1803,9 +1855,12 @@ def write_pdf_reframed(cluster_experiment: pd.DataFrame, selected: pd.DataFrame,
     base_index = bike_index_cmp[bike_index_cmp["feature_variant"] == "bike_count_index_without_cluster"].iloc[0]
     with_index = bike_index_cmp[bike_index_cmp["feature_variant"] == "bike_count_index_with_cluster"].iloc[0]
     final_metrics = pd.read_csv(DATA_DIR / "station_hour_final_model_metrics.csv", encoding="utf-8-sig")
-    benchmark = pd.read_csv(DATA_DIR / "station_hour_test_benchmark_metrics.csv", encoding="utf-8-sig")
+    benchmark = load_benchmark_metrics()
     reduced_feature_experiment = pd.read_csv(DATA_DIR / "station_hour_reduced_feature_experiment.csv", encoding="utf-8-sig")
-    overall = final_metrics[final_metrics["metric_scope"] == "all_hours"].set_index("target")
+    overall = final_metrics[
+        (final_metrics["metric_scope"] == "all_hours")
+        & (final_metrics.get("data_split", "test") == "test")
+    ].set_index("target")
     changed = int(cluster_stability["cluster_changed"].sum())
     total = int(len(cluster_stability))
     train_flow = pd.read_csv(DATA_DIR / "station_hour_bike_flow_train_2023_2024.csv", encoding="utf-8-sig", parse_dates=["time"])
@@ -1875,7 +1930,11 @@ def write_pdf_reframed(cluster_experiment: pd.DataFrame, selected: pd.DataFrame,
     metrics_df["rmse"] = metrics_df["rmse"].map(lambda x: f"{x:.4f}")
     metrics_df["mae"] = metrics_df["mae"].map(lambda x: f"{x:.4f}")
     metrics_df["r2"] = metrics_df["r2"].map(lambda x: f"{x:.4f}")
-    metrics_df = metrics_df[["target", "best_model", "feature_set", "metric_scope", "rmse", "mae", "r2"]]
+    metric_cols = ["target", "best_model", "feature_set"]
+    if "data_split" in metrics_df.columns:
+        metric_cols.append("data_split")
+    metric_cols.extend(["metric_scope", "rmse", "mae", "r2"])
+    metrics_df = metrics_df[metric_cols]
 
     representative_summary = selected[["cluster_name", "station_name", "rental_total_2025", "mean_abs_error"]].copy()
     representative_summary["rental_total_2025"] = representative_summary["rental_total_2025"].astype(int)
@@ -2309,6 +2368,222 @@ def main():
     print(cluster_experiment.to_string(index=False))
     print(f"saved md: {REPORT_MD}")
     print(f"saved pdf: {REPORT_PDF}")
+
+
+def write_markdown_reframed(
+    cluster_stability: pd.DataFrame,
+    cluster_experiment: pd.DataFrame,
+    selected: pd.DataFrame,
+    final_metrics: pd.DataFrame,
+):
+    benchmark = load_benchmark_metrics()
+    split_summary = load_split_summary()
+    cluster_specific_best = pd.read_csv(DATA_DIR / "station_hour_cluster_specific_best_models.csv", encoding="utf-8-sig")
+    final_table = final_metrics[final_metrics["metric_scope"] == "all_hours"][
+        ["target", "best_model", "feature_set", "evaluation_stage", "fit_period", "data_split", "rmse", "mae", "r2"]
+    ].copy()
+
+    def top_models(target: str) -> pd.DataFrame:
+        subset = benchmark[(benchmark["target"] == target) & (~benchmark["model"].str.startswith("baseline_"))].copy()
+        subset = subset.sort_values(["rmse", "mae"]).reset_index(drop=True)
+        subset["rank"] = np.arange(1, len(subset) + 1)
+        return subset[["rank", "model", "rmse", "mae", "r2", "notes"]].head(5)
+
+    bike_change_cmp = cluster_experiment[cluster_experiment["target"] == "bike_change"].sort_values("rmse")
+    base_change = bike_change_cmp[bike_change_cmp["feature_variant"] == "bike_change_without_cluster"].iloc[0]
+    with_change = bike_change_cmp[bike_change_cmp["feature_variant"] == "bike_change_with_cluster"].iloc[0]
+    split_note = (
+        "Feature selection and model selection used only the 2024 validation split. "
+        "The 2025 test split was held out until the final retraining step on 2023+2024."
+    )
+
+    lines = [
+        "# Station-Hour Bike Availability Analysis",
+        "",
+        "## 1. Split Protocol",
+        "",
+        "- Train: `2023`",
+        "- Validation: `2024`",
+        "- Test: `2025`",
+        f"- {split_note}",
+        "",
+        "## 2. Train / Valid / Test Summary",
+        "",
+        split_summary.round(4).to_markdown(index=False),
+        "",
+        "## 3. Validation Benchmark For Model Selection",
+        "",
+        "### bike_change top 5",
+        "",
+        top_models("bike_change").round(4).to_markdown(index=False),
+        "",
+        "### bike_count_index top 5",
+        "",
+        top_models("bike_count_index").round(4).to_markdown(index=False),
+        "",
+        "## 4. Final Metrics By Stage",
+        "",
+        final_table.round(4).to_markdown(index=False),
+        "",
+        "## 5. Cluster Feature Effect",
+        "",
+        f"- bike_change without cluster: RMSE `{base_change['rmse']:.4f}`, MAE `{base_change['mae']:.4f}`",
+        f"- bike_change with cluster: RMSE `{with_change['rmse']:.4f}`, MAE `{with_change['mae']:.4f}`",
+        f"- RMSE change: `{with_change['rmse'] - base_change['rmse']:.4f}`",
+        f"- MAE change: `{with_change['mae'] - base_change['mae']:.4f}`",
+        "",
+        "## 6. Cluster-Specific Best Models",
+        "",
+        cluster_specific_best[
+            ["cluster_name", "model", "selection_rmse", "test_rmse", "test_mae", "test_r2", "train_rows", "eval_rows"]
+        ].round(4).to_markdown(index=False),
+        "",
+        "## 7. Representative Stations",
+        "",
+        selected[
+            ["cluster_name", "station_id", "station_name", "rental_total_2025", "mean_abs_error", "selection_reason"]
+        ].copy().to_markdown(index=False),
+        "",
+        "## 8. Notes",
+        "",
+        f"- Cluster changed stations: `{int(cluster_stability['cluster_changed'].sum())}` / `{int(len(cluster_stability))}`",
+        "- Test metrics are final holdout results, not model-selection results.",
+        "- Validation benchmark charts in the PDF correspond to the model-selection stage.",
+        "",
+    ]
+    REPORT_MD.write_text("\n".join(lines), encoding="utf-8")
+
+
+def write_pdf_reframed(cluster_experiment: pd.DataFrame, selected: pd.DataFrame, cluster_stability: pd.DataFrame):
+    final_metrics = pd.read_csv(DATA_DIR / "station_hour_final_model_metrics.csv", encoding="utf-8-sig")
+    benchmark = load_benchmark_metrics()
+    split_summary = load_split_summary()
+    cluster_specific_best = pd.read_csv(DATA_DIR / "station_hour_cluster_specific_best_models.csv", encoding="utf-8-sig")
+
+    def top_models(target: str) -> pd.DataFrame:
+        subset = benchmark[(benchmark["target"] == target) & (~benchmark["model"].str.startswith("baseline_"))].copy()
+        subset = subset.sort_values(["rmse", "mae"]).reset_index(drop=True)
+        subset["rank"] = np.arange(1, len(subset) + 1)
+        return subset[["rank", "model", "rmse", "mae", "r2"]].head(5)
+
+    bike_change_cmp = cluster_experiment[cluster_experiment["target"] == "bike_change"].sort_values("rmse")
+    base_change = bike_change_cmp[bike_change_cmp["feature_variant"] == "bike_change_without_cluster"].iloc[0]
+    with_change = bike_change_cmp[bike_change_cmp["feature_variant"] == "bike_change_with_cluster"].iloc[0]
+    final_table = final_metrics[final_metrics["metric_scope"] == "all_hours"][
+        ["target", "best_model", "feature_set", "evaluation_stage", "fit_period", "data_split", "rmse", "mae", "r2"]
+    ].copy()
+    final_table["rmse"] = final_table["rmse"].map(lambda x: f"{x:.4f}")
+    final_table["mae"] = final_table["mae"].map(lambda x: f"{x:.4f}")
+    final_table["r2"] = final_table["r2"].map(lambda x: f"{x:.4f}")
+
+    status_df = pd.DataFrame(
+        [
+            ["Split", "Done", "2023 train / 2024 valid / 2025 test"],
+            ["Feature selection", "Done", "validation only"],
+            ["Model selection", "Done", "validation only"],
+            ["Final retraining", "Done", "2023+2024 before test"],
+            ["Final evaluation", "Done", "2025 holdout"],
+            ["Cluster analysis", "Done", "global + cluster-specific"],
+        ],
+        columns=["Step", "Status", "Summary"],
+    )
+
+    split_table = split_summary.copy()
+    for col in ["train_rmse", "valid_rmse", "test_rmse", "train_mae", "valid_mae", "test_mae", "train_r2", "valid_r2", "test_r2"]:
+        split_table[col] = split_table[col].map(lambda x: f"{x:.4f}")
+
+    representative = selected[
+        ["cluster_name", "station_id", "station_name", "rental_total_2025", "mean_abs_error"]
+    ].copy().head(10)
+    representative["rental_total_2025"] = representative["rental_total_2025"].astype(int)
+    representative["mean_abs_error"] = representative["mean_abs_error"].map(lambda x: f"{x:.4f}")
+
+    with PdfPages(REPORT_PDF) as pdf:
+        pages = [
+            _make_status_page(
+                "Station-Hour Bike Availability Report",
+                status_df,
+                "This report now follows a strict train-valid-test protocol: 2023 for train, 2024 for validation, and 2025 for final holdout test.",
+            ),
+            _make_table_page(
+                "1. Train / Valid / Test Summary",
+                "Selected model scores by split",
+                split_table,
+                "Train and validation scores come from the model-selection stage trained on 2023. Test score comes from the final retrained model fit on 2023+2024.",
+                subtitle="Split Metrics",
+                fontsize=8.8,
+            ),
+            _make_two_chart_page(
+                "2. Validation Benchmark",
+                [
+                    "- These charts are validation benchmarks, not final test benchmarks.",
+                    "- They were used to choose the model family after fixing the feature set.",
+                    "- The final test numbers are reported separately.",
+                ],
+                ASSET_DIR / "benchmark_bike_change.png",
+                ASSET_DIR / "benchmark_bike_count_index.png",
+                "bike_change validation benchmark",
+                "bike_count_index validation benchmark",
+                "Model choice is based on the 2024 validation split only.",
+                subtitle="Validation Selection",
+            ),
+            _make_table_page(
+                "3. Top Models For bike_change",
+                "Validation top 5",
+                top_models("bike_change").round(4),
+                "Lower RMSE and MAE on validation were used as the primary selection criteria.",
+                subtitle="bike_change",
+                fontsize=9.2,
+            ),
+            _make_table_page(
+                "4. Top Models For bike_count_index",
+                "Validation top 5",
+                top_models("bike_count_index").round(4),
+                "This target is reported for reference, but the service-facing target remains bike_change.",
+                subtitle="bike_count_index",
+                fontsize=9.2,
+            ),
+            _make_table_page(
+                "5. Final Metrics By Stage",
+                "All-hours metrics",
+                final_table,
+                "Selection rows are train/valid results. Final rows are the locked model evaluated on the 2025 holdout test.",
+                subtitle="Stage Breakdown",
+                fontsize=8.5,
+            ),
+            _make_text_page(
+                "6. Cluster Feature Effect",
+                [
+                    f"- bike_change without cluster RMSE: {base_change['rmse']:.4f}",
+                    f"- bike_change with cluster RMSE: {with_change['rmse']:.4f}",
+                    f"- bike_change without cluster MAE: {base_change['mae']:.4f}",
+                    f"- bike_change with cluster MAE: {with_change['mae']:.4f}",
+                    f"- Cluster changed stations: {int(cluster_stability['cluster_changed'].sum())} / {int(len(cluster_stability))}",
+                ],
+                subtitle="Cluster Summary",
+            ),
+            _make_table_page(
+                "7. Cluster-Specific Best Models",
+                "Best specialist model per cluster",
+                cluster_specific_best[
+                    ["cluster_name", "model", "selection_rmse", "test_rmse", "test_mae", "test_r2", "train_rows", "eval_rows"]
+                ].round(4),
+                "Specialist models were trained and compared per cluster after the global modeling stage.",
+                subtitle="Cluster Specialists",
+                fontsize=8.8,
+            ),
+            _make_table_page(
+                "8. Representative Stations",
+                "Top representative stations",
+                representative,
+                "Representative stations help interpret model behavior and cluster character in concrete service locations.",
+                subtitle="Station Examples",
+                fontsize=8.7,
+            ),
+        ]
+        for fig in pages:
+            pdf.savefig(fig)
+            plt.close(fig)
 
 
 if __name__ == "__main__":

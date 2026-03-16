@@ -1,0 +1,12 @@
+{
+  "target": "bike_change",
+  "best_feature_variant": "enhanced_cluster",
+  "best_model_name": "lightgbm_leafy",
+  "new_feature_groups": [
+    "station-hour priors",
+    "station weekday-hour priors",
+    "station month-hour priors",
+    "cluster hour priors",
+    "gap features"
+  ]
+}
