@@ -2,6 +2,10 @@
 
 이 경로는 분석 결과를 웹/앱 서비스 구조로 연결하는 최종 통합 축이다.
 
+**웹 프로젝트:** `/Users/cheng80/Desktop/ddri_web` (Flutter 생성 완료)  
+**범위:** 기획 단계 작성. 뼈대 확정 후 기획 문서·웹 프로젝트 함께 이전 예정.  
+**범위 밖:** 이용권, 사용자 정보(회원가입·로그인·프로필 등) — 비로그인 공개 웹.
+
 ## 이 축에서 최종적으로 보여야 하는 것
 
 - 서비스 목적
@@ -20,6 +24,12 @@
 3. [03_ddri_web_service_screen_spec.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/03_ddri_web_service_screen_spec.md)
 4. [04_ddri_database_design.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/04_ddri_database_design.md)
 5. [05_ddri_erd.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/05_ddri_erd.md)
+6. [06_ddri_flutter_web_planning_next_steps.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/06_ddri_flutter_web_planning_next_steps.md) – 다음 단계·갭·우선순위
+7. [07_ddri_web_project_context_and_migration.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/07_ddri_web_project_context_and_migration.md) – 웹 프로젝트 위치, API 산출물·키, 이전 계획
+8. [08_ddri_user_page_spec_detail.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/08_ddri_user_page_spec_detail.md) – 사용자 페이지 상세 (현 위치·주소 검색, kpostal_plus)
+9. [09_stitch_design_application_guide.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/09_stitch_design_application_guide.md) – Stitch MCP 디자인 적용 가이드
+10. [10_ddri_user_page_map_ux_spec.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/10_ddri_user_page_map_ux_spec.md) – 지도 UX (단일 지도 + 원형 반경 + 마커, 모바일/데스크탑 레이아웃)
+11. [11_stitch_mcp_progress_and_references.md](/Users/cheng80/Desktop/ddri_work/z_final_delivery/02_web_service_final/11_stitch_mcp_progress_and_references.md) – Stitch MCP 진행 상황 및 참고 주소
 
 ## 현재 근거 정본
 
@@ -33,6 +43,10 @@
   - [02_ddri_api_operational_rules.md](/Users/cheng80/Desktop/ddri_work/cheng80/02_ddri_api_operational_rules.md)
 - API 검증 노트북:
   - [01_ddri_api_verification.ipynb](/Users/cheng80/Desktop/ddri_work/cheng80/01_ddri_api_verification.ipynb)
+- Open API 테스트 결과:
+  - [cheng80/api_output/](/Users/cheng80/Desktop/ddri_work/cheng80/api_output/)
+- API 키 (차후 FastAPI 이전 예정):
+  - [cheng80/api_keys.env](/Users/cheng80/Desktop/ddri_work/cheng80/api_keys.env)
 - 발표 정본:
   - [04_presentation](/Users/cheng80/Desktop/ddri_work/works/04_presentation)
 - Flutter 서비스 준비 문서:
