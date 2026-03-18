@@ -8,7 +8,7 @@ pdf_options:
 
 <link rel="stylesheet" href="../references/ddri_presentation_a4_landscape.css">
 
-# 강남구 따릉이 통합 분석 보고서 v1
+# 강남구 따릉이 통합 분석 보고서
 
 ## 분석 목적
 
