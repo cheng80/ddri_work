@@ -1,5 +1,11 @@
 {
   "train_path": "C:/Users/tj/Documents/GitHub/ddri_work/ksm_note/data/ddri_prediction_canonical_train_2023_2024_multicollinearity_removed_v3_with_sample_weight.csv",
   "test_path": "C:/Users/tj/Documents/GitHub/ddri_work/ksm_note/data/ddri_prediction_canonical_test_2025_multicollinearity_removed_v3.csv",
-  "report_path": "C:/Users/tj/Documents/GitHub/ddri_work/ksm_note/lightgbm_reason/outputs/lightgbm_high_score_audit_report.md"
+  "clusters": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
 }

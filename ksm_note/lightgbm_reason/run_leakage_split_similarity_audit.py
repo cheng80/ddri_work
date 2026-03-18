@@ -28,6 +28,13 @@ TIME_DERIVED_COLS = [
 ]
 
 
+def setup_plot_style() -> None:
+    plt.rcParams["font.family"] = ["Malgun Gothic"]
+    plt.rcParams["font.sans-serif"] = ["Malgun Gothic"]
+    plt.rcParams["axes.unicode_minus"] = False
+    sns.set_theme(style="whitegrid", font="Malgun Gothic")
+
+
 def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
     train = pd.read_csv(TRAIN_PATH)
     test = pd.read_csv(TEST_PATH)
@@ -219,13 +226,12 @@ def save_target_corr_plot(target_audit: pd.DataFrame) -> Path:
     plt.figure(figsize=(9, 5.8))
     colors = ["#c26a2e" if v > 0 else "#1f4e79" for v in top["correlation_with_target"]]
     plt.barh(top["feature"], top["correlation_with_target"], color=colors)
-    plt.title("Top Feature Correlations with Target")
-    plt.xlabel("correlation with bike_change_raw")
+    plt.title("???? ????? ?? ??")
+    plt.xlabel("bike_change_raw?? ????")
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
     plt.close()
     return path
-
 
 def save_similarity_plot(sim_df: pd.DataFrame) -> Path:
     path = OUT_DIR / "repeated_pattern_similarity_counts.png"
@@ -236,17 +242,18 @@ def save_similarity_plot(sim_df: pd.DataFrame) -> Path:
     )
     count_df["year_pair"] = count_df["left_year"].astype(str) + " vs " + count_df["right_year"].astype(str)
     plt.figure(figsize=(7, 4.8))
-    ax = sns.barplot(data=count_df, x="year_pair", y="high_similarity_count", palette=["#1f4e79", "#4f7942", "#c26a2e"])
-    ax.set_title("High Similarity Month-Feature Counts by Year Pair")
+    ax = sns.barplot(data=count_df, x="year_pair", y="high_similarity_count", hue="year_pair", dodge=False, palette=["#1f4e79", "#4f7942", "#c26a2e"])
+    if ax.legend_ is not None:
+        ax.legend_.remove()
+    ax.set_title("?? ? ?? ??? ??")
     ax.set_xlabel("")
-    ax.set_ylabel("count")
+    ax.set_ylabel("??")
     for idx, row in count_df.reset_index(drop=True).iterrows():
         ax.text(idx, row["high_similarity_count"], str(int(row["high_similarity_count"])), ha="center", va="bottom")
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
     plt.close()
     return path
-
 
 def build_report(
     target_audit: pd.DataFrame,
@@ -321,7 +328,7 @@ def build_report(
 
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    sns.set_theme(style="whitegrid")
+    setup_plot_style()
 
     train_df, test_df = load_data()
     train_split, valid_split, test_split = split_data(train_df, test_df)
