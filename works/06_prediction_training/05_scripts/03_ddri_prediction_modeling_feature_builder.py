@@ -15,6 +15,8 @@ class ModelingSpec:
     # 각 데이터셋별로 정본 입력 위치와 모델링용 출력 위치를 묶어 둔다.
     name: str
     canonical_dir: Path
+    train_file: str
+    test_file: str
     output_dir: Path
 
 
@@ -22,11 +24,15 @@ SPECS = [
     ModelingSpec(
         name="rep15",
         canonical_dir=ROOT / "3조 공유폴더" / "대표대여소_예측데이터_15개" / "canonical_data",
+        train_file="ddri_prediction_canonical_train_2023_2024.csv",
+        test_file="ddri_prediction_canonical_test_2025.csv",
         output_dir=ROOT / "3조 공유폴더" / "대표대여소_예측데이터_15개" / "modeling_data",
     ),
     ModelingSpec(
         name="full161",
-        canonical_dir=ROOT / "3조 공유폴더" / "군집별 데이터_전체 스테이션" / "canonical_data",
+        canonical_dir=ROOT / "3조 공유폴더" / "군집별 데이터_전체 스테이션" / "canonical_data_no_multicollinearity",
+        train_file="ddri_prediction_canonical_train_2023_2024_no_multicollinearity.csv",
+        test_file="ddri_prediction_canonical_test_2025_no_multicollinearity.csv",
         output_dir=ROOT / "3조 공유폴더" / "군집별 데이터_전체 스테이션" / "modeling_data",
     ),
 ]
@@ -54,6 +60,10 @@ def add_missing_flags_and_fill(df: pd.DataFrame) -> pd.DataFrame:
     # 2) 트리 모델에서도 missing_flag와 함께 해석할 수 있게 하기 위해서다.
     out = df.copy()
     for col in MISSING_BASE_COLS:
+        # 공선성 제거 버전처럼 일부 파생 컬럼이 빠진 정본도 있으므로
+        # 실제 존재하는 컬럼에 대해서만 missing flag와 0 대체를 적용한다.
+        if col not in out.columns:
+            continue
         flag_col = f"{col}_missing"
         out[flag_col] = out[col].isna().astype("int8")
         out[col] = out[col].fillna(0).astype("float32")
@@ -65,8 +75,8 @@ def build_one(spec: ModelingSpec) -> dict[str, object]:
     spec.output_dir.mkdir(parents=True, exist_ok=True)
 
     # 정본은 2023~2024, 2025 두 파일로 존재하므로 이를 읽어 온다.
-    train_path = spec.canonical_dir / "ddri_prediction_canonical_train_2023_2024.csv"
-    test_path = spec.canonical_dir / "ddri_prediction_canonical_test_2025.csv"
+    train_path = spec.canonical_dir / spec.train_file
+    test_path = spec.canonical_dir / spec.test_file
     train_df = pd.read_csv(train_path)
     test_df = pd.read_csv(test_path)
 
