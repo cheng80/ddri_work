@@ -1,3 +1,0 @@
-﻿variant,feature_count,selection_rule,rmse,mae,r2,nrmse_std,nmae_std
-full_feature_set,62,enhanced + cluster,1.050757,0.586025,0.210975,,
-reduced_feature_set,21,importance_mean > 0.001,1.0533927454163667,0.588043597567793,0.20701150331872442,0.8904990155420024,0.49711016808162745
