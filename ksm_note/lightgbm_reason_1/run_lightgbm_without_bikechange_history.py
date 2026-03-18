@@ -35,6 +35,13 @@ BASELINE_SCORES = {
 }
 
 
+def setup_plot_style() -> None:
+    plt.rcParams["font.family"] = ["Malgun Gothic"]
+    plt.rcParams["font.sans-serif"] = ["Malgun Gothic"]
+    plt.rcParams["axes.unicode_minus"] = False
+    sns.set_theme(style="whitegrid", font="Malgun Gothic")
+
+
 def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
     train = pd.read_csv(TRAIN_PATH)
     test = pd.read_csv(TEST_PATH)
@@ -160,16 +167,17 @@ def make_comparison(scores: pd.DataFrame) -> pd.DataFrame:
 def save_score_plot(scores: pd.DataFrame) -> Path:
     path = OUT_DIR / "lightgbm_without_history_scores.png"
     long_df = scores.melt(id_vars=["split"], value_vars=["rmse", "mae", "r2"], var_name="metric", value_name="value")
+    long_df["split"] = long_df["split"].map({"train": "??", "valid": "??", "test": "???"})
+    long_df["metric"] = long_df["metric"].map({"rmse": "RMSE", "mae": "MAE", "r2": "R2"})
     plt.figure(figsize=(9, 5.2))
     sns.barplot(data=long_df, x="split", y="value", hue="metric", palette=["#c26a2e", "#5d8aa8", "#4f7942"])
-    plt.title("LightGBM Without bike_change-history Features")
+    plt.title("bike_change ?? ?? ?? ? LightGBM ??")
     plt.xlabel("")
-    plt.ylabel("score")
+    plt.ylabel("??")
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
     plt.close()
     return path
-
 
 def save_comparison_plot(comp: pd.DataFrame) -> Path:
     path = OUT_DIR / "baseline_vs_without_history_r2.png"
@@ -179,16 +187,19 @@ def save_comparison_plot(comp: pd.DataFrame) -> Path:
         var_name="model_version",
         value_name="r2",
     )
+    plot_df["split"] = plot_df["split"].map({"valid": "??", "test": "???"})
+    plot_df["model_version"] = plot_df["model_version"].map(
+        {"baseline_r2": "?? LightGBM", "new_r2": "?? ?? ??"}
+    )
     plt.figure(figsize=(7, 4.8))
     sns.barplot(data=plot_df, x="split", y="r2", hue="model_version", palette=["#1f4e79", "#c26a2e"])
-    plt.title("R2 Comparison: Baseline vs Without bike_change-history")
+    plt.title("LightGBM R2 ??")
     plt.xlabel("")
-    plt.ylabel("r2")
+    plt.ylabel("R2")
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
     plt.close()
     return path
-
 
 def build_report(scores: pd.DataFrame, comp: pd.DataFrame, feature_names: list[str], img_scores: Path, img_comp: Path) -> str:
     lines: list[str] = []
@@ -238,7 +249,7 @@ def build_report(scores: pd.DataFrame, comp: pd.DataFrame, feature_names: list[s
 
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    sns.set_theme(style="whitegrid")
+    setup_plot_style()
 
     train_df, test_df = load_data()
     train_split, valid_split, test_split = split_data(train_df, test_df)
