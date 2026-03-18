@@ -132,6 +132,56 @@ def add_residual_lag_features(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def build_reduced_feature_set(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy()
+
+    out["qr_ratio"] = np.where(out["dock_total"] > 0, out["qr_count"] / out["dock_total"], 0.0)
+    out["station_activity_total"] = out["rental_count"] + out["return_count"]
+    out["seasonality_strength"] = out["bike_change"] - out["bike_change_deseasonalized"]
+
+    keep_cols = [
+        "station_id",
+        "time",
+        "bike_change",
+        "rental_count",
+        "return_count",
+        "station_activity_total",
+        "bike_change_seasonal_expected",
+        "bike_change_deseasonalized",
+        "rental_count_deseasonalized",
+        "return_count_deseasonalized",
+        "bike_change_resid_lag_1",
+        "bike_change_resid_lag_24",
+        "bike_change_resid_lag_168",
+        "bike_change_resid_rollmean_24",
+        "bike_change_resid_rollstd_24",
+        "bike_change_resid_rollmean_168",
+        "bike_change_resid_rollstd_168",
+        "bike_change_resid_trend_1_24",
+        "bike_change_resid_trend_24_168",
+        "year",
+        "month",
+        "weekday",
+        "hour",
+        "is_weekend_or_holiday",
+        "is_commute_hour",
+        "is_night_hour",
+        "temperature",
+        "humidity",
+        "precipitation",
+        "wind_speed",
+        "is_rainy",
+        "heavy_rain",
+        "lat",
+        "lon",
+        "dock_total",
+        "qr_ratio",
+        "seasonality_strength",
+    ]
+    keep_cols = [col for col in keep_cols if col in out.columns]
+    return out[keep_cols].copy()
+
+
 def save_split(df: pd.DataFrame, filename: str):
     path = OUTPUT_DIR / filename
     df.to_csv(path, index=False, encoding="utf-8-sig", compression="gzip")
@@ -153,9 +203,16 @@ def main():
     valid_out = valid_out.dropna().reset_index(drop=True)
     test_out = test_out.dropna().reset_index(drop=True)
 
+    train_reduced = build_reduced_feature_set(train_out)
+    valid_reduced = build_reduced_feature_set(valid_out)
+    test_reduced = build_reduced_feature_set(test_out)
+
     train_path = save_split(train_out, "station_hour_bike_change_deseason_train_2023.csv.gz")
     valid_path = save_split(valid_out, "station_hour_bike_change_deseason_valid_2024.csv.gz")
     test_path = save_split(test_out, "station_hour_bike_change_deseason_test_2025.csv.gz")
+    train_reduced_path = save_split(train_reduced, "station_hour_bike_change_deseason_reduced_train_2023.csv.gz")
+    valid_reduced_path = save_split(valid_reduced, "station_hour_bike_change_deseason_reduced_valid_2024.csv.gz")
+    test_reduced_path = save_split(test_reduced, "station_hour_bike_change_deseason_reduced_test_2025.csv.gz")
 
     meta = {
         "target": "bike_change",
@@ -171,12 +228,58 @@ def main():
             "train": train_path.name,
             "valid": valid_path.name,
             "test": test_path.name,
+            "reduced_train": train_reduced_path.name,
+            "reduced_valid": valid_reduced_path.name,
+            "reduced_test": test_reduced_path.name,
         },
         "shapes": {
             "train_rows": len(train_out),
             "valid_rows": len(valid_out),
             "test_rows": len(test_out),
             "columns": len(train_out.columns),
+            "reduced_columns": len(train_reduced.columns),
+        },
+        "reduction_notes": {
+            "collapsed_time_features_to_core_axes": [
+                "hour",
+                "weekday",
+                "month",
+                "is_weekend_or_holiday",
+                "is_commute_hour",
+                "is_night_hour",
+            ],
+            "collapsed_seasonality_features_to_core_axes": [
+                "bike_change_seasonal_expected",
+                "bike_change_deseasonalized",
+                "seasonality_strength",
+            ],
+            "collapsed_station_features_to_core_axes": [
+                "dock_total",
+                "qr_ratio",
+                "lat",
+                "lon",
+            ],
+            "dropped_as_redundant_examples": [
+                "day",
+                "dayofyear",
+                "weekofyear",
+                "hour_sin",
+                "hour_cos",
+                "weekday_sin",
+                "weekday_cos",
+                "month_sin",
+                "month_cos",
+                "hour_mean",
+                "weekday_hour_mean",
+                "station_weekday_hour_mean",
+                "station_weekday_hour_count",
+                "lcd_count",
+                "qr_count",
+                "is_qr_mixed",
+                "bike_change_resid_lag_2",
+                "bike_change_resid_rollmean_3",
+                "bike_change_resid_rollstd_3",
+            ],
         },
     }
     (OUTPUT_DIR / "station_hour_bike_change_deseason_meta.json").write_text(

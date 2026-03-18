@@ -1,0 +1,26 @@
+{
+  "target": "bike_change",
+  "data": {
+    "full_train": "station_hour_bike_change_hierarchical_compact_train_2023.csv.gz",
+    "train": "station_hour_bike_change_hierarchical_compact_sampled_train_2023.csv.gz",
+    "valid": "station_hour_bike_change_hierarchical_compact_valid_2024.csv.gz",
+    "test": "station_hour_bike_change_hierarchical_compact_test_2025.csv.gz"
+  },
+  "global_best": {
+    "feature_variant": "compact_safe_with_cluster",
+    "model": "lightgbm_balanced"
+  },
+  "outputs": {
+    "feature_variant_search": "hierarchical_compact_feature_variant_search.csv",
+    "model_benchmark": "hierarchical_compact_model_benchmark.csv",
+    "final_metrics": "hierarchical_compact_final_metrics.csv",
+    "global_feature_importance": "hierarchical_compact_global_feature_importance.csv",
+    "cluster_model_benchmark": "hierarchical_compact_cluster_model_benchmark.csv",
+    "cluster_best_models": "hierarchical_compact_cluster_best_models.csv",
+    "cluster_feature_importance": "hierarchical_compact_cluster_feature_importance.csv",
+    "cluster_comparison": "hierarchical_compact_cluster_comparison.csv",
+    "test_predictions": "hierarchical_compact_test_predictions.csv",
+    "report_md": "reports\\hierarchical_compact_model_report.md",
+    "report_pdf": "reports\\hierarchical_compact_model_report.pdf"
+  }
+}
