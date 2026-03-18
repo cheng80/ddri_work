@@ -1,0 +1,174 @@
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DDRI 대여소 조회</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00a857",
+            "background-light": "#f5f8f7",
+            "background-dark": "#0f2319",
+          },
+          fontFamily: {
+            "display": ["Public Sans", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between border-b border-primary/10 bg-white dark:bg-background-dark px-10 py-4 z-10">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+<svg class="size-8" fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z"></path>
+</svg>
+</div>
+<h1 class="text-2xl font-bold tracking-tight text-primary">DDRI</h1>
+</div>
+<nav class="flex items-center gap-10">
+<a class="text-sm font-semibold hover:text-primary transition-colors text-slate-700 dark:text-slate-300" href="#">사용자</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors text-slate-700 dark:text-slate-300" href="#">관리자</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors text-slate-700 dark:text-slate-300" href="#">통계</a>
+</nav>
+</header>
+<!-- Main Content Split View -->
+<main class="flex flex-1 overflow-hidden">
+<!-- Left: Interactive Map (45%) -->
+<section class="w-[45%] flex flex-col relative border-r border-primary/10">
+<!-- Radius Selector Overlay -->
+<div class="absolute top-6 left-1/2 -translate-x-1/2 z-20 flex w-auto max-w-xs items-center justify-center rounded-xl bg-white/90 backdrop-blur shadow-lg p-1 border border-primary/20">
+<label class="flex cursor-pointer h-9 grow items-center justify-center overflow-hidden rounded-lg px-4 has-[:checked]:bg-primary has-[:checked]:text-white text-slate-600 text-sm font-medium transition-all">
+<span>300m</span>
+<input class="hidden" name="radius" type="radio" value="300m"/>
+</label>
+<label class="flex cursor-pointer h-9 grow items-center justify-center overflow-hidden rounded-lg px-4 has-[:checked]:bg-primary has-[:checked]:text-white text-slate-600 text-sm font-medium transition-all">
+<span>500m</span>
+<input checked="" class="hidden" name="radius" type="radio" value="500m"/>
+</label>
+<label class="flex cursor-pointer h-9 grow items-center justify-center overflow-hidden rounded-lg px-4 has-[:checked]:bg-primary has-[:checked]:text-white text-slate-600 text-sm font-medium transition-all">
+<span>1km</span>
+<input class="hidden" name="radius" type="radio" value="1km"/>
+</label>
+</div>
+<!-- Map Placeholder -->
+<div class="w-full h-full bg-slate-200 bg-center bg-no-repeat bg-cover" data-alt="Interactive city map with green radius circle and station markers" data-location="Seoul, South Korea" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBfNdOWvkPcE44WsbSVk0Rgyzdla-xsFeLLkdsfwbisp04gT-xgXz0xKJ990ndjD_ydj8esI9Wpc2Vchu6cmMflSx6xS6pI1u_D0eGaWidvDA0T7qituzHSe1wp4IKAegqkZfGkEe-kEd0QguWoHUTos0WS3FDYBkeG0_jnEtkjT7J1Av19-VdpCu18AA8Un-D4tpsS0wXZ6sSYl8nXvYHsPVnf1hGCPyiTvOmUb5rD7KFSZiUJKIRvwg30WSXuzTVMxpNMio6Srl4R");'>
+</div>
+</section>
+<!-- Right: Scrollable List (55%) -->
+<section class="w-[55%] flex flex-col bg-background-light dark:bg-background-dark overflow-y-auto px-8 py-6 gap-6">
+<div class="flex items-center justify-between mb-2">
+<h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">주변 대여소 목록</h2>
+<span class="text-sm text-slate-500 font-medium">총 8개의 대여소 발견</span>
+</div>
+<!-- Rental Station Card 1 -->
+<div class="flex items-center justify-between gap-6 rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm border border-primary/5 hover:border-primary/30 transition-all cursor-pointer group">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">대여가능</span>
+<p class="text-xs text-slate-500 font-medium">150m 거리</p>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">DDRI-024 Gangnam Stn</h3>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-2xl">pedal_bike</span>
+<span class="text-2xl font-extrabold">12대</span>
+</div>
+<button class="text-xs font-semibold text-slate-400 hover:text-primary flex items-center gap-1 mt-1">
+              상세보기 <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Rental Station Card 2 -->
+<div class="flex items-center justify-between gap-6 rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm border border-primary/5 hover:border-primary/30 transition-all cursor-pointer group">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">보통</span>
+<p class="text-xs text-slate-500 font-medium">320m 거리</p>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">DDRI-015 Yeoksam Stn</h3>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-2xl">pedal_bike</span>
+<span class="text-2xl font-extrabold">5대</span>
+</div>
+<button class="text-xs font-semibold text-slate-400 hover:text-primary flex items-center gap-1 mt-1">
+              상세보기 <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Rental Station Card 3 -->
+<div class="flex items-center justify-between gap-6 rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm border border-primary/5 hover:border-primary/30 transition-all cursor-pointer group opacity-80">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">부족</span>
+<p class="text-xs text-slate-500 font-medium">480m 거리</p>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">DDRI-088 Teheran-ro</h3>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-2xl">pedal_bike</span>
+<span class="text-2xl font-extrabold">1대</span>
+</div>
+<button class="text-xs font-semibold text-slate-400 hover:text-primary flex items-center gap-1 mt-1">
+              상세보기 <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Rental Station Card 4 -->
+<div class="flex items-center justify-between gap-6 rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm border border-primary/5 hover:border-primary/30 transition-all cursor-pointer group">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">대여가능</span>
+<p class="text-xs text-slate-500 font-medium">610m 거리</p>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">DDRI-102 Nonhyeon Stn</h3>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-2xl">pedal_bike</span>
+<span class="text-2xl font-extrabold">18대</span>
+</div>
+<button class="text-xs font-semibold text-slate-400 hover:text-primary flex items-center gap-1 mt-1">
+              상세보기 <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Rental Station Card 5 -->
+<div class="flex items-center justify-between gap-6 rounded-xl bg-white dark:bg-slate-800 p-6 shadow-sm border border-primary/5 hover:border-primary/30 transition-all cursor-pointer group">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">보통</span>
+<p class="text-xs text-slate-500 font-medium">850m 거리</p>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">DDRI-042 Seolleung Stn</h3>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-2xl">pedal_bike</span>
+<span class="text-2xl font-extrabold">8대</span>
+</div>
+<button class="text-xs font-semibold text-slate-400 hover:text-primary flex items-center gap-1 mt-1">
+              상세보기 <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+</div>
+
+```</body></html>
