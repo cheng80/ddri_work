@@ -1,0 +1,26 @@
+{
+  "train_path": "C:/Users/tj/Documents/GitHub/ddri_work/ksm_note/data/ddri_prediction_canonical_train_2023_2024_multicollinearity_removed_v3_with_sample_weight.csv",
+  "test_path": "C:/Users/tj/Documents/GitHub/ddri_work/ksm_note/data/ddri_prediction_canonical_test_2025_multicollinearity_removed_v3.csv",
+  "feature_count": 16,
+  "features": [
+    "station_id",
+    "hour",
+    "rental_count",
+    "weekday",
+    "month",
+    "holiday",
+    "temperature",
+    "humidity",
+    "precipitation",
+    "wind_speed",
+    "cluster",
+    "bike_change_lag_1",
+    "bike_change_rollmean_24",
+    "bike_change_rollstd_24",
+    "bike_change_rollmean_168",
+    "bike_change_rollstd_168"
+  ],
+  "target_col": "bike_change_raw",
+  "weight_col": "sample_weight",
+  "intercept": -0.00018817328324766995
+}

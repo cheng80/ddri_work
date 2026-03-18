@@ -1,0 +1,3 @@
+﻿feature_a,feature_b,correlation,abs_correlation
+bike_change_raw,bike_change_deseasonalized,0.934864353983446,0.934864353983446
+bike_change_rollstd_24,bike_change_rollstd_168,0.7772132480640704,0.7772132480640704

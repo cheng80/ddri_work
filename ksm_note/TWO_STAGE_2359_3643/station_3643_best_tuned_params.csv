@@ -1,2 +1,0 @@
-threshold_nonzero,scale_positive,bias_positive,rmse,mae,r2,exact_match_hits_rounded,exact_match_rate_rounded,tolerance_1_accuracy_rounded,bucket_accuracy_0_1_2_3plus,n_samples
-0.82,0.7,-0.4,1.0767825004165503,0.5803621759400607,-0.009956175681615997,5429.0,0.6180555555555556,0.8765938069216758,0.6198770491803278,8784.0
