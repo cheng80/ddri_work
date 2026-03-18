@@ -1,6 +1,8 @@
 ﻿from __future__ import annotations
 
 import json
+import os
+import unicodedata
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -11,8 +13,32 @@ import seaborn as sns
 
 BASE_DIR = Path(__file__).resolve().parent
 KSM_DIR = BASE_DIR.parent
-DATA_DIR = KSM_DIR / "data"
+REPO_ROOT = KSM_DIR.parent
+LOCAL_DATA_DIR = KSM_DIR / "data"
 OUT_DIR = BASE_DIR / "outputs"
+
+
+def resolve_data_dir() -> Path:
+    # 1) Optional explicit override
+    env_dir = os.getenv("KSM_NOTE_LARGE_DATA_DIR")
+    if env_dir:
+        candidate = Path(env_dir)
+        if candidate.exists():
+            return candidate
+
+    # 2) Shared Team-3 folder (name can vary by Unicode normalization)
+    for child in REPO_ROOT.iterdir():
+        if not child.is_dir() or not child.name.startswith("3"):
+            continue
+        candidate = child / "ksm_note_large_files_20260318" / "data"
+        if candidate.exists():
+            return candidate
+
+    # 3) Fallback to repository-local data
+    return LOCAL_DATA_DIR
+
+
+DATA_DIR = resolve_data_dir()
 
 TRAIN_PATH = DATA_DIR / "ddri_prediction_canonical_train_2023_2024_multicollinearity_removed_v3_with_sample_weight.csv"
 TEST_PATH = DATA_DIR / "ddri_prediction_canonical_test_2025_multicollinearity_removed_v3.csv"
@@ -73,6 +99,10 @@ def rel(path: Path) -> str:
     if path.is_relative_to(OUT_DIR):
         return path.relative_to(OUT_DIR).as_posix()
     return os.path.relpath(path, OUT_DIR).replace("\\", "/")
+
+
+def posix_text(path: Path) -> str:
+    return unicodedata.normalize("NFC", Path(path).as_posix())
 
 
 def load_inputs() -> dict[str, pd.DataFrame]:
@@ -156,6 +186,53 @@ def save_process_flow() -> Path:
         )
         if idx < len(steps) - 1:
             ax.annotate("", xy=(x_positions[idx + 1] - 0.07, 0.5), xytext=(x + 0.07, 0.5), arrowprops={"arrowstyle": "->", "lw": 1.8, "color": "#3b5b75"})
+    plt.tight_layout()
+    plt.savefig(path, dpi=180, bbox_inches="tight")
+    plt.close()
+    return path
+
+
+def save_weighted_ridge_flow() -> Path:
+    path = OUT_DIR / "weighted_ridge_formula_flow.png"
+    fig, ax = plt.subplots(figsize=(12, 4.2))
+    ax.axis("off")
+
+    steps = [
+        ("1. 가중치 계산", "월별 유사패턴 기반\nsample_weight 산출"),
+        ("2. 선형회귀식 구성", "y_hat = b0 + b1x1 + ... + bkxk"),
+        ("3. Ridge 학습", "가중 잔차 + L2 규제\n동시 최소화"),
+    ]
+    x_positions = [0.16, 0.50, 0.84]
+
+    for idx, ((title, subtitle), x) in enumerate(zip(steps, x_positions)):
+        ax.text(
+            x,
+            0.62,
+            f"{title}\n{subtitle}",
+            ha="center",
+            va="center",
+            fontsize=11,
+            bbox={"boxstyle": "round,pad=0.45", "facecolor": "#f4f1ea", "edgecolor": "#3b5b75", "linewidth": 1.5},
+        )
+        if idx < len(steps) - 1:
+            ax.annotate(
+                "",
+                xy=(x_positions[idx + 1] - 0.09, 0.62),
+                xytext=(x + 0.09, 0.62),
+                arrowprops={"arrowstyle": "->", "lw": 1.8, "color": "#3b5b75"},
+            )
+
+    formula_text = "최종 목적함수:  Σ w_i (y_i - y_hat_i)^2  +  α Σ b_j^2"
+    ax.text(
+        0.5,
+        0.2,
+        formula_text,
+        ha="center",
+        va="center",
+        fontsize=12,
+        bbox={"boxstyle": "round,pad=0.35", "facecolor": "#eef5ff", "edgecolor": "#1f4e79", "linewidth": 1.4},
+    )
+
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
     plt.close()
@@ -396,8 +473,8 @@ def write_report(data: dict[str, pd.DataFrame], image_paths: dict[str, Path], co
     lines.append(f"![process flow]({rel(image_paths['flow'])})")
     lines.append("")
     lines.append("## 2. 데이터 구성")
-    lines.append(f"- 학습 데이터: `{TRAIN_PATH.as_posix()}`")
-    lines.append(f"- 테스트 데이터: `{TEST_PATH.as_posix()}`")
+    lines.append(f"- 학습 데이터: `{posix_text(TRAIN_PATH)}`")
+    lines.append(f"- 테스트 데이터: `{posix_text(TEST_PATH)}`")
     lines.append(f"- 원본 canonical 컬럼 수: **{before_count}개**")
     lines.append(f"- 최종 입력 변수 수: **{after_count}개**")
     lines.append(f"- 최종 예측 타깃: `bike_change_raw`")
@@ -478,6 +555,21 @@ def write_report(data: dict[str, pd.DataFrame], image_paths: dict[str, Path], co
     lines.append(low_months.to_markdown(index=False))
     lines.append("")
     lines.append("## 6. 데이터 분할과 모델링")
+    lines.append("### 6-1. 가중치 -> 선형회귀식 -> Ridge 적용 흐름")
+    lines.append("- 먼저 월별 반복패턴 분석 결과를 이용해 각 학습 행의 `sample_weight`를 계산했습니다.")
+    lines.append("- 다음으로 선형회귀식 형태(`y_hat = b0 + b1x1 + ... + bkxk`)로 타깃을 설명했습니다.")
+    lines.append("- 마지막으로 같은 선형식에 L2 규제를 더한 `Ridge`를 사용해, 다중공선성 상황에서도 계수가 과도하게 흔들리지 않게 학습했습니다.")
+    lines.append("- 즉, 이 보고서의 모델은 `가중치가 적용된 선형회귀식`을 기반으로 하고, 이를 Ridge 목적함수로 최적화한 구조입니다.")
+    lines.append("")
+    lines.append("```text")
+    lines.append("1) sample_weight 계산")
+    lines.append("2) 선형회귀식 설정: y_hat = b0 + b1x1 + ... + bkxk")
+    lines.append("3) Ridge 학습: min Σ w_i (y_i - y_hat_i)^2 + α Σ b_j^2")
+    lines.append("```")
+    lines.append("")
+    lines.append(f"![weighted ridge flow]({rel(image_paths['weighted_ridge_flow'])})")
+    lines.append("")
+    lines.append("### 6-2. 실험 설정")
     lines.append("- 분할 방식: `train=2023`, `valid=2024`, `test=2025`")
     lines.append("- 모델: `Ridge(alpha=2.0)`")
     lines.append("- 전처리: median imputation + standardization")
@@ -530,15 +622,16 @@ def write_report(data: dict[str, pd.DataFrame], image_paths: dict[str, Path], co
     lines.append("- 그 결과 Ridge는 `R2 약 0.72` 수준의 안정적이고 설명 가능한 기준 모델로 정리할 수 있었습니다.")
     lines.append("")
     lines.append("## 12. 참고 산출물")
-    lines.append(f"- 선형회귀 계수: `{(LINEAR_DIR / 'linear_regression_coefficients.csv').as_posix()}`")
-    lines.append(f"- 선형회귀 점수: `{(LINEAR_DIR / 'linear_regression_scores.csv').as_posix()}`")
-    lines.append(f"- 월 가중치 제안: `{(SIM_DIR / 'overall_month_weight_suggestions.csv').as_posix()}`")
-    lines.append(f"- 누수/분할 점검 보고서: `{(AUDIT_DIR / 'lightgbm_high_score_audit_report.md').as_posix()}`")
-    lines.append(f"- LightGBM 재실험 보고서: `{(LGBM_COMPARE_DIR / 'lightgbm_without_history_report.md').as_posix()}`")
-    lines.append(f"- 클러스터별 Ridge 점수: `{(CLUSTER_DIR / 'cluster_ridge_scores.csv').as_posix()}`")
+    lines.append(f"- 선형회귀 계수: `{posix_text(LINEAR_DIR / 'linear_regression_coefficients.csv')}`")
+    lines.append(f"- 선형회귀 점수: `{posix_text(LINEAR_DIR / 'linear_regression_scores.csv')}`")
+    lines.append(f"- 월 가중치 제안: `{posix_text(SIM_DIR / 'overall_month_weight_suggestions.csv')}`")
+    lines.append(f"- 누수/분할 점검 보고서: `{posix_text(AUDIT_DIR / 'lightgbm_high_score_audit_report.md')}`")
+    lines.append(f"- LightGBM 재실험 보고서: `{posix_text(LGBM_COMPARE_DIR / 'lightgbm_without_history_report.md')}`")
+    lines.append(f"- 클러스터별 Ridge 점수: `{posix_text(CLUSTER_DIR / 'cluster_ridge_scores.csv')}`")
 
     report_path = OUT_DIR / "ridge_end_to_end_report.md"
-    report_path.write_text("\n".join(lines), encoding="utf-8")
+    # Save Markdown with UTF-8 BOM for editor/preview compatibility on Windows.
+    report_path.write_text("\n".join(lines), encoding="utf-8-sig")
     return report_path
 
 
@@ -552,6 +645,7 @@ def main() -> None:
 
     image_paths = {
         "flow": save_process_flow(),
+        "weighted_ridge_flow": save_weighted_ridge_flow(),
         "feature_count": save_feature_count_bar(before_count=26, after_count=16, removed_count=8),
         "split": save_split_bar(counts),
         "scores": save_score_bar(data["scores"]),
@@ -567,10 +661,10 @@ def main() -> None:
     report_path = write_report(data, image_paths, corr, current_pairs)
 
     meta = {
-        "train_path": TRAIN_PATH.as_posix(),
-        "test_path": TEST_PATH.as_posix(),
-        "report_path": report_path.as_posix(),
-        "images": {k: v.as_posix() for k, v in image_paths.items()},
+        "train_path": posix_text(TRAIN_PATH),
+        "test_path": posix_text(TEST_PATH),
+        "report_path": posix_text(report_path),
+        "images": {k: posix_text(v) for k, v in image_paths.items()},
     }
     (OUT_DIR / "report_meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
