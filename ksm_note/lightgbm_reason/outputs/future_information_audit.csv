@@ -1,0 +1,6 @@
+﻿feature,mismatch_count_vs_past_only_formula,past_only_verified
+bike_change_lag_1,0,True
+bike_change_rollmean_24,0,True
+bike_change_rollstd_24,0,True
+bike_change_rollmean_168,0,True
+bike_change_rollstd_168,0,True
