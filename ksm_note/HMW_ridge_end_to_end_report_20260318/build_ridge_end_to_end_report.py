@@ -285,12 +285,22 @@ def save_similarity_heatmap(similarity: pd.DataFrame) -> Path:
     plot_df = plot_df[plot_df["feature"].isin(top_features)].copy()
     plot_df["month_pair"] = plot_df["year_month_left"] + "→" + plot_df["year_month_right"]
     pivot = plot_df.pivot(index="feature", columns="month_pair", values="similarity_score")
-    plt.figure(figsize=(14, 5.5))
-    sns.heatmap(pivot, cmap="YlGnBu", vmin=0, vmax=1, linewidths=0.3)
-    plt.title("인접 월 시간 평균선 유사도 히트맵")
-    plt.xlabel("인접 월 쌍")
-    plt.ylabel("변수")
-    plt.tight_layout()
+    fig, ax = plt.subplots(figsize=(18, 5.2))
+    sns.heatmap(
+        pivot,
+        cmap="YlGnBu",
+        vmin=0,
+        vmax=1,
+        linewidths=0.3,
+        ax=ax,
+        cbar_kws={"shrink": 0.9, "pad": 0.01},
+    )
+    ax.set_title("")
+    ax.set_xlabel("")
+    ax.set_ylabel("")
+    ax.tick_params(axis="x", labelrotation=90, labelsize=9)
+    ax.tick_params(axis="y", labelsize=11)
+    plt.tight_layout(pad=0.3)
     plt.savefig(path, dpi=180, bbox_inches="tight")
     plt.close()
     return path

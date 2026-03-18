@@ -26,15 +26,11 @@ CLUSTER_COL = "cluster"
 DROP_FEATURES = [DATE_COL, TARGET_COL, WEIGHT_COL, CLUSTER_COL]
 
 
-def k(s: str) -> str:
-    return s.encode("utf-8").decode("unicode_escape")
-
-
 def setup_plot_style() -> None:
-    plt.rcParams["font.family"] = ["Malgun Gothic"]
-    plt.rcParams["font.sans-serif"] = ["Malgun Gothic"]
+    plt.rcParams["font.family"] = ["AppleGothic", "Arial Unicode MS", "sans-serif"]
+    plt.rcParams["font.sans-serif"] = ["AppleGothic", "Arial Unicode MS", "sans-serif"]
     plt.rcParams["axes.unicode_minus"] = False
-    sns.set_theme(style="whitegrid", font="Malgun Gothic")
+    sns.set_theme(style="whitegrid", font="AppleGothic")
 
 
 def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -99,11 +95,13 @@ def save_r2_plot(result_df: pd.DataFrame) -> Path:
     path = OUT_DIR / "cluster_r2_by_split.png"
     plot_df = result_df.copy()
     plot_df["cluster"] = plot_df["cluster"].astype(str)
-    plot_df["split"] = plot_df["split"].map({"train": k("\ud559\uc2b5"), "valid": k("\uac80\uc99d"), "test": k("\ud14c\uc2a4\ud2b8")})
+    plot_df["split"] = plot_df["split"].map(
+        {"train": "학습", "valid": "검증", "test": "테스트"}
+    )
     plt.figure(figsize=(10, 5.2))
     sns.barplot(data=plot_df, x="cluster", y="r2", hue="split", palette=["#1f4e79", "#4f7942", "#c26a2e"])
-    plt.title(k("\ud074\ub7ec\uc2a4\ud130\ubcc4 Ridge R2"))
-    plt.xlabel(k("\ud074\ub7ec\uc2a4\ud130"))
+    plt.title("군집별 Ridge R²")
+    plt.xlabel("군집")
     plt.ylabel("R2")
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
@@ -115,11 +113,13 @@ def save_rmse_plot(result_df: pd.DataFrame) -> Path:
     path = OUT_DIR / "cluster_rmse_by_split.png"
     plot_df = result_df.copy()
     plot_df["cluster"] = plot_df["cluster"].astype(str)
-    plot_df["split"] = plot_df["split"].map({"train": k("\ud559\uc2b5"), "valid": k("\uac80\uc99d"), "test": k("\ud14c\uc2a4\ud2b8")})
+    plot_df["split"] = plot_df["split"].map(
+        {"train": "학습", "valid": "검증", "test": "테스트"}
+    )
     plt.figure(figsize=(10, 5.2))
     sns.barplot(data=plot_df, x="cluster", y="rmse", hue="split", palette=["#1f4e79", "#4f7942", "#c26a2e"])
-    plt.title(k("\ud074\ub7ec\uc2a4\ud130\ubcc4 Ridge RMSE"))
-    plt.xlabel(k("\ud074\ub7ec\uc2a4\ud130"))
+    plt.title("군집별 Ridge RMSE")
+    plt.xlabel("군집")
     plt.ylabel("RMSE")
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
@@ -132,16 +132,16 @@ def build_report(result_df: pd.DataFrame, img_r2: Path, img_rmse: Path) -> str:
     test_best = result_df[result_df["split"].eq("test")].sort_values("r2", ascending=False)
 
     lines: list[str] = []
-    lines.append(k("\ud074\ub7ec\uc2a4\ud130\ubcc4 Ridge \ud68c\uadc0 \uacb0\uacfc \ubcf4\uace0\uc11c"))
+    lines.append("군집별 Ridge 회귀 결과 보고서")
     lines.append("")
-    lines.append(k("## 1. \uc2e4\ud5d8 \uc124\uc815"))
-    lines.append("- ??: Ridge(alpha=2.0)")
-    lines.append(k("- ???: median imputation + standardization"))
-    lines.append(k("- ?? ???: sample_weight ??"))
-    lines.append(k("- ??: 2023=train, 2024=valid, 2025=test"))
-    lines.append(k("- ????? ????? `cluster` ??? feature?? ??"))
+    lines.append("## 1. 실험 설정")
+    lines.append("- 모델: Ridge(alpha=2.0)")
+    lines.append("- 전처리: median imputation + standardization")
+    lines.append("- 학습 가중치: sample_weight 적용")
+    lines.append("- 분할: 2023=학습, 2024=검증, 2025=테스트")
+    lines.append("- 군집별 모델에서는 `cluster` 자체를 입력 feature에서 제외")
     lines.append("")
-    lines.append(k("## 2. ????? ??"))
+    lines.append("## 2. 군집별 성능")
     lines.append("")
     lines.append(result_df.to_markdown(index=False))
     lines.append("")
@@ -149,10 +149,16 @@ def build_report(result_df: pd.DataFrame, img_r2: Path, img_rmse: Path) -> str:
     lines.append("")
     lines.append(f"![cluster rmse]({img_rmse.name})")
     lines.append("")
-    lines.append(k("## 3. ??"))
-    lines.append(k(f"- valid ?? ?? ????? `cluster {int(valid_best.iloc[0]['cluster'])}`?? R2={valid_best.iloc[0]['r2']:.6f} ???."))
-    lines.append(k(f"- test ?? ?? ????? `cluster {int(test_best.iloc[0]['cluster'])}`?? R2={test_best.iloc[0]['r2']:.6f} ???."))
-    lines.append(k("- ????? ?? ??? ???? ??, ??? ??? ????? ?????? ??? ?? ??? ?? ?? ?? ????? ????."))
+    lines.append("## 3. 해석")
+    lines.append(
+        f"- 검증 기준 최고 군집은 `군집 {int(valid_best.iloc[0]['cluster'])}`로 R²={valid_best.iloc[0]['r2']:.6f}였다."
+    )
+    lines.append(
+        f"- 테스트 기준 최고 군집은 `군집 {int(test_best.iloc[0]['cluster'])}`로 R²={test_best.iloc[0]['r2']:.6f}였다."
+    )
+    lines.append(
+        "- 군집별 성능 차이가 존재하므로, 군집별 수요 패턴 차이를 반영하는 추가 피처 보강 여지가 있다."
+    )
     return "\n".join(lines)
 
 

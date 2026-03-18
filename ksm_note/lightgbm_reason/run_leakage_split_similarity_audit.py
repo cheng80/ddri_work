@@ -27,12 +27,25 @@ TIME_DERIVED_COLS = [
     "bike_change_rollstd_168",
 ]
 
+FEATURE_LABELS = {
+    "rental_count": "대여 건수",
+    "wind_speed": "풍속",
+    "temperature": "기온",
+    "bike_change_rollstd_168": "최근 168시간 변동성",
+    "humidity": "습도",
+    "bike_change_rollstd_24": "최근 24시간 변동성",
+    "hour": "시간대",
+    "bike_change_lag_1": "직전 시점 변화량",
+    "bike_change_rollmean_168": "최근 168시간 평균 변화량",
+    "bike_change_rollmean_24": "최근 24시간 평균 변화량",
+}
+
 
 def setup_plot_style() -> None:
-    plt.rcParams["font.family"] = ["Malgun Gothic"]
-    plt.rcParams["font.sans-serif"] = ["Malgun Gothic"]
+    plt.rcParams["font.family"] = ["AppleGothic", "Arial Unicode MS", "sans-serif"]
+    plt.rcParams["font.sans-serif"] = ["AppleGothic", "Arial Unicode MS", "sans-serif"]
     plt.rcParams["axes.unicode_minus"] = False
-    sns.set_theme(style="whitegrid", font="Malgun Gothic")
+    sns.set_theme(style="whitegrid", font="AppleGothic")
 
 
 def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -222,12 +235,13 @@ def repeated_pattern_audit(full_df: pd.DataFrame, feature_cols: list[str]) -> pd
 
 def save_target_corr_plot(target_audit: pd.DataFrame) -> Path:
     path = OUT_DIR / "target_like_feature_correlation.png"
-    top = target_audit.head(10).sort_values("correlation_with_target")
+    top = target_audit.head(10).sort_values("correlation_with_target").copy()
+    top["feature_label"] = top["feature"].map(lambda x: FEATURE_LABELS.get(x, x))
     plt.figure(figsize=(9, 5.8))
     colors = ["#c26a2e" if v > 0 else "#1f4e79" for v in top["correlation_with_target"]]
-    plt.barh(top["feature"], top["correlation_with_target"], color=colors)
-    plt.title("???? ????? ?? ??")
-    plt.xlabel("bike_change_raw?? ????")
+    plt.barh(top["feature_label"], top["correlation_with_target"], color=colors)
+    plt.title("타깃 유사 피처 상관계수")
+    plt.xlabel("자전거 수요 변화량과의 상관계수")
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
     plt.close()
@@ -245,9 +259,9 @@ def save_similarity_plot(sim_df: pd.DataFrame) -> Path:
     ax = sns.barplot(data=count_df, x="year_pair", y="high_similarity_count", hue="year_pair", dodge=False, palette=["#1f4e79", "#4f7942", "#c26a2e"])
     if ax.legend_ is not None:
         ax.legend_.remove()
-    ax.set_title("?? ? ?? ??? ??")
+    ax.set_title("연도 쌍별 고유사 패턴 수")
     ax.set_xlabel("")
-    ax.set_ylabel("??")
+    ax.set_ylabel("개수")
     for idx, row in count_df.reset_index(drop=True).iterrows():
         ax.text(idx, row["high_similarity_count"], str(int(row["high_similarity_count"])), ha="center", va="bottom")
     plt.tight_layout()
