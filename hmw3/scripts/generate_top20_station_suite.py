@@ -197,16 +197,30 @@ def create_integrated_notebook(station_ids: list[int]) -> Path:
 
     ranking_md = nbformat.v4.new_markdown_cell(
         "## Test R² Integrated Ranking\n\n"
-        "`rental_count`와 `return_count`의 test R²를 평균내어 station별 종합 점수를 계산하고, 높은 순서대로 시각화합니다."
+        "`rental_count`와 `return_count`의 test R²를 평균내어 station별 종합 점수를 계산하고, 높은 순서대로 시각화합니다.\n\n"
+        "같은 순서에서 `RMSE`, `MAE`도 함께 정리해서 성능을 한 번에 비교할 수 있도록 구성합니다."
     )
 
     ranking_code = nbformat.v4.new_code_cell(
-        "test_r2_df = metrics_df[(metrics_df['split'] == 'test') & (metrics_df['target'].isin(['rental_count', 'return_count']))].copy()\n"
-        "ranking_df = (\n"
-        "    test_r2_df.pivot_table(index='station_id', columns='target', values='r2', aggfunc='mean')\n"
+        "test_metric_df = metrics_df[(metrics_df['split'] == 'test') & (metrics_df['target'].isin(['rental_count', 'return_count']))].copy()\n"
+        "r2_df = (\n"
+        "    test_metric_df.pivot_table(index='station_id', columns='target', values='r2', aggfunc='mean')\n"
         "    .reset_index()\n"
         ")\n"
+        "rmse_df = (\n"
+        "    test_metric_df.pivot_table(index='station_id', columns='target', values='rmse', aggfunc='mean')\n"
+        "    .reset_index()\n"
+        "    .rename(columns={'rental_count': 'rental_rmse', 'return_count': 'return_rmse'})\n"
+        ")\n"
+        "mae_df = (\n"
+        "    test_metric_df.pivot_table(index='station_id', columns='target', values='mae', aggfunc='mean')\n"
+        "    .reset_index()\n"
+        "    .rename(columns={'rental_count': 'rental_mae', 'return_count': 'return_mae'})\n"
+        ")\n"
+        "ranking_df = r2_df.merge(rmse_df, on='station_id').merge(mae_df, on='station_id')\n"
         "ranking_df['combined_test_r2'] = ranking_df[['rental_count', 'return_count']].mean(axis=1)\n"
+        "ranking_df['combined_test_rmse'] = ranking_df[['rental_rmse', 'return_rmse']].mean(axis=1)\n"
+        "ranking_df['combined_test_mae'] = ranking_df[['rental_mae', 'return_mae']].mean(axis=1)\n"
         "ranking_df = ranking_df.sort_values('combined_test_r2', ascending=False).reset_index(drop=True)\n"
         "ranking_df.index = ranking_df.index + 1\n"
         "ranking_df.to_csv(DATA_DIR / 'top20_station_combined_test_r2_ranking.csv', index_label='rank', encoding='utf-8-sig')\n"
@@ -233,6 +247,24 @@ def create_integrated_notebook(station_ids: list[int]) -> Path:
         "plt.show()\n"
     )
 
+    error_metric_plot_code = nbformat.v4.new_code_cell(
+        "plot_df = ranking_df.reset_index().rename(columns={'index': 'rank'})\n"
+        "fig, axes = plt.subplots(1, 2, figsize=(18, 8), sharey=True)\n"
+        "sns.barplot(data=plot_df, x='combined_test_rmse', y=plot_df['station_id'].astype(str), ax=axes[0], color='#4C72B0')\n"
+        "axes[0].set_title('Combined Test RMSE')\n"
+        "axes[0].set_xlabel('Average RMSE of rental_count and return_count')\n"
+        "axes[0].set_ylabel('station_id')\n"
+        "sns.barplot(data=plot_df, x='combined_test_mae', y=plot_df['station_id'].astype(str), ax=axes[1], color='#55A868')\n"
+        "axes[1].set_title('Combined Test MAE')\n"
+        "axes[1].set_xlabel('Average MAE of rental_count and return_count')\n"
+        "axes[1].set_ylabel('station_id')\n"
+        "plt.tight_layout()\n"
+        "plt.show()\n"
+        "\n"
+        "detail_metric_df = plot_df[['rank', 'station_id', 'rental_rmse', 'return_rmse', 'combined_test_rmse', 'rental_mae', 'return_mae', 'combined_test_mae']]\n"
+        "detail_metric_df\n"
+    )
+
     notebook = nbformat.v4.new_notebook(
         cells=[
             intro_md,
@@ -246,6 +278,7 @@ def create_integrated_notebook(station_ids: list[int]) -> Path:
             ranking_md,
             ranking_code,
             ranking_plot_code,
+            error_metric_plot_code,
         ],
         metadata={
             "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
