@@ -1,19 +1,19 @@
 {
-  "train_path": "C:/Users/User_KO/Documents/GitHub/ddri_work/3조 공유폴더/ksm_note_large_files_20260318/data/ddri_prediction_canonical_train_2023_2024_multicollinearity_removed_v3_with_sample_weight.csv",
-  "test_path": "C:/Users/User_KO/Documents/GitHub/ddri_work/3조 공유폴더/ksm_note_large_files_20260318/data/ddri_prediction_canonical_test_2025_multicollinearity_removed_v3.csv",
-  "report_path": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/ridge_end_to_end_report.md",
+  "train_path": "/Users/cheng80/Desktop/ddri_work/3조 공유폴더/ksm_note_large_files_20260318/data/ddri_prediction_canonical_train_2023_2024_multicollinearity_removed_v3_with_sample_weight.csv",
+  "test_path": "/Users/cheng80/Desktop/ddri_work/3조 공유폴더/ksm_note_large_files_20260318/data/ddri_prediction_canonical_test_2025_multicollinearity_removed_v3.csv",
+  "report_path": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/ridge_end_to_end_report.md",
   "images": {
-    "flow": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/analysis_process_flow.png",
-    "weighted_ridge_flow": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/weighted_ridge_formula_flow.png",
-    "feature_count": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/feature_count_summary.png",
-    "split": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/split_row_counts.png",
-    "scores": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/ridge_scores.png",
-    "coef": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/top_standardized_coefficients.png",
-    "month_weight": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/overall_month_weights.png",
-    "corr_heatmap": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/current_feature_correlation_heatmap.png",
-    "high_corr": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/high_correlation_pairs_bar.png",
-    "similarity_heatmap": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/adjacent_month_similarity_heatmap.png",
-    "weekday_compare": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/weekday_profile_compare_rental_count.png",
-    "hourly_compare": "C:/Users/User_KO/Documents/GitHub/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/hourly_profile_compare_rental_count.png"
+    "flow": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/analysis_process_flow.png",
+    "weighted_ridge_flow": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/weighted_ridge_formula_flow.png",
+    "feature_count": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/feature_count_summary.png",
+    "split": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/split_row_counts.png",
+    "scores": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/ridge_scores.png",
+    "coef": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/top_standardized_coefficients.png",
+    "month_weight": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/overall_month_weights.png",
+    "corr_heatmap": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/current_feature_correlation_heatmap.png",
+    "high_corr": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/high_correlation_pairs_bar.png",
+    "similarity_heatmap": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/adjacent_month_similarity_heatmap.png",
+    "weekday_compare": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/weekday_profile_compare_rental_count.png",
+    "hourly_compare": "/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_ridge_end_to_end_report_20260318/outputs/hourly_profile_compare_rental_count.png"
   }
 }

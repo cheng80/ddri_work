@@ -7,6 +7,9 @@
 ![process flow](analysis_process_flow.png)
 
 ## 2. 데이터 구성
+- 학습 데이터: `/Users/cheng80/Desktop/ddri_work/3조 공유폴더/ksm_note_large_files_20260318/data/ddri_prediction_canonical_train_2023_2024_multicollinearity_removed_v3_with_sample_weight.csv`
+- 테스트 데이터: `/Users/cheng80/Desktop/ddri_work/3조 공유폴더/ksm_note_large_files_20260318/data/ddri_prediction_canonical_test_2025_multicollinearity_removed_v3.csv`
+- 원본 canonical 컬럼 수: **26개**
 - 최종 입력 변수 수: **16개**
 - 최종 예측 타깃: `bike_change_raw`
 
@@ -213,6 +216,17 @@
 
 ![top coefficients](top_standardized_coefficients.png)
 
+## 9. LightGBM 고성능에 대한 해석
+- LightGBM은 매우 높은 R2를 보였지만, 타깃 이력 파생변수 제거 후 성능이 크게 하락했습니다.
+- 따라서 LightGBM의 높은 점수는 순수한 일반화 능력만이 아니라 `강한 과거 이력 feature + 반복되는 시계열 패턴`의 영향이 크다고 해석했습니다.
+
+| split   |   baseline_rmse |   new_rmse |   rmse_change |   baseline_mae |   new_mae |   mae_change |   baseline_r2 |   new_r2 |   r2_change |
+|:--------|----------------:|-----------:|--------------:|---------------:|----------:|-------------:|--------------:|---------:|------------:|
+| valid   |        0.354179 |   0.993907 |      0.639728 |       0.149206 |  0.635511 |     0.486305 |      0.935107 | 0.488971 |   -0.446136 |
+| test    |        0.317459 |   0.911335 |      0.593876 |       0.131086 |  0.599049 |     0.467963 |      0.934917 | 0.463648 |   -0.471269 |
+
+![repeat counts](../../lightgbm_reason/outputs/repeated_pattern_similarity_counts.png)
+
 ## 10. 클러스터별 Ridge 결과
 |   cluster | split   |   rows |     rmse |      mae |       r2 |
 |----------:|:--------|-------:|---------:|---------:|---------:|
@@ -245,3 +259,11 @@
 - 누수 점검 단계에서는 미래정보 혼입과 잘못된 분할이 없음을 확인했습니다.
 - 시계열 패턴 진단 단계에서는 월별·요일별·시간별 유사패턴이 반복되는 것을 확인했고, 이를 완화하기 위해 `sample_weight`를 적용했습니다.
 - 그 결과 Ridge는 `R2 약 0.72` 수준의 안정적이고 설명 가능한 기준 모델로 정리할 수 있었습니다.
+
+## 12. 참고 산출물
+- 선형회귀 계수: `/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_linear_regression_coefficients_20260318/outputs/linear_regression_coefficients.csv`
+- 선형회귀 점수: `/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_linear_regression_coefficients_20260318/outputs/linear_regression_scores.csv`
+- 월 가중치 제안: `/Users/cheng80/Desktop/ddri_work/ksm_note/feature_weight/outputs/overall_month_weight_suggestions.csv`
+- 누수/분할 점검 보고서: `/Users/cheng80/Desktop/ddri_work/ksm_note/lightgbm_reason/outputs/lightgbm_high_score_audit_report.md`
+- LightGBM 재실험 보고서: `/Users/cheng80/Desktop/ddri_work/ksm_note/lightgbm_reason_1/outputs/lightgbm_without_history_report.md`
+- 클러스터별 Ridge 점수: `/Users/cheng80/Desktop/ddri_work/ksm_note/HMW_cluster_ridge_regression_20260318/outputs/cluster_ridge_scores.csv`

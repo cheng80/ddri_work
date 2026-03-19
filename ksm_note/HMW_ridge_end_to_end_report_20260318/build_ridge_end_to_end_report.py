@@ -84,12 +84,52 @@ COL_MEANINGS = [
 
 WEEKDAY_LABELS = ["월", "화", "수", "목", "금", "토", "일"]
 
+FEATURE_DISPLAY = {
+    "station_id": "대여소 고유 ID",
+    "hour": "시간대",
+    "rental_count": "대여 건수",
+    "weekday": "요일",
+    "month": "월",
+    "holiday": "공휴일 여부",
+    "temperature": "기온",
+    "humidity": "습도",
+    "precipitation": "강수량",
+    "wind_speed": "풍속",
+    "cluster": "군집 번호",
+    "bike_change_raw": "자전거 수요 변화량",
+    "bike_change_deseasonalized": "계절조정 수요 변화량",
+    "rental_count_deseasonalized": "계절조정 대여 건수",
+    "bike_change_lag_1": "직전 시점 변화량",
+    "bike_change_lag_24": "24시간 전 변화량",
+    "bike_change_lag_168": "168시간 전 변화량",
+    "bike_change_rollmean_24": "직전 24시간 평균 변화량",
+    "bike_change_rollstd_24": "직전 24시간 변동성",
+    "bike_change_rollmean_168": "직전 168시간 평균 변화량",
+    "bike_change_rollstd_168": "직전 168시간 변동성",
+    "bike_change_trend_1_24": "단기 추세 변화량",
+    "bike_change_trend_24_168": "장기 추세 변화량",
+    "mapped_dong_code": "행정동 코드",
+    "seasonal_mean_2023": "계절 평균",
+    "sample_weight": "학습 가중치",
+}
+
 
 def setup_plot_style() -> None:
-    plt.rcParams["font.family"] = ["Malgun Gothic"]
-    plt.rcParams["font.sans-serif"] = ["Malgun Gothic"]
+    plt.rcParams["font.family"] = ["AppleGothic", "Arial Unicode MS", "sans-serif"]
+    plt.rcParams["font.sans-serif"] = ["AppleGothic", "Arial Unicode MS", "sans-serif"]
     plt.rcParams["axes.unicode_minus"] = False
-    sns.set_theme(style="whitegrid", font="Malgun Gothic")
+    sns.set_theme(style="whitegrid", font="AppleGothic")
+
+
+def feature_display(name: str) -> str:
+    label = FEATURE_DISPLAY.get(name)
+    if label is None:
+        return name
+    return f"{label} ({name})"
+
+
+def feature_korean(name: str) -> str:
+    return FEATURE_DISPLAY.get(name, name)
 
 
 def rel(path: Path) -> str:
@@ -295,10 +335,11 @@ def save_score_bar(scores: pd.DataFrame) -> Path:
 def save_coef_bar(coefs: pd.DataFrame) -> Path:
     path = OUT_DIR / "top_standardized_coefficients.png"
     top = coefs.head(12).copy().sort_values("standardized_coefficient")
+    top["feature_label"] = top["feature"].map(feature_display)
     plt.figure(figsize=(9, 6))
     colors = ["#c26a2e" if v > 0 else "#1f4e79" for v in top["standardized_coefficient"]]
     ax = plt.gca()
-    ax.barh(top["feature"], top["standardized_coefficient"], color=colors)
+    ax.barh(top["feature_label"], top["standardized_coefficient"], color=colors)
     ax.set_title("표준화 회귀계수 상위 변수")
     ax.set_xlabel("계수값")
     ax.set_ylabel("")
@@ -325,9 +366,12 @@ def save_month_weight_bar(month_weights: pd.DataFrame) -> Path:
 
 def save_current_corr_heatmap(corr: pd.DataFrame) -> Path:
     path = OUT_DIR / "current_feature_correlation_heatmap.png"
+    plot_corr = corr.copy()
+    plot_corr.index = [feature_display(c) for c in plot_corr.index]
+    plot_corr.columns = [feature_display(c) for c in plot_corr.columns]
     plt.figure(figsize=(11, 9))
-    mask = np.triu(np.ones_like(corr, dtype=bool))
-    sns.heatmap(corr, mask=mask, cmap="RdBu_r", center=0, vmin=-1, vmax=1, square=True, linewidths=0.4)
+    mask = np.triu(np.ones_like(plot_corr, dtype=bool))
+    sns.heatmap(plot_corr, mask=mask, cmap="RdBu_r", center=0, vmin=-1, vmax=1, square=True, linewidths=0.4)
     plt.title("최종 입력 변수 상관계수 히트맵")
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
@@ -338,7 +382,7 @@ def save_current_corr_heatmap(corr: pd.DataFrame) -> Path:
 def save_high_corr_bar(high_corr_pairs: pd.DataFrame) -> Path:
     path = OUT_DIR / "high_correlation_pairs_bar.png"
     plot_df = high_corr_pairs.copy().sort_values("abs_correlation", ascending=True)
-    labels = plot_df["feature_a"] + " ↔ " + plot_df["feature_b"]
+    labels = plot_df["feature_a"].map(feature_korean) + " ↔ " + plot_df["feature_b"].map(feature_korean)
     colors = ["#b22222" if v >= 0.9 else "#c26a2e" for v in plot_df["abs_correlation"]]
     plt.figure(figsize=(10, 4.8))
     plt.barh(labels, plot_df["abs_correlation"], color=colors)
@@ -360,8 +404,9 @@ def save_similarity_heatmap(similarity: pd.DataFrame) -> Path:
         plot_df.groupby("feature", as_index=False)["similarity_score"].max().sort_values("similarity_score", ascending=False).head(8)["feature"].tolist()
     )
     plot_df = plot_df[plot_df["feature"].isin(top_features)].copy()
+    plot_df["feature_label"] = plot_df["feature"].map(feature_display)
     plot_df["month_pair"] = plot_df["year_month_left"] + "→" + plot_df["year_month_right"]
-    pivot = plot_df.pivot(index="feature", columns="month_pair", values="similarity_score")
+    pivot = plot_df.pivot(index="feature_label", columns="month_pair", values="similarity_score")
     fig, ax = plt.subplots(figsize=(18, 5.2))
     sns.heatmap(
         pivot,
@@ -372,7 +417,7 @@ def save_similarity_heatmap(similarity: pd.DataFrame) -> Path:
         ax=ax,
         cbar_kws={"shrink": 0.9, "pad": 0.01},
     )
-    ax.set_title("")
+    ax.set_title("인접 월 유사도 히트맵")
     ax.set_xlabel("")
     ax.set_ylabel("")
     ax.tick_params(axis="x", labelrotation=90, labelsize=9)
@@ -387,12 +432,18 @@ def save_hourly_profile_compare(profiles: pd.DataFrame, similarity: pd.DataFrame
     path = OUT_DIR / "hourly_profile_compare_rental_count.png"
     plot_df = profiles[(profiles["feature"].eq(feature)) & (profiles["year_month"].isin([left, right]))].copy()
     sim_row = similarity[(similarity["feature"].eq(feature)) & (similarity["year_month_left"].eq(left)) & (similarity["year_month_right"].eq(right))].iloc[0]
+    feature_label = feature_display(feature)
     plt.figure(figsize=(10, 4.8))
     sns.lineplot(data=plot_df, x="hour", y="hourly_mean", hue="year_month", marker="o", palette=["#1f4e79", "#c26a2e"])
-    plt.title(f"시간별 평균선 비교: {feature} ({left} vs {right})")
+    plt.title(f"시간대별 평균 패턴 비교: {feature_label} ({left} vs {right})")
     plt.xlabel("시간")
     plt.ylabel("평균값")
-    plt.text(0.01, 0.02, f"corr={sim_row['corr']:.3f}, NRMSE={sim_row['nrmse']:.3f}, similarity={sim_row['similarity_score']:.3f}", transform=plt.gca().transAxes)
+    plt.text(
+        0.01,
+        0.02,
+        f"상관계수(corr)={sim_row['corr']:.3f}, NRMSE={sim_row['nrmse']:.3f}, 유사도={sim_row['similarity_score']:.3f}",
+        transform=plt.gca().transAxes,
+    )
     plt.tight_layout()
     plt.savefig(path, dpi=180, bbox_inches="tight")
     plt.close()
