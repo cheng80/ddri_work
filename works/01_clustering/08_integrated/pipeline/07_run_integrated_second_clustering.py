@@ -179,7 +179,7 @@ def plot_cluster_profile_heatmap(summary: pd.DataFrame) -> None:
     heat_df = summary[FEATURE_COLS].rename(columns=FEATURE_LABELS)
     fig, ax = plt.subplots(figsize=(10, 4))
     sns.heatmap(heat_df, annot=True, fmt=".3f", cmap="YlOrRd", ax=ax)
-    ax.set_title("2차 군집 프로파일 히트맵")
+    ax.set_title("2차 군집 특성 히트맵")
     fig.tight_layout()
     fig.savefig(OUTPUT_IMG_DIR / "ddri_second_cluster_profile_heatmap.png", dpi=200, bbox_inches="tight")
     plt.close(fig)
