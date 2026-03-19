@@ -1,0 +1,10 @@
+﻿target,split,r2
+bike_change_from_predictions,test,0.15507239475917847
+bike_change_from_predictions,train,0.16161388734319612
+bike_change_from_predictions,valid,0.18264977024277543
+rental_count,test,0.3497882625224304
+rental_count,train,0.37539046897718886
+rental_count,valid,0.3914631833374292
+return_count,test,0.3780610136898861
+return_count,train,0.4206231178971477
+return_count,valid,0.43281821479392385
