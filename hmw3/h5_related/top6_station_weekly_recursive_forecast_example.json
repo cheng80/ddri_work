@@ -1,0 +1,393 @@
+{
+  "station_id": 2348,
+  "station_name": " 포스코사거리(기업은행)",
+  "start_datetime": "2026-03-20T10:00:00",
+  "initial_bike_count_from_api": 12.0,
+  "horizon_hours": 24,
+  "forecast": [
+    {
+      "step": 1,
+      "datetime": "2026-03-20T11:00:00",
+      "bike_count_from_api_or_prev_step": 12.0,
+      "rental_count_pred": 2.3588602046832117,
+      "return_count_pred": 2.1128631409119727,
+      "bike_change_pred": 0.24599706377123898,
+      "next_bike_count_pred": 12.245997063771238,
+      "display": {
+        "bike_count_from_api_or_prev_step": 12,
+        "rental_count_pred": 2,
+        "return_count_pred": 2,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 12
+      }
+    },
+    {
+      "step": 2,
+      "datetime": "2026-03-20T12:00:00",
+      "bike_count_from_api_or_prev_step": 12.245997063771238,
+      "rental_count_pred": 2.000399666371788,
+      "return_count_pred": 2.603551561457781,
+      "bike_change_pred": -0.6031518950859933,
+      "next_bike_count_pred": 11.642845168685245,
+      "display": {
+        "bike_count_from_api_or_prev_step": 12,
+        "rental_count_pred": 2,
+        "return_count_pred": 3,
+        "bike_change_pred": -1,
+        "next_bike_count_pred": 12
+      }
+    },
+    {
+      "step": 3,
+      "datetime": "2026-03-20T13:00:00",
+      "bike_count_from_api_or_prev_step": 11.642845168685245,
+      "rental_count_pred": 1.8495389657427355,
+      "return_count_pred": 2.4257668825727174,
+      "bike_change_pred": -0.576227916829982,
+      "next_bike_count_pred": 11.066617251855263,
+      "display": {
+        "bike_count_from_api_or_prev_step": 12,
+        "rental_count_pred": 2,
+        "return_count_pred": 2,
+        "bike_change_pred": -1,
+        "next_bike_count_pred": 11
+      }
+    },
+    {
+      "step": 4,
+      "datetime": "2026-03-20T14:00:00",
+      "bike_count_from_api_or_prev_step": 11.066617251855263,
+      "rental_count_pred": 1.5259203160313215,
+      "return_count_pred": 1.9522962076108414,
+      "bike_change_pred": -0.42637589157951994,
+      "next_bike_count_pred": 10.640241360275743,
+      "display": {
+        "bike_count_from_api_or_prev_step": 11,
+        "rental_count_pred": 2,
+        "return_count_pred": 2,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 11
+      }
+    },
+    {
+      "step": 5,
+      "datetime": "2026-03-20T15:00:00",
+      "bike_count_from_api_or_prev_step": 10.640241360275743,
+      "rental_count_pred": 2.048055467945642,
+      "return_count_pred": 1.7386887668960647,
+      "bike_change_pred": 0.3093667010495773,
+      "next_bike_count_pred": 10.949608061325321,
+      "display": {
+        "bike_count_from_api_or_prev_step": 11,
+        "rental_count_pred": 2,
+        "return_count_pred": 2,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 11
+      }
+    },
+    {
+      "step": 6,
+      "datetime": "2026-03-20T16:00:00",
+      "bike_count_from_api_or_prev_step": 10.949608061325321,
+      "rental_count_pred": 3.4256447526463703,
+      "return_count_pred": 2.113596740305781,
+      "bike_change_pred": 1.3120480123405893,
+      "next_bike_count_pred": 12.261656073665911,
+      "display": {
+        "bike_count_from_api_or_prev_step": 11,
+        "rental_count_pred": 3,
+        "return_count_pred": 2,
+        "bike_change_pred": 1,
+        "next_bike_count_pred": 12
+      }
+    },
+    {
+      "step": 7,
+      "datetime": "2026-03-20T17:00:00",
+      "bike_count_from_api_or_prev_step": 12.261656073665911,
+      "rental_count_pred": 7.056040850915297,
+      "return_count_pred": 2.425898070423099,
+      "bike_change_pred": 4.630142780492198,
+      "next_bike_count_pred": 16.89179885415811,
+      "display": {
+        "bike_count_from_api_or_prev_step": 12,
+        "rental_count_pred": 7,
+        "return_count_pred": 2,
+        "bike_change_pred": 5,
+        "next_bike_count_pred": 17
+      }
+    },
+    {
+      "step": 8,
+      "datetime": "2026-03-20T18:00:00",
+      "bike_count_from_api_or_prev_step": 16.89179885415811,
+      "rental_count_pred": 8.075898352011347,
+      "return_count_pred": 2.545885545808985,
+      "bike_change_pred": 5.530012806202362,
+      "next_bike_count_pred": 22.421811660360472,
+      "display": {
+        "bike_count_from_api_or_prev_step": 17,
+        "rental_count_pred": 8,
+        "return_count_pred": 3,
+        "bike_change_pred": 6,
+        "next_bike_count_pred": 22
+      }
+    },
+    {
+      "step": 9,
+      "datetime": "2026-03-20T19:00:00",
+      "bike_count_from_api_or_prev_step": 22.421811660360472,
+      "rental_count_pred": 2.466448270783318,
+      "return_count_pred": 1.7100704566890834,
+      "bike_change_pred": 0.7563778140942348,
+      "next_bike_count_pred": 23.178189474454708,
+      "display": {
+        "bike_count_from_api_or_prev_step": 22,
+        "rental_count_pred": 2,
+        "return_count_pred": 2,
+        "bike_change_pred": 1,
+        "next_bike_count_pred": 23
+      }
+    },
+    {
+      "step": 10,
+      "datetime": "2026-03-20T20:00:00",
+      "bike_count_from_api_or_prev_step": 23.178189474454708,
+      "rental_count_pred": 1.743138560097234,
+      "return_count_pred": 1.141904527181105,
+      "bike_change_pred": 0.601234032916129,
+      "next_bike_count_pred": 23.779423507370836,
+      "display": {
+        "bike_count_from_api_or_prev_step": 23,
+        "rental_count_pred": 2,
+        "return_count_pred": 1,
+        "bike_change_pred": 1,
+        "next_bike_count_pred": 24
+      }
+    },
+    {
+      "step": 11,
+      "datetime": "2026-03-20T21:00:00",
+      "bike_count_from_api_or_prev_step": 23.779423507370836,
+      "rental_count_pred": 1.3067450120900646,
+      "return_count_pred": 0.2823127954778866,
+      "bike_change_pred": 1.024432216612178,
+      "next_bike_count_pred": 24.803855723983013,
+      "display": {
+        "bike_count_from_api_or_prev_step": 24,
+        "rental_count_pred": 1,
+        "return_count_pred": 0,
+        "bike_change_pred": 1,
+        "next_bike_count_pred": 25
+      }
+    },
+    {
+      "step": 12,
+      "datetime": "2026-03-20T22:00:00",
+      "bike_count_from_api_or_prev_step": 24.803855723983013,
+      "rental_count_pred": 1.1105964858917046,
+      "return_count_pred": 0.0,
+      "bike_change_pred": 1.1105964858917046,
+      "next_bike_count_pred": 25.914452209874717,
+      "display": {
+        "bike_count_from_api_or_prev_step": 25,
+        "rental_count_pred": 1,
+        "return_count_pred": 0,
+        "bike_change_pred": 1,
+        "next_bike_count_pred": 26
+      }
+    },
+    {
+      "step": 13,
+      "datetime": "2026-03-20T23:00:00",
+      "bike_count_from_api_or_prev_step": 25.914452209874717,
+      "rental_count_pred": 0.7935722085306934,
+      "return_count_pred": 0.32837447380597873,
+      "bike_change_pred": 0.4651977347247147,
+      "next_bike_count_pred": 26.379649944599432,
+      "display": {
+        "bike_count_from_api_or_prev_step": 26,
+        "rental_count_pred": 1,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 26
+      }
+    },
+    {
+      "step": 14,
+      "datetime": "2026-03-21T00:00:00",
+      "bike_count_from_api_or_prev_step": 26.379649944599432,
+      "rental_count_pred": 0.28368115852079234,
+      "return_count_pred": 0.0,
+      "bike_change_pred": 0.28368115852079234,
+      "next_bike_count_pred": 26.663331103120225,
+      "display": {
+        "bike_count_from_api_or_prev_step": 26,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 27
+      }
+    },
+    {
+      "step": 15,
+      "datetime": "2026-03-21T01:00:00",
+      "bike_count_from_api_or_prev_step": 26.663331103120225,
+      "rental_count_pred": 0.2669928113793236,
+      "return_count_pred": 0.0,
+      "bike_change_pred": 0.2669928113793236,
+      "next_bike_count_pred": 26.93032391449955,
+      "display": {
+        "bike_count_from_api_or_prev_step": 27,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 27
+      }
+    },
+    {
+      "step": 16,
+      "datetime": "2026-03-21T02:00:00",
+      "bike_count_from_api_or_prev_step": 26.93032391449955,
+      "rental_count_pred": 0.18907033937456402,
+      "return_count_pred": 0.0,
+      "bike_change_pred": 0.18907033937456402,
+      "next_bike_count_pred": 27.119394253874113,
+      "display": {
+        "bike_count_from_api_or_prev_step": 27,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 27
+      }
+    },
+    {
+      "step": 17,
+      "datetime": "2026-03-21T03:00:00",
+      "bike_count_from_api_or_prev_step": 27.119394253874113,
+      "rental_count_pred": 0.14172362778426534,
+      "return_count_pred": 0.0,
+      "bike_change_pred": 0.14172362778426534,
+      "next_bike_count_pred": 27.26111788165838,
+      "display": {
+        "bike_count_from_api_or_prev_step": 27,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 27
+      }
+    },
+    {
+      "step": 18,
+      "datetime": "2026-03-21T04:00:00",
+      "bike_count_from_api_or_prev_step": 27.26111788165838,
+      "rental_count_pred": 0.1298478822994607,
+      "return_count_pred": 0.0,
+      "bike_change_pred": 0.1298478822994607,
+      "next_bike_count_pred": 27.39096576395784,
+      "display": {
+        "bike_count_from_api_or_prev_step": 27,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 27
+      }
+    },
+    {
+      "step": 19,
+      "datetime": "2026-03-21T05:00:00",
+      "bike_count_from_api_or_prev_step": 27.39096576395784,
+      "rental_count_pred": 0.1523365347603461,
+      "return_count_pred": 0.0,
+      "bike_change_pred": 0.1523365347603461,
+      "next_bike_count_pred": 27.543302298718185,
+      "display": {
+        "bike_count_from_api_or_prev_step": 27,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 28
+      }
+    },
+    {
+      "step": 20,
+      "datetime": "2026-03-21T06:00:00",
+      "bike_count_from_api_or_prev_step": 27.543302298718185,
+      "rental_count_pred": 0.12570257228467951,
+      "return_count_pred": 0.0,
+      "bike_change_pred": 0.12570257228467951,
+      "next_bike_count_pred": 27.669004871002866,
+      "display": {
+        "bike_count_from_api_or_prev_step": 28,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 28
+      }
+    },
+    {
+      "step": 21,
+      "datetime": "2026-03-21T07:00:00",
+      "bike_count_from_api_or_prev_step": 27.669004871002866,
+      "rental_count_pred": 0.14027595706632412,
+      "return_count_pred": 0.0,
+      "bike_change_pred": 0.14027595706632412,
+      "next_bike_count_pred": 27.80928082806919,
+      "display": {
+        "bike_count_from_api_or_prev_step": 28,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 28
+      }
+    },
+    {
+      "step": 22,
+      "datetime": "2026-03-21T08:00:00",
+      "bike_count_from_api_or_prev_step": 27.80928082806919,
+      "rental_count_pred": 0.26007441545991505,
+      "return_count_pred": 0.1112246050102379,
+      "bike_change_pred": 0.14884981044967716,
+      "next_bike_count_pred": 27.958130638518867,
+      "display": {
+        "bike_count_from_api_or_prev_step": 28,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 28
+      }
+    },
+    {
+      "step": 23,
+      "datetime": "2026-03-21T09:00:00",
+      "bike_count_from_api_or_prev_step": 27.958130638518867,
+      "rental_count_pred": 0.2946650398067949,
+      "return_count_pred": 0.10586809549430265,
+      "bike_change_pred": 0.18879694431249228,
+      "next_bike_count_pred": 28.14692758283136,
+      "display": {
+        "bike_count_from_api_or_prev_step": 28,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 28
+      }
+    },
+    {
+      "step": 24,
+      "datetime": "2026-03-21T10:00:00",
+      "bike_count_from_api_or_prev_step": 28.14692758283136,
+      "rental_count_pred": 0.32816927733235174,
+      "return_count_pred": 0.004659183854396787,
+      "bike_change_pred": 0.32351009347795495,
+      "next_bike_count_pred": 28.470437676309317,
+      "display": {
+        "bike_count_from_api_or_prev_step": 28,
+        "rental_count_pred": 0,
+        "return_count_pred": 0,
+        "bike_change_pred": 0,
+        "next_bike_count_pred": 28
+      }
+    }
+  ]
+}
