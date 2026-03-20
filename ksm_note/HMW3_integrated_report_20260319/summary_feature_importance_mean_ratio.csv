@@ -1,0 +1,17 @@
+﻿target,feature,importance_ratio
+rental_count,corrected_pattern_prior,0.5547543805153977
+rental_count,pattern_prior,0.15747541335556006
+rental_count,hour_weight,0.14060971139082917
+rental_count,month_weight,0.07973113130455022
+rental_count,base_value,0.04967480740887917
+rental_count,day_type_offday,0.008877278013249421
+rental_count,day_type_weekday,0.008877278011533974
+rental_count,year_weight,9.305541027189367e-25
+return_count,corrected_pattern_prior,0.5493990786848271
+return_count,pattern_prior,0.14897447338200406
+return_count,hour_weight,0.1464648709780137
+return_count,month_weight,0.07351828060994581
+return_count,base_value,0.04815713447628635
+return_count,day_type_offday,0.016743080939295656
+return_count,day_type_weekday,0.016743080929627056
+return_count,year_weight,6.0907255282439495e-25
