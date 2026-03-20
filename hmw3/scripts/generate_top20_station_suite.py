@@ -17,6 +17,16 @@ warnings.filterwarnings("ignore", message="FigureCanvasAgg is non-interactive")
 ROOT = Path(__file__).resolve().parents[2]
 HMW3_DIR = ROOT / "hmw3"
 DATA_DIR = HMW3_DIR / "Data"
+STATION_RAW_DIR = DATA_DIR / "station_raw"
+HOLIDAY_DIR = DATA_DIR / "holiday_reference"
+FORMULA_DIR = DATA_DIR / "formulas"
+WEIGHTS_DIR = DATA_DIR / "weights"
+TUNING_DIR = DATA_DIR / "tuning"
+METRICS_DIR = DATA_DIR / "metrics"
+PREDICTIONS_DIR = DATA_DIR / "predictions"
+FEATURE_DIR = DATA_DIR / "feature_analysis"
+COMPARISON_DIR = DATA_DIR / "comparisons"
+SUMMARY_DIR = DATA_DIR / "summaries"
 NOTE_DIR = HMW3_DIR / "Note"
 SOURCE_PATH = ROOT / "3조 공유폴더" / "station_hour_bike_flow_2023_2025.csv"
 TEMPLATE_NOTEBOOK = NOTE_DIR / "hmw2340.ipynb"
@@ -34,13 +44,13 @@ def load_top20_station_ids() -> list[int]:
         )
         return usage["station_id"].astype(int).tolist()
 
-    metric_summary_path = DATA_DIR / "top20_station_metrics_summary.csv"
+    metric_summary_path = SUMMARY_DIR / "top20_station_metrics_summary.csv"
     if metric_summary_path.exists():
         metric_df = pd.read_csv(metric_summary_path)
         return sorted(metric_df["station_id"].dropna().astype(int).unique().tolist())
 
     station_ids = []
-    for path in sorted(DATA_DIR.glob("station_*.csv")):
+    for path in sorted(STATION_RAW_DIR.glob("station_*.csv")):
         station_name = path.stem.replace("station_", "")
         if station_name.isdigit():
             station_ids.append(int(station_name))
@@ -48,7 +58,7 @@ def load_top20_station_ids() -> list[int]:
 
 
 def extract_station_csv(source_df: pd.DataFrame, station_id: int) -> Path:
-    output_path = DATA_DIR / f"station_{station_id}.csv"
+    output_path = STATION_RAW_DIR / f"station_{station_id}.csv"
     station_df = source_df.loc[source_df["station_id"] == station_id].copy()
     station_df.to_csv(output_path, index=False, encoding="utf-8-sig")
     return output_path
@@ -93,12 +103,12 @@ def execute_notebook(notebook_path: Path) -> None:
 def collect_metrics(station_ids: list[int]) -> pd.DataFrame:
     frames: list[pd.DataFrame] = []
     for station_id in station_ids:
-        metric_path = DATA_DIR / f"station_{station_id}_offday_month_ridge_metrics.csv"
+        metric_path = METRICS_DIR / f"station_{station_id}_offday_month_ridge_metrics.csv"
         metric_df = pd.read_csv(metric_path)
         metric_df.insert(0, "station_id", station_id)
         frames.append(metric_df)
     summary_df = pd.concat(frames, ignore_index=True)
-    summary_df.to_csv(DATA_DIR / "top20_station_metrics_summary.csv", index=False, encoding="utf-8-sig")
+    summary_df.to_csv(SUMMARY_DIR / "top20_station_metrics_summary.csv", index=False, encoding="utf-8-sig")
     return summary_df
 
 
@@ -218,43 +228,43 @@ def create_integrated_notebook(station_ids: list[int]) -> Path:
             "holiday_frames = []\n"
             "\n"
             "for station_id in TOP20_STATIONS:\n"
-            "    raw_df = pd.read_csv(DATA_DIR / f'station_{station_id}.csv')\n"
+            "    raw_df = pd.read_csv(DATA_DIR / 'station_raw' / f'station_{station_id}.csv')\n"
             "    raw_df['station_id'] = station_id\n"
             "    raw_frames.append(raw_df)\n"
             "\n"
-            "    formula_df = pd.read_csv(DATA_DIR / f'station_{station_id}_offday_hour_formulas.csv')\n"
+            "    formula_df = pd.read_csv(DATA_DIR / 'formulas' / f'station_{station_id}_offday_hour_formulas.csv')\n"
             "    formula_df['station_id'] = station_id\n"
             "    formula_frames.append(formula_df)\n"
             "\n"
-            "    weight_df = pd.read_csv(DATA_DIR / f'station_{station_id}_month_weights.csv')\n"
+            "    weight_df = pd.read_csv(DATA_DIR / 'weights' / f'station_{station_id}_month_weights.csv')\n"
             "    weight_df['station_id'] = station_id\n"
             "    weight_frames.append(weight_df)\n"
             "\n"
-            "    tuning_df = pd.read_csv(DATA_DIR / f'station_{station_id}_offday_month_ridge_tuning.csv')\n"
+            "    tuning_df = pd.read_csv(DATA_DIR / 'tuning' / f'station_{station_id}_offday_month_ridge_tuning.csv')\n"
             "    tuning_df['station_id'] = station_id\n"
             "    tuning_frames.append(tuning_df)\n"
             "\n"
-            "    metric_df = pd.read_csv(DATA_DIR / f'station_{station_id}_offday_month_ridge_metrics.csv')\n"
+            "    metric_df = pd.read_csv(DATA_DIR / 'metrics' / f'station_{station_id}_offday_month_ridge_metrics.csv')\n"
             "    metric_df['station_id'] = station_id\n"
             "    metric_frames.append(metric_df)\n"
             "\n"
-            "    importance_df = pd.read_csv(DATA_DIR / f'station_{station_id}_feature_importance.csv')\n"
+            "    importance_df = pd.read_csv(DATA_DIR / 'feature_analysis' / f'station_{station_id}_feature_importance.csv')\n"
             "    importance_df['station_id'] = station_id\n"
             "    importance_frames.append(importance_df)\n"
             "\n"
-            "    comparison_df = pd.read_csv(DATA_DIR / f'station_{station_id}_year_actual_vs_regression_vs_ml.csv')\n"
+            "    comparison_df = pd.read_csv(DATA_DIR / 'comparisons' / f'station_{station_id}_year_actual_vs_regression_vs_ml.csv')\n"
             "    comparison_df['station_id'] = station_id\n"
             "    comparison_frames.append(comparison_df)\n"
             "\n"
-            "    error_df = pd.read_csv(DATA_DIR / f'station_{station_id}_2025_high_error_points.csv')\n"
+            "    error_df = pd.read_csv(DATA_DIR / 'comparisons' / f'station_{station_id}_2025_high_error_points.csv')\n"
             "    error_df['station_id'] = station_id\n"
             "    error_frames.append(error_df)\n"
             "\n"
-            "    pred_df = pd.read_csv(DATA_DIR / f'station_{station_id}_offday_month_ridge_predictions_long.csv')\n"
+            "    pred_df = pd.read_csv(DATA_DIR / 'predictions' / f'station_{station_id}_offday_month_ridge_predictions_long.csv')\n"
             "    pred_df['station_id'] = station_id\n"
             "    prediction_frames.append(pred_df)\n"
             "\n"
-            "    holiday_df = pd.read_csv(DATA_DIR / f'station_{station_id}_holiday_reference.csv')\n"
+            "    holiday_df = pd.read_csv(DATA_DIR / 'holiday_reference' / f'station_{station_id}_holiday_reference.csv')\n"
             "    holiday_df['station_id'] = station_id\n"
             "    holiday_frames.append(holiday_df)\n"
             "\n"
@@ -659,7 +669,7 @@ def create_integrated_notebook(station_ids: list[int]) -> Path:
             "ranking_df = ranking_df.sort_values('combined_test_r2', ascending=False).reset_index(drop=True)\n"
             "ranking_df = ranking_df.merge(station_meta_df[['station_id', 'station_name', 'station_label', 'latitude', 'longitude']], on='station_id', how='left')\n"
             "ranking_df.index = ranking_df.index + 1\n"
-            "ranking_df.to_csv(DATA_DIR / 'top20_station_combined_test_r2_ranking.csv', index_label='rank', encoding='utf-8-sig')\n"
+            "ranking_df.to_csv(DATA_DIR / 'summaries/top20_station_combined_test_r2_ranking.csv', index_label='rank', encoding='utf-8-sig')\n"
             "ranking_df\n"
         ),
         code(

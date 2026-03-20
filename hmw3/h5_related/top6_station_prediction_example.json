@@ -1,0 +1,21 @@
+{
+  "station_id": 2348,
+  "station_name": " 포스코사거리(기업은행)",
+  "datetime": "2026-04-25T16:00:00",
+  "input": {
+    "year": 2026,
+    "month": 4,
+    "day": 25,
+    "hour": 16
+  },
+  "prediction": {
+    "rental_count_pred": 0.9800492643950891,
+    "return_count_pred": 0.38491116236471035,
+    "bike_change_pred": 0.5951381020303788
+  },
+  "display": {
+    "rental_count_pred": 1,
+    "return_count_pred": 0,
+    "bike_change_pred": 1
+  }
+}

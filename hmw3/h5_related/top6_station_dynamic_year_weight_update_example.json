@@ -1,0 +1,77 @@
+{
+  "station_id": 2348,
+  "station_name": " 포스코사거리(기업은행)",
+  "before_update_prediction": {
+    "station_id": 2348,
+    "station_name": " 포스코사거리(기업은행)",
+    "datetime": "2026-03-20T11:00:00",
+    "dynamic_year_weight": {
+      "rental_count": 1.0,
+      "return_count": 1.0
+    },
+    "base_prediction": {
+      "rental_count_pred": 2.3588602046832117,
+      "return_count_pred": 2.1128631409119727,
+      "bike_change_pred": 0.24599706377123898,
+      "display": {
+        "rental_count_pred": 2,
+        "return_count_pred": 2,
+        "bike_change_pred": 0
+      }
+    },
+    "adjusted_prediction": {
+      "rental_count_pred": 2.3588602046832117,
+      "return_count_pred": 2.1128631409119727,
+      "bike_change_pred": 0.24599706377123898,
+      "display": {
+        "rental_count_pred": 2,
+        "return_count_pred": 2,
+        "bike_change_pred": 0
+      }
+    }
+  },
+  "update_result": {
+    "alpha": 0.2,
+    "actual_observation": {
+      "rental_count": 3.1,
+      "return_count": 1.8
+    },
+    "observed_ratio": {
+      "rental_count": 1.314194030593823,
+      "return_count": 0.8519245592135551
+    },
+    "updated_dynamic_year_weight": {
+      "rental_count": 1.0628388061187646,
+      "return_count": 0.970384911842711
+    }
+  },
+  "after_update_next_hour_prediction": {
+    "station_id": 2348,
+    "station_name": " 포스코사거리(기업은행)",
+    "datetime": "2026-03-20T12:00:00",
+    "dynamic_year_weight": {
+      "rental_count": 1.0628388061187646,
+      "return_count": 0.970384911842711
+    },
+    "base_prediction": {
+      "rental_count_pred": 2.000399666371788,
+      "return_count_pred": 2.603551561457781,
+      "bike_change_pred": -0.6031518950859933,
+      "display": {
+        "rental_count_pred": 2,
+        "return_count_pred": 3,
+        "bike_change_pred": -1
+      }
+    },
+    "adjusted_prediction": {
+      "rental_count_pred": 2.126102393166966,
+      "return_count_pred": 2.5264471524431618,
+      "bike_change_pred": -0.4003447592761957,
+      "display": {
+        "rental_count_pred": 2,
+        "return_count_pred": 3,
+        "bike_change_pred": 0
+      }
+    }
+  }
+}
