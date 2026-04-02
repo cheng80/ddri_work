@@ -1,0 +1,10 @@
+{
+  "open_meteo_example": {
+    "base_url": "https://archive-api.open-meteo.com/v1/archive",
+    "query_string": "latitude=37.5665&longitude=126.8789&hourly=temperature_2m%2Crelative_humidity_2m%2Cprecipitation%2Cwind_speed_10m&timezone=Asia%2FSeoul"
+  },
+  "notes": [
+    "Use Nanji parking lot coordinates instead of the placeholder if precise coordinates are known.",
+    "For Seoul Open Data and data.go.kr, fill the exact endpoint after dataset selection and key issuance."
+  ]
+}

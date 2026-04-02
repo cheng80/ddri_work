@@ -1,0 +1,6 @@
+.env
+external_data_plan/.env
+external_data_plan/data/raw/*
+external_data_plan/data/processed/*
+!external_data_plan/data/raw/.gitkeep
+!external_data_plan/data/processed/.gitkeep

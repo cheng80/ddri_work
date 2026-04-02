@@ -1,0 +1,6 @@
+﻿source_name,category,official_site,dataset_or_entry,access_type,required_auth,recommended_fields,priority
+seoul_open_data_hangang_parking_info,parking_master,https://data.seoul.go.kr,한강공원 주차장 정보,manual_check_or_api_if_available,depends_on_dataset,"parking_lot_id, parking_lot_name, total_spaces, address, lat, lon",1
+kma_weather_api,weather,https://data.kma.go.kr,기상자료개방포털 Open API,api,api_key_required,"timestamp, weather_temp_c, weather_precip_mm, weather_humidity, weather_wind_speed",2
+korean_holiday_api,calendar,https://www.data.go.kr,특일 정보 API,api,api_key_required,"date, holiday_name, is_holiday",2
+open_meteo,weather_backup,https://open-meteo.com,Historical Weather API,api,no_key_or_check_current_policy,"timestamp, temperature_2m, precipitation, relative_humidity_2m, wind_speed_10m",3
+nanji_facility_usage_manual,nanji_special,manual_or_official_booking_site,난지 캠핑장/행사/시설 이용량,manual_or_crawling,unknown,"date, event_flag, facility_demand_level",4
