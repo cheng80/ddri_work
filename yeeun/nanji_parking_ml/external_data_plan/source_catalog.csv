@@ -1,6 +1,9 @@
 ﻿source_name,category,official_site,dataset_or_entry,access_type,required_auth,recommended_fields,priority
-seoul_open_data_hangang_parking_info,parking_master,https://data.seoul.go.kr,한강공원 주차장 정보,manual_check_or_api_if_available,depends_on_dataset,"parking_lot_id, parking_lot_name, total_spaces, address, lat, lon",1
-kma_weather_api,weather,https://data.kma.go.kr,기상자료개방포털 Open API,api,api_key_required,"timestamp, weather_temp_c, weather_precip_mm, weather_humidity, weather_wind_speed",2
+mapo_camping_status_data_go_kr,camping_master,https://www.data.go.kr/data/15126656/fileData.do,서울특별시 마포구_캠핑장 현황_20250403,manual_download,no_auth_for_portal_page,"campground_name, road_address, dong_name, business_start_date, camping_site_count",1
+kma_weather_api,weather,https://data.kma.go.kr/api/selectApiDetail.do?pgmNo=42,기상자료개방포털 Open API,api,api_key_required,"timestamp, weather_temp_c, weather_precip_mm, weather_humidity, weather_wind_speed",2
+kopis_performance_list_api,performance,https://www.data.go.kr/data/15097805/openapi.do,예술경영지원센터_공연예술통합전산망_DB검색_공연목록,api,service_key_required,"performance_id, performance_name, venue_name, area, sigungu, performance_start_date, performance_end_date, genre",2
+kopis_venue_list_api,performance_venue,https://www.data.go.kr/data/15097806/openapi.do,예술경영지원센터_공연예술통합전산망_DB검색_공연시설목록,api,service_key_required,"venue_id, venue_name, sido_code, gugun_code, venue_characteristic_code",2
 korean_holiday_api,calendar,https://www.data.go.kr,특일 정보 API,api,api_key_required,"date, holiday_name, is_holiday",2
+hangang_usage_pattern_jkila_2025,research_reference,https://www.jkila.org/archive/view_article?pid=jkila-53-3-31,유동인구 데이터를 활용한 한강공원의 이용 패턴과 특성 연구,manual_review,none,"park_name, peak_hour, low_hour, age_pattern, spatial_context",3
 open_meteo,weather_backup,https://open-meteo.com,Historical Weather API,api,no_key_or_check_current_policy,"timestamp, temperature_2m, precipitation, relative_humidity_2m, wind_speed_10m",3
 nanji_facility_usage_manual,nanji_special,manual_or_official_booking_site,난지 캠핑장/행사/시설 이용량,manual_or_crawling,unknown,"date, event_flag, facility_demand_level",4

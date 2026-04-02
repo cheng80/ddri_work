@@ -1,75 +1,68 @@
-# 난지 한강공원 주차장 예측 시작점
+# 난지 주차 수요 예측과 외부데이터 정제
 
-이 폴더는 난지 한강공원 주차장 빈자리 예측 프로젝트의 첫 골격입니다.
+이 폴더는 난지권 주차 또는 캠핑 수요 예측에 필요한 기본 ML 파이프라인과 외부데이터 수집/정제 보조 스크립트를 담고 있습니다.
 
-목표는 아래 4가지를 한 번에 연결하는 것입니다.
+현재 구성은 두 갈래입니다.
 
-1. 주차장 원천 데이터를 읽는다.
-2. 시간대 기반 feature를 만든다.
-3. 머신러닝 모델을 학습하고 성능을 비교한다.
-4. Swift 앱, Flutter Web, DB에 넣기 쉬운 예측 결과 CSV를 만든다.
+1. `run_nanji_parking_pipeline.py`
+   - 주차 가용면수 CSV를 읽어 feature engineering, 학습, 평가, 예측 출력까지 수행합니다.
+2. `collect_external_data.py` + `prepare_external_datasets.py`
+   - 원천 링크와 API 후보를 정리하고, `2023`, `2024`, `2025` 연도 기준으로 결측치와 이상치를 제거한 정제본을 만듭니다.
 
-## 현재 포함된 파일
+## 주요 파일
 
-- `run_nanji_parking_pipeline.py`
-  - 입력 CSV를 읽고 feature engineering, 학습, 평가, 예측 결과 저장까지 수행
 - `data/nanji_parking_input_template.csv`
-  - 원천 데이터 템플릿
-- `DATA_SOURCES.md`
-  - 공식 데이터 소스와 추천 활용 방법 정리
-- `collect_external_data.py`
-  - 외부 데이터 수집 계획용 폴더와 메타 파일 생성
+  - 모델 입력 예시 템플릿
+- `external_data_plan/source_catalog.csv`
+  - 캠핑장, 날씨, 특일, 공연정보 소스 목록
+- `external_data_plan/request_plan.json`
+  - 확인한 링크와 API 메모
+- `prepare_external_datasets.py`
+  - `raw` 폴더의 CSV/XLS/XLSX를 읽어 `processed` 폴더에 정제 결과 저장
 
-## 입력 데이터 규칙
+## 모델 입력 최소 스키마
 
-입력 CSV는 최소한 아래 컬럼을 가져야 합니다.
+입력 CSV에는 아래 컬럼이 필요합니다.
 
 - `timestamp`
-  - 예: `2026-04-01 13:00:00`
 - `total_spaces`
-  - 전체 주차 가능 면수
 - `available_spaces` 또는 `occupied_spaces`
-  - 둘 중 하나는 반드시 있어야 함
 
-있으면 좋은 컬럼:
+있으면 좋은 컬럼은 아래와 같습니다.
 
 - `parking_lot_id`
-  - 예: `nanji_main`
 - `parking_lot_name`
-  - 예: `난지 한강공원 제1주차장`
 - `is_holiday`
-  - 공휴일이면 `1`, 아니면 `0`
 - `weather_temp_c`
 - `weather_precip_mm`
 - `weather_humidity`
 - `event_flag`
-  - 행사일, 축제일, 야구 경기일 같은 특이일 표시
 
-## 예측 타깃
+## 외부데이터 정제 흐름
 
-현재 기본 타깃은 `available_spaces`입니다.
+1. 원본 파일을 `external_data_plan/data/raw/` 아래에 넣습니다.
+2. 아래 명령으로 수집 계획 파일을 다시 생성합니다.
 
-이유:
+```powershell
+python yeeun\nanji_parking_ml\collect_external_data.py
+```
 
-- 사용자에게 "지금 또는 곧 빈자리 몇 칸인지"를 직접 보여주기 쉽습니다.
-- DB 저장 시 `predicted_available_spaces`, `predicted_occupied_spaces`, `predicted_occupancy_rate`를 같이 만들기 좋습니다.
+3. 아래 명령으로 `2023~2025` 데이터만 남기고 결측치/이상치를 제거합니다.
 
-## 생성되는 출력 파일
+```powershell
+python yeeun\nanji_parking_ml\prepare_external_datasets.py `
+  --input-dir yeeun\nanji_parking_ml\external_data_plan\data\raw `
+  --output-dir yeeun\nanji_parking_ml\external_data_plan\data\processed `
+  --years 2023 2024 2025
+```
 
-스크립트를 실행하면 `outputs/` 아래에 다음 파일이 생깁니다.
+4. 결과는 아래 파일로 저장됩니다.
 
-- `model_metrics.csv`
-  - 모델별 RMSE, MAE, R2
-- `test_predictions.csv`
-  - 테스트 구간 실제값 vs 예측값
-- `feature_importance.csv`
-  - 랜덤포레스트 기준 중요 feature
-- `db_prediction_output.csv`
-  - 앱/웹/DB 적재용 예측 결과
+- `cleaning_summary.csv`
+- `cleaning_summary.json`
+- `{원본파일명}_cleaned.csv`
 
-## 실행 방법
-
-PowerShell 기준 예시입니다.
+## 모델 실행 예시
 
 ```powershell
 python yeeun\nanji_parking_ml\run_nanji_parking_pipeline.py `
@@ -77,39 +70,12 @@ python yeeun\nanji_parking_ml\run_nanji_parking_pipeline.py `
   --output-dir yeeun\nanji_parking_ml\outputs
 ```
 
-외부 데이터 수집 계획 골격을 만드는 명령은 아래와 같습니다.
+## 현재 반영한 외부데이터 후보
 
-```powershell
-python yeeun\nanji_parking_ml\collect_external_data.py `
-  --output-dir yeeun\nanji_parking_ml\external_data_plan
-```
-
-## DB 적재용 출력 스키마
-
-`db_prediction_output.csv`는 아래 컬럼을 만듭니다.
-
-- `parking_lot_id`
-- `parking_lot_name`
-- `predicted_for`
-- `actual_available_spaces`
-- `predicted_available_spaces`
-- `predicted_occupied_spaces`
-- `predicted_occupancy_rate`
-- `model_name`
-- `created_at`
-
-이 포맷이면 나중에 다음 연결이 쉬워집니다.
-
-- Swift 앱: JSON으로 변환 후 최근 예측 목록 표시
-- Flutter Web: 차트/테이블/색상 상태 표시
-- DB: `parking_predictions` 테이블에 적재
-
-## 다음 단계 제안
-
-이 골격 다음에는 아래 순서로 가면 됩니다.
-
-1. 난지 한강공원 실제 주차장 CSV 확보
-2. 공휴일, 날씨, 행사일 데이터 결합
-3. 1시간 뒤, 2시간 뒤, 3시간 뒤 다중 horizon 예측으로 확장
-4. FastAPI 또는 Flask로 예측 API 생성
-5. Swift 앱과 Flutter Web에서 같은 DB 또는 API 사용
+- 마포구 캠핑장 현황 파일데이터
+- 기상자료개방포털 Open API
+- Open-Meteo 이력 기상 API
+- 공공데이터포털 특일 정보 API
+- KOPIS 공연목록 API
+- KOPIS 공연시설목록 API
+- 한강공원 이용 패턴 논문 참고자료
